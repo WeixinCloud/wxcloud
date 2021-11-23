@@ -1,7 +1,8 @@
 import axios from "axios";
-import { createSign } from "../utils/auth";
+import { stat } from "fs";
+import { createSign, readLoginState } from "../utils/auth";
 
-export const BASE_URL = "https://wxardm.weixin.qq.com/wxa-dev-qbase";
+export const BASE_URL = "https://wxardm.weixin.qq.com";
 
 interface fetchApiOptions {
   skipSign?: boolean;
@@ -14,16 +15,14 @@ interface fetchApiOptions {
 }
 
 export async function getCloudRunCliRandStr(appid: string) {
-  const data = await fetchApi(
-    "getcloudrunclirandstr",
-    {},
-    {
-      method: "GET",
-      params: { appid },
-      skipSign: true,
-    }
-  );
-  return data?.randstr;
+  const config = {
+    url: `${BASE_URL}/wxa-dev-qbase/getcloudrunclirandstr`,
+    params: { appid },
+  };
+  //   console.log(config);
+  const res = await axios.request(config);
+  //   console.log(res.data);
+  return res.data?.randstr;
 }
 
 export async function fetchApi(
@@ -32,21 +31,21 @@ export async function fetchApi(
   options: fetchApiOptions = {}
 ) {
   // todo: read local
-  const appid = options.wxCloudConfig?.appid || "";
-  const privateKey = options.wxCloudConfig?.privateKey || "";
+  const appid = options.wxCloudConfig?.appid || (await readLoginState()).appid;
+  const privateKey =
+    options.wxCloudConfig?.privateKey || (await readLoginState()).privateKey;
 
   let sign, randStr;
   if (!options.skipSign) {
     randStr = await getCloudRunCliRandStr(appid);
-    data = { ...data, rand_str: randStr };
-    sign = createSign(JSON.stringify(data), privateKey);
+    sign = createSign(JSON.stringify({ appid, rand_str: randStr }), privateKey);
   }
 
   const headers: any = {
     "X-CloudRunCli-Robot": "5",
   };
   if (sign) {
-      headers["X-CloudRunCli-Signature"] = sign
+    headers["X-CloudRunCli-Signature"] = sign;
   }
   const config = {
     url: `${BASE_URL}/${apiName}`,

@@ -29,9 +29,9 @@ export default class LoginCommand extends Command {
 
     if (isValid) {
       await saveLoginState(appid, privateKey);
-      this.log("登录成功");
+      this.log("✅登录成功");
     } else {
-      this.error("登录失败，请检查 AppID 与私钥文件是否正确");
+      this.error("❌登录失败，请检查 AppID 与私钥文件是否正确");
     }
   }
 }
