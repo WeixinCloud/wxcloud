@@ -15,6 +15,7 @@
     "cli-ux": "^5.6.3",
     "dotenv": "^10.0.0",
     "node-rsa": "^1.1.1",
+    "shortid": "^2.2.16",
     "tslib": "^1"
   },
   "devDependencies": {
@@ -23,6 +24,7 @@
     "@types/chai": "^4",
     "@types/mocha": "^5",
     "@types/node": "^10",
+    "@types/shortid": "0.0.29",
     "chai": "^4",
     "eslint": "^5.13",
     "eslint-config-oclif": "^3.1",

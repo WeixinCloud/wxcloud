@@ -6,11 +6,59 @@ import cli from "cli-ux";
 import { fetchApi, getCloudRunCliRandStr } from "../api/base";
 import * as crypto from "crypto";
 import * as dotenv from "dotenv";
+import * as shortid from "shortid";
+import axios from "axios";
 
 const NodeRSA = require("node-rsa");
 
 const HOME_DIR = os.homedir();
 const WXCLOUD_CONFIG_PATH = path.resolve(HOME_DIR, ".wxcloudconfig");
+
+const basepath =
+  "https://web-test-7gz6yo8c98e82c01-1304825656.ap-shanghai.app.tcloudbase.com";
+
+export async function openQrCodeLogin() {
+  const randstr = shortid.generate();
+  await cli.open(`${basepath}/cloudrun/cliAuth?randstr=${randstr}`);
+  return randstr;
+}
+
+export async function waitForQrCodeLoginResult(
+  randstr: string,
+  timeout: number
+): Promise<{
+  accessToken: string;
+  refreshToken: string;
+}> {
+  const startTime = Date.now();
+  return new Promise((resolve, reject) => {
+    const interval = setInterval(async () => {
+      if (Date.now() - startTime > timeout) {
+        clearInterval(interval);
+        return;
+      }
+      try {
+        const res = await axios.get(
+          `${basepath}/api/wxa-dev-qbase/getcloudrunclisession?randstr=${randstr}`
+        );
+        if (res.data?.base_resp?.ret === 0) {
+          const {
+            cloudruncli_access_token: accessToken,
+            cloudruncli_refresh_token: refreshToken,
+          } = res.data;
+          clearInterval(interval);
+          resolve({
+            accessToken,
+            refreshToken,
+          });
+        }
+      } catch (e) {
+        clearInterval(interval);
+        reject(e);
+      }
+    }, 2000);
+  });
+}
 
 export function createSign(data: string, privateKey: string) {
   const key = new NodeRSA(privateKey, "private");
@@ -18,7 +66,11 @@ export function createSign(data: string, privateKey: string) {
   return encrypted;
 }
 
-export async function checkLoginState(appid: string, privateKey: string) {
+export async function checkLoginState(
+  appid: string,
+  privateKeyAbsolutePath: string
+) {
+  const privateKey = await fs.promises.readFile(privateKeyAbsolutePath, "utf8");
   try {
     const data = await fetchApi(
       "wxa-dev-qbase/getqbaseinfo",
@@ -35,27 +87,35 @@ export async function checkLoginState(appid: string, privateKey: string) {
   }
 }
 
-export async function saveLoginState(appid: string, privateKey: string) {
+export async function saveLoginState(
+  appid: string,
+  privateKeyAbsolutePath: string
+) {
   cli.action.start(`写入配置文件：${WXCLOUD_CONFIG_PATH}`);
   await fs.promises.writeFile(
     WXCLOUD_CONFIG_PATH,
-    generateDotenv({ appid, privateKey })
+    generateDotenv({ appid, privateKeyPath: privateKeyAbsolutePath })
   );
   cli.action.stop();
 }
 
 export async function readLoginState(): Promise<{ [key: string]: string }> {
   try {
-    fs.statSync(WXCLOUD_CONFIG_PATH)
-  } catch(e) {
+    fs.statSync(WXCLOUD_CONFIG_PATH);
+  } catch (e) {
     throw new Error("您尚未登录 CLI，请先登录：wxcloud login");
   }
   const state = dotenv.parse(
     await fs.promises.readFile(WXCLOUD_CONFIG_PATH, "utf8")
   );
+  const appid = state["APPID"];
+  const privateKey = await fs.promises.readFile(
+    state["PRIVATE_KEY_PATH"],
+    "utf8"
+  );
   return {
-    appid: state["APPID"],
-    privateKey: state["PRIVATE_KEY"],
+    appid,
+    privateKey,
   };
 }
 
