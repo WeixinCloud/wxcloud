@@ -120,7 +120,7 @@ export async function readLoginState(): Promise<{ [key: string]: string }> {
 }
 
 export function generateDotenv(obj: any) {
-  const arr = [];
+  const arr: any = [];
   for (const key in obj) {
     arr.push(`${constantCase(key)}=${obj[key]}`);
   }

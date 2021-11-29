@@ -1,8 +1,9 @@
 import { Command, flags } from "@oclif/command";
 import { cli } from "cli-ux";
-import { DescribeWxCloudBaseRunEnvs } from "../../api/service";
+import { callCloudApi } from "../../api/cloudapi";
+import { DescribeWxCloudBaseRunEnvs } from "../../api";
 
-export default class ListServiceCommand extends Command {
+export default class ListEnvCommand extends Command {
   static description = "describe the command here";
 
   static examples = [`wxcloud env:list`];
@@ -12,9 +13,8 @@ export default class ListServiceCommand extends Command {
   };
 
   async run() {
-    const envList = await DescribeWxCloudBaseRunEnvs();
-    console.log(envList);
-
+    const res = await DescribeWxCloudBaseRunEnvs();
+    const envList = res.EnvList
     cli.table(
       envList,
       {
