@@ -2,6 +2,7 @@ import axios from "axios";
 import { stat } from "fs";
 import { cli } from "cli-ux";
 import { createSign, readLoginState } from "../utils/auth";
+import { logger } from "../utils/log";
 
 export const BASE_URL = "https://servicewechat.com";
 
@@ -51,12 +52,12 @@ export async function fetchApi(
     },
     headers,
   };
-  console.log(config);
+  logger.debug(config)
   try {
     const res = await axios.request(config);
-    console.log(res.data);
+    logger.debug(res.data);
     return res.data;
   } catch (e) {
-    console.log(e.response.headers, e.response.data);
+    logger.debug(e.response.headers, e.response.data);
   }
 }
