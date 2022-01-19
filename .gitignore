@@ -3,7 +3,7 @@
 /.nyc_output
 /dist
 /lib
-/package-lock.json
+package-lock.json
 /tmp
 node_modules
 private.key
