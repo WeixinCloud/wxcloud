@@ -3,7 +3,7 @@ import { stat } from "fs";
 import { cli } from "cli-ux";
 import { createSign, readLoginState } from "../utils/auth";
 
-export const BASE_URL = "https://cloud.weixin.qq.com/api";
+export const BASE_URL = "https://servicewechat.com";
 
 interface fetchApiOptions {
   skipSign?: boolean;
@@ -51,8 +51,12 @@ export async function fetchApi(
     },
     headers,
   };
-  // console.log(config);
-  const res = await axios.request(config);
-  // console.log(res.data);
-  return res.data;
+  console.log(config);
+  try {
+    const res = await axios.request(config);
+    console.log(res.data);
+    return res.data;
+  } catch (e) {
+    console.log(e.response.headers, e.response.data);
+  }
 }
