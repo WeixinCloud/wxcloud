@@ -18,8 +18,8 @@ export default class LoginCommand extends Command {
   static flags = {
     help: flags.help({ char: "h" }),
     // flag with a value (-n, --name=VALUE)
-    appid: flags.string({ char: "a", description: "微信 AppID" }),
-    private_key: flags.string({ char: "k", description: "微信云服务私钥" }),
+    appId: flags.string({ char: "a", description: "微信 AppID" }),
+    privateKey: flags.string({ char: "k", description: "微信云服务私钥" }),
   };
 
   async run() {
@@ -42,9 +42,9 @@ export default class LoginCommand extends Command {
 
   async loginWithPrivateKey() {
     const { args, flags } = this.parse(LoginCommand);
-    const appid: string = flags.appid || (await cli.prompt("请输入微信 AppID"));
+    const appid: string = flags.appId || (await cli.prompt("请输入微信 AppID"));
     const privateKey =
-      flags.private_key || (await cli.prompt("请输入秘钥"));
+      flags.privateKey || (await cli.prompt("请输入秘钥"));
 
     cli.action.start("登录中");
     const isValid = await checkLoginState(appid, privateKey);

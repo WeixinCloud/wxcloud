@@ -13,8 +13,9 @@ import * as fs from "fs";
 import * as path from "path";
 import { readLoginState } from "../../utils/auth";
 import * as inquirer from "inquirer";
+import { zipDir } from "../../utils/zip";
 
-export default class VersionCreateCommand extends Command {
+export default class RunDeployCommand extends Command {
   static description = "创建版本";
 
   static examples = [`wxcloud version:create <项目根目录>`];
@@ -38,7 +39,7 @@ export default class VersionCreateCommand extends Command {
   };
 
   async run() {
-    const { args, flags } = this.parse(VersionCreateCommand);
+    const { args, flags } = this.parse(RunDeployCommand);
     const { override } = flags;
     const envId = flags.envId || (await chooseEnvId());
     const serviceName = flags.serviceName || (await chooseServiceId(envId));
@@ -98,18 +99,22 @@ export default class VersionCreateCommand extends Command {
     console.log("发布模式：全量发布 (构建成功后会自动上线)");
     console.log("==========");
 
-    if (!flags.noConfirm && await cli.confirm("确定发布？(请输入yes或no)")) {
-      await uploadVersionPackage(
-        buildInfo.UploadUrl,
-        fs.readFileSync(path.resolve(process.cwd(), args.path))
-      );
+    if (!flags.noConfirm || (await cli.confirm("确定发布？(请输入yes或no)"))) {
+      const zipFile = `.cloudrun_${serviceName}_${Date.now()}.zip`;
+      const srcPath = path.resolve(process.cwd(), args.path);
+      const destPath = path.resolve(process.cwd(), zipFile);
+      await zipDir(srcPath, destPath);
+      console.log(buildInfo);
+      await uploadVersionPackage(buildInfo.UploadUrl, fs.readFileSync(zipFile));
       const createResult = await SubmitServerRelease(newReleaseConfig);
+      await fs.promises.unlink(destPath);
+      console.log("触发部署成功，请前往控制台查看详情。");
+      cli.url(
+        "点击前往控制台",
+        `https://cloud.weixin.qq.com/cloudrun/service/${newReleaseConfig.ServerName}`
+      );
+    } else {
+      console.log("取消发布");
     }
-
-    console.log('触发部署成功，请前往控制台查看详情。')
-    cli.url(
-      "点击前往控制台",
-      `https://cloud.weixin.qq.com/cloudrun/service/${newReleaseConfig.ServerName}`
-    );
   }
 }

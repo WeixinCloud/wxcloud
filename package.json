@@ -10,6 +10,7 @@
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^3",
+    "archiver": "^5.3.0",
     "axios": "^0.24.0",
     "change-case": "^4.1.2",
     "cli-ux": "^5.6.3",
