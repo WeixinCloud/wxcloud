@@ -66,37 +66,39 @@ export function createSign(data: string, privateKey: string) {
   return encrypted;
 }
 
-export async function checkLoginState(
-  appid: string,
-  privateKeyAbsolutePath: string
-) {
-  const privateKey = await fs.promises.readFile(privateKeyAbsolutePath, "utf8");
+export async function checkLoginState(appid: string, privateKey: string) {
   try {
     const data = await fetchApi(
       "wxa-dev-qbase/getqbaseinfo",
       { appid },
       { wxCloudConfig: { appid, privateKey } }
     );
+    // console.log(data);
     if (data?.base_resp?.ret === 0) {
       return true;
     } else {
       return false;
     }
   } catch (e) {
+    // console.log(e);
     return false;
   }
 }
 
 export async function saveLoginState(
   appid: string,
-  privateKeyAbsolutePath: string
+  privateKey: string
 ) {
   cli.action.start(`写入配置文件：${WXCLOUD_CONFIG_PATH}`);
   await fs.promises.writeFile(
     WXCLOUD_CONFIG_PATH,
-    generateDotenv({ appid, privateKeyPath: privateKeyAbsolutePath })
+    generateDotenv({ appid, privateKey })
   );
   cli.action.stop();
+}
+
+export async function removeLoginState() {
+  await fs.promises.unlink(WXCLOUD_CONFIG_PATH);
 }
 
 export async function readLoginState(): Promise<{ [key: string]: string }> {
@@ -109,10 +111,7 @@ export async function readLoginState(): Promise<{ [key: string]: string }> {
     await fs.promises.readFile(WXCLOUD_CONFIG_PATH, "utf8")
   );
   const appid = state["APPID"];
-  const privateKey = await fs.promises.readFile(
-    state["PRIVATE_KEY_PATH"],
-    "utf8"
-  );
+  const privateKey = state["PRIVATE_KEY"];
   return {
     appid,
     privateKey,

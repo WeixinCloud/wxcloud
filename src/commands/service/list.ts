@@ -21,13 +21,11 @@ export default class ListServiceCommand extends Command {
   async run() {
     const { args, flags } = this.parse(ListServiceCommand);
     const envId = flags.envId || (await chooseEnvId());
-    cli.action.start('查询中')
     const res = await DescribeCloudBaseRunServers({
       EnvId: envId,
       Limit: 10,
       Offset: parseInt(flags.page as string) || 0,
     });
-    cli.action.stop();
     const serviceList = res.CloudBaseRunServerSet;
     // console.log(await callCloudApi("DescribeCloudBaseBuildService", {
     //   EnvId: "env01-9gdi9qsa33fa4f83",

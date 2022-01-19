@@ -1,7 +1,11 @@
 import { Command, flags } from "@oclif/command";
 import cli from "cli-ux";
 import * as fs from "fs";
-import { checkLoginState, saveLoginState } from "../utils/auth";
+import {
+  checkLoginState,
+  saveLoginState,
+  removeLoginState,
+} from "../utils/auth";
 
 export default class LogoutCommand extends Command {
   static description = "登出 CLI";
@@ -13,6 +17,6 @@ export default class LogoutCommand extends Command {
   };
 
   async run() {
-      
+    await removeLoginState()
   }
 }

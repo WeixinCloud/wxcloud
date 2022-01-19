@@ -1,6 +1,7 @@
 import { readLoginState } from "../utils/auth";
 import { fetchApi } from "./base";
 import { CloudBaseRunServer, EnvInfo, VersionInfo } from "./interface";
+import cli from "cli-ux";
 
 export async function DescribeCloudBaseBuildService(data: {
   EnvId: string;
@@ -27,7 +28,7 @@ export async function DescribeWxCloudBaseRunEnvs(): Promise<{
 
 export async function DescribeCloudBaseRunServerVersion(params: {
   EnvId: string;
-  ServiceName: string;
+  ServerName: string;
   VersionName: string;
 }): Promise<VersionInfo> {
   return callCloudApi("DescribeCloudBaseRunServerVersion", params);
@@ -52,6 +53,56 @@ export async function DescribeCloudBaseRunServers(params: {
   return callCloudApi("DescribeCloudBaseRunServers", params);
 }
 
+export async function SubmitServerRelease(params: {
+  BuildDir: string;
+  DeployType: string;
+  Dockerfile: string;
+  EnvId: string;
+  HasDockerfile: boolean;
+  PackageName: string;
+  PackageVersion: string;
+  Port: number;
+  ReleaseType: string;
+  ServerName: string;
+  WxAppId: string;
+}): Promise<{
+  Result: string;
+  RunId: string;
+  VersionName: string;
+}> {
+  return callCloudApi("SubmitServerRelease", params);
+}
+
+export async function CreateCloudBaseRunServerVersion(params: {
+  BuildDir: string;
+  ContainerPort: number;
+  Cpu: number;
+  CustomLogs: string;
+  DockerfilePath: string;
+  EntryPoint: string;
+  EnvId: string;
+  EnvParams: string;
+  FlowRatio: number;
+  HasDockerfile: number;
+  MaxNum: number;
+  Mem: number;
+  MinNum: number;
+  MountWxToken: boolean;
+  PackageName: string;
+  PackageVersion: string;
+  PolicyThreshold: number;
+  PolicyType: string;
+  ServerName: string;
+  UploadType: string;
+  VersionRemark: string;
+}): Promise<{
+  Result: string;
+  RunId: string;
+  VersionName: string;
+}> {
+  return callCloudApi("CreateCloudBaseRunServerVersion", params);
+}
+
 export async function callCloudApi(action: string, data: Object) {
   const res = await fetchApi("wxa-dev-qbase/apihttpagent", {
     action,
@@ -64,8 +115,8 @@ export async function callCloudApi(action: string, data: Object) {
     const response = JSON.parse(res.content);
     if (response.Response?.Error) {
       console.log(action);
-      console.log(data)
-      console.log(response)
+      console.log(data);
+      console.log(response);
       const error = response.Response.Error;
       throw new Error(
         `${error.Message} (RequestId: ${response.Response.RequestId})`

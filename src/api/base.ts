@@ -36,18 +36,10 @@ export async function fetchApi(
   const privateKey =
     options.wxCloudConfig?.privateKey || (await readLoginState()).privateKey;
 
-  let sign, randStr;
-  if (!options.skipSign) {
-    randStr = await getCloudRunCliRandStr(appid);
-    sign = createSign(JSON.stringify({ appid, rand_str: randStr }), privateKey);
-  }
-
   const headers: any = {
-    "X-CloudRunCli-Robot": "5",
+    "X-CloudRunCli-Robot": "1",
+    "X-CloudRunCli-Key": privateKey,
   };
-  if (sign) {
-    headers["X-CloudRunCli-Signature"] = sign;
-  }
   const config = {
     url: `${BASE_URL}/${apiName}`,
     data,
@@ -59,8 +51,8 @@ export async function fetchApi(
     },
     headers,
   };
-//   console.log(config);
+  console.log(config);
   const res = await axios.request(config);
-//   console.log(res.data);
+  console.log(res.data);
   return res.data;
 }
