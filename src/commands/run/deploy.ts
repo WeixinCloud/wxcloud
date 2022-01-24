@@ -30,7 +30,7 @@ export default class RunDeployCommand extends Command {
     }),
     noConfirm: flags.boolean({
       description: "发布前是否跳过二次确认",
-      default: true,
+      default: false,
     }),
 
     targetDir: flags.string({ description: "目标目录" }),
@@ -99,20 +99,25 @@ export default class RunDeployCommand extends Command {
     console.log("发布模式：全量发布 (构建成功后会自动上线)");
     console.log("==========");
 
-    if (!flags.noConfirm || (await cli.confirm("确定发布？(请输入yes或no)"))) {
+    if (flags.noConfirm || (await cli.confirm("确定发布？(请输入yes或no)"))) {
       const zipFile = `.cloudrun_${serviceName}_${Date.now()}.zip`;
       const srcPath = path.resolve(process.cwd(), args.path);
       const destPath = path.resolve(process.cwd(), zipFile);
       await zipDir(srcPath, destPath);
-      console.log(buildInfo);
-      await uploadVersionPackage(buildInfo.UploadUrl, fs.readFileSync(zipFile));
-      const createResult = await SubmitServerRelease(newReleaseConfig);
-      await fs.promises.unlink(destPath);
-      console.log("触发部署成功，请前往控制台查看详情。");
-      cli.url(
-        "点击前往控制台",
-        `https://cloud.weixin.qq.com/cloudrun/service/${newReleaseConfig.ServerName}`
-      );
+      try {
+        await uploadVersionPackage(
+          buildInfo.UploadUrl,
+          fs.readFileSync(zipFile)
+        );
+        const createResult = await SubmitServerRelease(newReleaseConfig);
+        console.log("触发部署成功，请前往控制台查看详情。");
+        cli.url(
+          "点击前往控制台",
+          `https://cloud.weixin.qq.com/cloudrun/service/${newReleaseConfig.ServerName}`
+        );
+      } finally {
+        await fs.promises.unlink(destPath);
+      }
     } else {
       console.log("取消发布");
     }
