@@ -3,6 +3,8 @@ import { fetchApi } from "./base";
 import { CloudBaseRunServer, EnvInfo, VersionInfo } from "./interface";
 import cli from "cli-ux";
 
+// 新的接口不太好使，CI 还是先用老的
+
 export async function DescribeCloudBaseBuildService(data: {
   EnvId: string;
   ServiceName: string;
@@ -17,6 +19,19 @@ export async function DescribeCloudBaseBuildService(data: {
   UploadUrl: string;
 }> {
   return callCloudApi("DescribeCloudBaseBuildService", data);
+}
+
+export async function DescribeCloudBaseRunServiceDomain(params: {
+  EnvId: string;
+  ServiceName: string;
+}): Promise<{
+  DefaultPublicDomain: string // 默认公网服务域名
+  DefaultInternalDomain: string // 默认内网服务域名
+  AccessTypes: string[] // 访问类型
+  RequestId: string // 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
+}> {
+  const { appid } = await readLoginState();
+  return callCloudApi("DescribeCloudBaseRunServiceDomain", params);
 }
 
 export async function DescribeWxCloudBaseRunEnvs(): Promise<{

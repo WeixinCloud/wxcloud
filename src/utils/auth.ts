@@ -84,16 +84,23 @@ export async function checkLoginState(appid: string, privateKey: string) {
     return false;
   }
 }
+export async function writeLoginState(
+  appid: string,
+  privateKey: string,
+) {
+  await fs.promises.writeFile(
+    WXCLOUD_CONFIG_PATH,
+    generateDotenv({ appid, privateKey })
+  );
+}
 
+// with cli actions
 export async function saveLoginState(
   appid: string,
   privateKey: string
 ) {
   cli.action.start(`写入配置文件：${WXCLOUD_CONFIG_PATH}`);
-  await fs.promises.writeFile(
-    WXCLOUD_CONFIG_PATH,
-    generateDotenv({ appid, privateKey })
-  );
+  await writeLoginState(appid, privateKey);
   cli.action.stop();
 }
 

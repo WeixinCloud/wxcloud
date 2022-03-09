@@ -1,6 +1,5 @@
 import axios from "axios";
 import { stat } from "fs";
-import { cli } from "cli-ux";
 import { createSign, readLoginState } from "../utils/auth";
 import { logger } from "../utils/log";
 
