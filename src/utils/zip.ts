@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import * as archiver from "archiver";
 
 export async function zipDir(src: string, dest: string, ignore?: string[]) {
-  return new Promise((resolve, reject) => {
+  return new Promise<void>((resolve, reject) => {
     // create a file to stream archive data to.
     const output = fs.createWriteStream(dest);
     const archive = archiver("zip", {

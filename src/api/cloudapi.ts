@@ -3,7 +3,43 @@ import { fetchApi } from "./base";
 import { CloudBaseRunServer, EnvInfo, VersionInfo } from "./interface";
 import cli from "cli-ux";
 
-// 新的接口不太好使，CI 还是先用老的
+export async function DescribeServiceBaseConfig(data: {
+  EnvId: string // 环境 Id
+  ServerName: string // 服务名
+}): Promise<any> {
+  return callCloudApi("DescribeServiceBaseConfig", data);
+}
+
+export async function UpdateServerBaseConfig(data: {
+  WxAppId: string // 微信appid
+  EnvId: string // 环境Id
+  ServerName: string // 服务名
+  Conf: {
+    EnvParams: string
+  } & Record<string, string> // 配置信息
+  OperatorRemark?: string // 操作人信息
+}): Promise<{}> {
+  return callCloudApi("UpdateServerBaseConfig", data);
+}
+
+export async function EstablishCloudBaseRunServer(data: {
+  EnvId: string // 环境id
+  ServiceName: string // 服务名称
+  IsPublic: boolean // 是否开通外网访问
+}): Promise<{}> {
+  return callCloudApi("EstablishCloudBaseRunServer", data);
+}
+
+
+export async function EstablishCloudBaseRunServerWx(data: {
+  EnvId: string // 环境id
+  ServiceName: string // 服务名称
+  IsPublic: boolean // 是否开通外网访问
+  PublicAccess?: number // 0/1=允许公网访问;2=关闭公网访问
+  OpenAccessTypes?: string[] // OA PUBLIC MINIAPP VPC
+}): Promise<{}> {
+  return callCloudApi("EstablishCloudBaseRunServerWx", data);
+}
 
 export async function DescribeCloudBaseBuildService(data: {
   EnvId: string;
@@ -74,8 +110,9 @@ export async function SubmitServerRelease(params: {
   Dockerfile: string;
   EnvId: string;
   HasDockerfile: boolean;
-  PackageName: string;
-  PackageVersion: string;
+  PackageName?: string;
+  PackageVersion?: string;
+  ImageUrl?: string;
   Port: number;
   ReleaseType: string;
   ServerName: string;
@@ -92,19 +129,20 @@ export async function CreateCloudBaseRunServerVersion(params: {
   BuildDir: string;
   ContainerPort: number;
   Cpu: number;
-  CustomLogs: string;
+  CustomLogs?: string;
   DockerfilePath: string;
-  EntryPoint: string;
+  EntryPoint?: string;
   EnvId: string;
   EnvParams: string;
   FlowRatio: number;
-  HasDockerfile: number;
+  HasDockerfile?: number;
+  ImageInfo?: any;
   MaxNum: number;
   Mem: number;
   MinNum: number;
   MountWxToken: boolean;
-  PackageName: string;
-  PackageVersion: string;
+  PackageName?: string;
+  PackageVersion?: string;
   PolicyThreshold: number;
   PolicyType: string;
   ServerName: string;
