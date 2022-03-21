@@ -1,7 +1,36 @@
 import { readLoginState } from "../utils/auth";
 import { fetchApi } from "./base";
 import { CloudBaseRunServer, EnvInfo, VersionInfo } from "./interface";
-import cli from "cli-ux";
+
+export async function DescribeWxCloudBaseRunDBClusterDetail(data: {
+  EnvId: string // 环境 Id
+  WxAppId: string // 微信 AppId
+}): Promise<{
+  NetInfo: {
+    PrivateNetAddress: string | null // 内网地址  注意：此字段可能返回 null，表示取不到有效值。
+    PubNetAddress: string | null // 外网地址  注意：此字段可能返回 null，表示取不到有效值。
+    Net: string | null // 网络信息（VPCID/SubnetID）  注意：此字段可能返回 null，表示取不到有效值。
+  } // 网络信息
+  DbInfo: {
+    IsOpenPubNetAccess: boolean // 是否开启公网访问
+    IsOpenAutoPause: boolean // 是否开启自动暂停
+    AutoPauseDelay: number | null // 自动暂停延时  注意：此字段可能返回 null，表示取不到有效值。
+    Charset: string | null // 编码  注意：此字段可能返回 null，表示取不到有效值。
+    MaxCpu: number | null // 最大算力  注意：此字段可能返回 null，表示取不到有效值。
+    MinCpu: number | null // 最小算力  注意：此字段可能返回 null，表示取不到有效值。
+    Status: string | null // TDSQL-C集群状态  注意：此字段可能返回 null，表示取不到有效值。
+    UsedStorage: number | null // 存储用量（单位：MB）  注意：此字段可能返回 null，表示取不到有效值。
+    StorageLimit: number | null // 最大存储量（单位：GB）  注意：此字段可能返回 null，表示取不到有效值。
+    DbType: string // 数据库类型
+    DbVersion: string // 数据库类型
+    WanStatus: string  //公网访问状态；open开启，opening开启中，closed关闭，closing关闭中
+    StrategyUpdateStatus: string  //数据库策略更新状态，doing是正在更新，done是已完成. 注意：此字段可能返回 null，表示取不到有效值。
+  } // 数据库信息
+  DbClusterId: string // db集群id
+
+}> {
+  return callCloudApi("DescribeWxCloudBaseRunDBClusterDetail", data);
+}
 
 export async function DescribeServiceBaseConfig(data: {
   EnvId: string // 环境 Id
