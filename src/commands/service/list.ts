@@ -1,10 +1,9 @@
 import { Command, flags } from "@oclif/command";
-import { cli } from "cli-ux";
 import {
   DescribeCloudBaseRunServers,
   DescribeCloudBaseRunServiceDomain,
 } from "../../api";
-import { chooseEnvId } from "../../utils/ux";
+import { chooseEnvId, printHorizontalTable } from "../../utils/ux";
 import { execWithLoading } from "../../utils/loading";
 
 export default class ListServiceCommand extends Command {
@@ -78,41 +77,32 @@ export default class ListServiceCommand extends Command {
       };
       this.log(JSON.stringify(result));
     } else {
-      cli.table(
-        CloudBaseRunServerInfo,
-        {
-          ServerName: {
-            header: "服务名称",
-          },
-          Status: {
-            header: "状态",
-            minWidth: 15,
-          },
-          isPublic: {
-            header: "公网访问",
-            minWidth: 15,
-            get: ({ IsPublicAccess }) => (IsPublicAccess ? "是" : "否"),
-          },
-          DefaultPublicDomain: {
-            header: "服务域名",
-            minWidth: 30,
-            get: ({ DefaultPublicDomain, IsPublicAccess }) =>
-              IsPublicAccess ? DefaultPublicDomain : "-",
-          },
-          CreatedTime: {
-            header: "创建时间",
-            minWidth: 15,
-          },
-          UpdatedTime: {
-            header: "更新时间",
-            minWidth: 15,
-          },
-        },
-        {
-          printLine: this.log,
-          ...flags, // parsed flags
-        }
+      const head = [
+        "服务名称",
+        "状态",
+        "公网访问",
+        "服务域名",
+        "创建时间",
+        "更新时间",
+      ];
+      const tableData = CloudBaseRunServerInfo.map(
+        ({
+          ServerName,
+          Status,
+          IsPublicAccess,
+          DefaultPublicDomain,
+          CreatedTime,
+          UpdatedTime,
+        }) => [
+          ServerName,
+          Status,
+          IsPublicAccess ? "开启" : "关闭",
+          IsPublicAccess ? DefaultPublicDomain : "-",
+          CreatedTime,
+          UpdatedTime,
+        ]
       );
+      printHorizontalTable(head, tableData);
     }
   }
 }

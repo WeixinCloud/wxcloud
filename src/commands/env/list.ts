@@ -1,7 +1,7 @@
 import { Command, flags } from "@oclif/command";
-import { cli } from "cli-ux";
 import { DescribeWxCloudBaseRunEnvs } from "../../api";
 import { execWithLoading } from "../../utils/loading";
+import { printHorizontalTable } from "../../utils/ux";
 
 export default class ListEnvCommand extends Command {
   static description = "查看环境列表";
@@ -37,24 +37,13 @@ export default class ListEnvCommand extends Command {
       };
       this.log(JSON.stringify(result));
     } else {
-      cli.table(
-        EnvList,
-        {
-          Alias: {
-            header: "环境名称",
-          },
-          EnvId: {
-            header: "环境ID",
-          },
-          CreateTime: {
-            header: "创建时间",
-          },
-        },
-        {
-          printLine: this.log,
-          ...flags, // parsed flags
-        }
-      );
+      const head = ["环境名称", "环境 Id", "创建时间"];
+      const tableData = EnvList.map(({ Alias, EnvId, CreateTime }) => [
+        Alias,
+        EnvId,
+        CreateTime,
+      ]);
+      printHorizontalTable(head, tableData);
     }
   }
 }

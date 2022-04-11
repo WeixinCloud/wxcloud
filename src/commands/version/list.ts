@@ -1,7 +1,10 @@
 import { Command, flags } from "@oclif/command";
-import { cli } from "cli-ux";
 import { DescribeCloudBaseRunServer } from "../../api";
-import { chooseEnvId, chooseServiceId } from "../../utils/ux";
+import {
+  chooseEnvId,
+  chooseServiceId,
+  printHorizontalTable,
+} from "../../utils/ux";
 
 export default class ListVersionCommand extends Command {
   static description = "获取版本列表";
@@ -44,27 +47,16 @@ export default class ListVersionCommand extends Command {
       };
       this.log(JSON.stringify(result));
     } else {
-      cli.table(
-        VersionItems,
-        {
-          VersionName: {
-            header: "版本名称",
-          },
-          Status: {
-            header: "状态",
-          },
-          CreatedTime: {
-            header: "创建时间",
-          },
-          UpdatedTime: {
-            header: "更新时间",
-          },
-        },
-        {
-          printLine: this.log,
-          ...flags, // parsed flags
-        }
+      const head = ["版本名称", "状态", "创建时间", "更新时间"];
+      const tableData = VersionItems.map(
+        ({ VersionName, Status, CreatedTime, UpdatedTime }) => [
+          VersionName,
+          Status,
+          CreatedTime,
+          UpdatedTime,
+        ]
       );
+      printHorizontalTable(head, tableData);
     }
   }
 }

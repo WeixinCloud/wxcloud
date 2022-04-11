@@ -21,6 +21,7 @@
     "ora": "^4.0.2",
     "shortid": "^2.2.16",
     "simple-git": "^3.5.0",
+    "cli-table3": "^0.5.1",
     "tslib": "^1"
   },
   "devDependencies": {
