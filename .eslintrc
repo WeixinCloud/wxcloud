@@ -1,0 +1,18 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "plugin:prettier/recommended"
+  ],
+  "plugins": [
+    "@typescript-eslint/eslint-plugin"
+  ],
+  "root": true,
+  "env": {
+    "node": true,
+    "jest": true,
+  },
+  "rules": {
+    // disable the rule for all files
+    "@typescript-eslint/explicit-member-accessibility": "off"
+  },
+}

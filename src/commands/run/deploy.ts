@@ -32,10 +32,29 @@ export default class RunDeployCommand extends Command {
       description: "发布前是否跳过二次确认",
       default: false,
     }),
-
     targetDir: flags.string({ description: "目标目录" }),
     containerPort: flags.integer({ description: "监听端口" }),
     dockerfile: flags.string({ description: "Dockerfile文件名" }),
+    verbose: flags.boolean({
+      description: "是否显示构建和部署步骤日志，不直接返回",
+      default: false,
+    }),
+    envParams: flags.string({
+      description: "服务参数，在此版本开始生效，同步到服务设置",
+    }),
+    strategy: flags.string({
+      description: "发布策略；FULL-全量；GRAY-灰度；",
+    }),
+    remark: flags.string({
+      description: "版本备注",
+    }),
+    localBuild: flags.string({
+      description: "是否在本地构建(本地代码构建方式，无docker环境提示失败)",
+    }),
+    image: flags.string({
+      char: "i",
+      description: "镜像标签或ID(上传镜像方式)",
+    }),
   };
 
   async run() {

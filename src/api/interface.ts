@@ -69,6 +69,9 @@ export interface CloudBaseRunServer {
   SourceType: string;
   TotalCount: number;
   TrafficType: string;
+  CreatedTime: string;
+  UpdatedTime: string;
+  Status: string;
   VersionItems: VersionItems[];
 }
 
@@ -78,7 +81,7 @@ export interface VersionItems {
   CreatedTime: string;
   CurrentReplicas: number;
   FlowParams: any;
-  FlowRatio: string;
+  FlowRatio: number;
   IsDefaultPriority: boolean;
   MaxReplicas: number;
   MinReplicas: number;
