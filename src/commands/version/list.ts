@@ -29,7 +29,7 @@ export default class ListVersionCommand extends Command {
     const { VersionItems } = await DescribeCloudBaseRunServer({
       EnvId: envId,
       ServerName: serviceName,
-      Limit: 10,
+      Limit: 100,
       Offset: parseInt(flags.page) || 0,
     });
     if (flags.json) {

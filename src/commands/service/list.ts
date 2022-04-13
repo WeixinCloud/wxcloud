@@ -31,7 +31,7 @@ export default class ListServiceCommand extends Command {
         const { CloudBaseRunServerSet } = await DescribeCloudBaseRunServers({
           EnvId: envId,
           ServerName: serviceName,
-          Limit: 10,
+          Limit: 100,
           Offset: parseInt(flags.page, 10) || 0,
         });
 

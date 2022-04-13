@@ -1,6 +1,11 @@
 import { readLoginState } from "../utils/auth";
 import { fetchApi } from "./base";
-import { CloudBaseRunServer, EnvInfo, VersionInfo } from "./interface";
+import {
+  CloudBaseRunServer,
+  EnvInfo,
+  IServerManageTaskInfo,
+  VersionInfo,
+} from "./interface";
 
 export async function DescribeWxCloudBaseRunDBClusterDetail(data: {
   EnvId: string; // 环境 Id
@@ -115,6 +120,7 @@ export async function DescribeCloudBaseRunServerVersion(params: {
 export async function DescribeCloudBaseRunServer(params: {
   EnvId: string;
   ServerName: string;
+  VersionName?: string;
   Offset: number;
   Limit: number;
 }): Promise<CloudBaseRunServer> {
@@ -197,6 +203,57 @@ export async function SubmitServerRollback(params: {
   return callCloudApi("SubmitServerRollback", { ...params, WxAppId: appid });
 }
 
+export async function DescribeCloudBaseRunBuildLog(params: {
+  EnvId: string;
+  ServiceVersion: string;
+  BuildId: number;
+}): Promise<{
+  Log: {
+    Total: number;
+    Delivered: number;
+    Text: string;
+    More: boolean;
+  };
+  RequestId: string;
+}> {
+  return callCloudApi("DescribeCloudBaseRunBuildLog", params);
+}
+
+export async function DescribeCloudBaseRunProcessLog(params: {
+  EnvId: string;
+  RunId: string;
+}): Promise<{ Logs: string[]; RequestId: string }> {
+  return callCloudApi("DescribeCloudBaseRunProcessLog", params);
+}
+
+export async function SearchClsLog(params: {
+  EnvId: string;
+  StartTime: string;
+  EndTime: string;
+  QueryString: string;
+  Limit: number;
+}): Promise<{
+  LogResults: {
+    Context: string;
+    ListOver: string;
+    Results: any[];
+  };
+  RequestId: string;
+}> {
+  return callCloudApi("SearchClsLog", params);
+}
+
+export async function DescribeServerManageTask(params: {
+  EnvId: string;
+  ServerName: string;
+  TaskId?: number;
+}): Promise<{
+  Task: IServerManageTaskInfo;
+  IsExist: boolean;
+  RequestId: string;
+}> {
+  return callCloudApi("DescribeServerManageTask", params);
+}
 export async function callCloudApi(action: string, data: Object) {
   const res = await fetchApi("wxa-dev-qbase/apihttpagent", {
     action,

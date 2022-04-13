@@ -129,6 +129,7 @@ export function printHorizontalTable(
 ) {
   if (!data?.length) {
     console.log("列表数据为空");
+    return;
   }
   const table: HorizontalTable = new Table({
     head,
