@@ -38,6 +38,10 @@ export default class RunRollbackCommand extends Command {
     envId: flags.string({ char: "e", description: "环境ID" }),
     serviceName: flags.string({ char: "s", description: "服务名称" }),
     version: flags.string({ char: "v", description: "回退版本" }),
+    json: flags.boolean({
+      description: "是否以json格式展示结果",
+      default: false,
+    }),
   };
 
   async computedBuildLog(envId: string, version: VersionItems) {
@@ -229,6 +233,9 @@ export default class RunRollbackCommand extends Command {
           failTip: "版本回退失败，请重试！",
         }
       );
+      if (flags.json) {
+        this.log(JSON.stringify({ code: 0, errmsg: "success", data: null }));
+      }
     } else {
       this.log("取消回退");
     }
