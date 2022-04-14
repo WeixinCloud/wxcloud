@@ -2,6 +2,7 @@ import { Command, flags } from "@oclif/command";
 import {
   DescribeCloudBaseRunServers,
   DescribeCloudBaseRunServiceDomain,
+  DescribeCustomDomains,
 } from "../../api";
 import { chooseEnvId, printHorizontalTable } from "../../utils/ux";
 import { execWithLoading } from "../../utils/loading";
@@ -34,7 +35,6 @@ export default class ListServiceCommand extends Command {
           Limit: 100,
           Offset: parseInt(flags.page, 10) || 0,
         });
-
         const CloudBaseRunServiceDomains = await Promise.all(
           CloudBaseRunServerSet.map(async ({ ServerName }) => {
             const CloudBaseRunServiceDomain =
@@ -45,13 +45,20 @@ export default class ListServiceCommand extends Command {
             return { ...CloudBaseRunServiceDomain, ServerName };
           })
         );
+        const { DomainList } = await DescribeCustomDomains({
+          EnvId: envId,
+        });
         return CloudBaseRunServerSet.map((CloudBaseRunServer) => {
           const { AccessTypes, DefaultPublicDomain } =
             CloudBaseRunServiceDomains.find(
               (item) => CloudBaseRunServer?.ServerName === item?.ServerName
             );
+          const CustomDomain = DomainList?.find(
+            (item) => CloudBaseRunServer?.ServerName === item?.ServiceName
+          );
           return {
             ...CloudBaseRunServer,
+            CustomDomain: CustomDomain?.Domain,
             IsPublicAccess: AccessTypes.includes("PUBLIC"),
             DefaultPublicDomain,
           };
@@ -67,9 +74,20 @@ export default class ListServiceCommand extends Command {
         code: 0,
         errmsg: "success",
         data: CloudBaseRunServerInfo.map(
-          ({ ServerName, Status, CreatedTime, UpdatedTime }) => ({
+          ({
             ServerName,
             Status,
+            IsPublicAccess,
+            DefaultPublicDomain,
+            CustomDomain,
+            CreatedTime,
+            UpdatedTime,
+          }) => ({
+            ServerName,
+            Status,
+            IsPublicAccess: IsPublicAccess ? "开启" : "关闭",
+            DefaultPublicDomain: IsPublicAccess ? DefaultPublicDomain : "-",
+            CustomDomain: CustomDomain ?? "-",
             CreatedTime,
             UpdatedTime,
           })
@@ -82,6 +100,7 @@ export default class ListServiceCommand extends Command {
         "状态",
         "公网访问",
         "服务域名",
+        "自定义域名",
         "创建时间",
         "更新时间",
       ];
@@ -91,6 +110,7 @@ export default class ListServiceCommand extends Command {
           Status,
           IsPublicAccess,
           DefaultPublicDomain,
+          CustomDomain,
           CreatedTime,
           UpdatedTime,
         }) => [
@@ -98,6 +118,7 @@ export default class ListServiceCommand extends Command {
           Status,
           IsPublicAccess ? "开启" : "关闭",
           IsPublicAccess ? DefaultPublicDomain : "-",
+          CustomDomain ?? "-",
           CreatedTime,
           UpdatedTime,
         ]
