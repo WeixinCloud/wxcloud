@@ -148,3 +148,24 @@ export interface IServerManageTaskInfo {
   /** 失败原因 */
   FailReason: string;
 }
+
+export interface DomainInfo {
+  /** 域名 */
+  Domain: string;
+  /** 后端服务名称 */
+  ServiceName: string;
+  /** 用户环境ID */
+  EnvId: string;
+  /** http or https */
+  Protocol: string;
+  /** 证书id,https时必传 */
+  CertId: string;
+  /** 域名id */
+  ID: number;
+  /** 回源域名 */
+  CName: string;
+  /** 域名操作状态todo(等待),done(成功),fail(失败) */
+  Status: string;
+  /** 证书到期时间 */
+  ExpireTime: string;
+}

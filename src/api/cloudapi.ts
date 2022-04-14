@@ -2,6 +2,7 @@ import { readLoginState } from "../utils/auth";
 import { fetchApi } from "./base";
 import {
   CloudBaseRunServer,
+  DomainInfo,
   EnvInfo,
   IServerManageTaskInfo,
   VersionInfo,
@@ -254,6 +255,17 @@ export async function DescribeServerManageTask(params: {
 }> {
   return callCloudApi("DescribeServerManageTask", params);
 }
+
+export async function DescribeCustomDomains(params: {
+  EnvId?: string;
+  Domain?: string;
+}): Promise<{
+  DomainList: DomainInfo[];
+  RequestId: string;
+}> {
+  return callCloudApi("DescribeCustomDomains", params);
+}
+
 export async function callCloudApi(action: string, data: Object) {
   const res = await fetchApi("wxa-dev-qbase/apihttpagent", {
     action,

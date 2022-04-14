@@ -6,7 +6,11 @@ import {
 import * as inquirer from "inquirer";
 import { execWithLoading } from "./loading";
 import { VersionItems } from "../api/interface";
-import Table, { TableOptions, HorizontalTable } from "cli-table3";
+import Table, {
+  TableOptions,
+  HorizontalTable,
+  VerticalTable,
+} from "cli-table3";
 
 export async function chooseEnvId() {
   const { EnvList } = await execWithLoading(
@@ -139,6 +143,28 @@ export function printHorizontalTable(
   }) as HorizontalTable;
 
   data.forEach((item: Table.Cell[]) => {
+    table.push(item);
+  });
+  console.log(table.toString());
+}
+
+/**
+ * 打印竖直方向的表格
+ */
+export function printVerticalTable(
+  data: { [key: string]: string | number }[] = [],
+  options?: TableOptions
+) {
+  if (!data?.length) {
+    console.log("列表数据为空");
+    return;
+  }
+  const table: VerticalTable = new Table({
+    style: { head: ["yellow"] },
+    ...options,
+  }) as VerticalTable;
+
+  data.forEach((item) => {
     table.push(item);
   });
   console.log(table.toString());
