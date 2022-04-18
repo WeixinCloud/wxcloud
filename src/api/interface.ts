@@ -169,3 +169,34 @@ export interface DomainInfo {
   /** 证书到期时间 */
   ExpireTime: string;
 }
+
+export interface ServiceBaseConfig {
+  /** 环境id */
+  EnvId?: string;
+  /** 服务名称 */
+  ServerName?: string;
+  /** 是否开启公网访问 */
+  PublicAccess: boolean;
+  /** Cpu 规格 */
+  Cpu: number;
+  /** Mem 规格 */
+  Mem: number;
+  /** 最小副本数 */
+  MinNum: number;
+  /** 最大副本数 */
+  MaxNum: number;
+  /** 扩缩容条件 */
+  PolicyType: string;
+  /** 扩缩容阈值 */
+  PolicyThreshold: number;
+  /** 日志采集路径 */
+  CustomLogs: string;
+  /** 环境变量 */
+  EnvParams: string;
+  /** 微信透传参数 */
+  OperatorRemark: string;
+  /** 延迟检测时间 */
+  InitialDelaySeconds: number;
+  /** 创建时间 */
+  CreateTime?: string;
+}

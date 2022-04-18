@@ -1,5 +1,5 @@
-import * as fs from 'fs'
-import * as archiver from "archiver";
+import * as fs from "fs";
+import archiver from "archiver";
 
 export async function zipDir(src: string, dest: string, ignore?: string[]) {
   return new Promise<void>((resolve, reject) => {

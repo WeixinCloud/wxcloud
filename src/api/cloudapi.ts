@@ -1,10 +1,12 @@
 import { readLoginState } from "../utils/auth";
+import { logger } from "../utils/log";
 import { fetchApi } from "./base";
 import {
   CloudBaseRunServer,
   DomainInfo,
   EnvInfo,
   IServerManageTaskInfo,
+  ServiceBaseConfig,
   VersionInfo,
 } from "./interface";
 
@@ -40,20 +42,8 @@ export async function DescribeWxCloudBaseRunDBClusterDetail(data: {
 export async function DescribeServiceBaseConfig(data: {
   EnvId: string; // 环境 Id
   ServerName: string; // 服务名
-}): Promise<any> {
+}): Promise<{ ServiceBaseConfig: ServiceBaseConfig }> {
   return callCloudApi("DescribeServiceBaseConfig", data);
-}
-
-export async function UpdateServerBaseConfig(data: {
-  WxAppId: string; // 微信appid
-  EnvId: string; // 环境Id
-  ServerName: string; // 服务名
-  Conf: {
-    EnvParams: string;
-  } & Record<string, string>; // 配置信息
-  OperatorRemark?: string; // 操作人信息
-}): Promise<{}> {
-  return callCloudApi("UpdateServerBaseConfig", data);
 }
 
 export async function EstablishCloudBaseRunServer(data: {
@@ -266,6 +256,18 @@ export async function DescribeCustomDomains(params: {
   return callCloudApi("DescribeCustomDomains", params);
 }
 
+export async function UpdateServerBaseConfig(params: {
+  EnvId: string;
+  ServerName: string;
+  Conf: ServiceBaseConfig;
+}): Promise<{}> {
+  const { appid } = await readLoginState();
+  return callCloudApi("UpdateServerBaseConfig", {
+    ...params,
+    WxAppId: appid,
+  });
+}
+
 export async function callCloudApi(action: string, data: Object) {
   const res = await fetchApi("wxa-dev-qbase/apihttpagent", {
     action,
@@ -277,14 +279,24 @@ export async function callCloudApi(action: string, data: Object) {
   if (res?.base_resp?.ret === 0) {
     const response = JSON.parse(res.content);
     if (response.Response?.Error) {
-      console.log(action);
-      console.log(data);
-      console.log(response);
+      logger.debug(action);
+      logger.debug(data);
+      logger.debug(response);
       const error = response.Response.Error;
+      console.log({
+        code: error?.Code,
+        errmsg: error?.Message,
+        data: null,
+      });
       throw error;
     }
     return response?.Response;
   } else {
+    console.log({
+      code: res?.base_resp?.ret,
+      errmsg: res?.base_resp?.errmsg,
+      data: null,
+    });
     throw res?.base_resp;
   }
 }

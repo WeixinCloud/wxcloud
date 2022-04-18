@@ -70,14 +70,8 @@ export const execWithLoading = async <T>(
     const res = await task(flush);
     successTip ? loading.succeed(successTip) : loading.stop();
     return res;
-    //@ts-ignore
-  } catch (e: any) {
+  } catch (e) {
     failTip ? loading.fail(failTip) : loading.stop();
-    console.log({
-      code: e?.ret || e?.Code,
-      errmsg: e?.errmsg || e?.Message,
-      data: null,
-    });
     throw e;
   }
 };
