@@ -1,5 +1,6 @@
 import { Command, flags } from "@oclif/command";
 import { DescribeCloudBaseRunServer } from "../../api";
+import { execWithLoading } from "../../utils/loading";
 import {
   chooseEnvId,
   chooseServiceId,
@@ -26,12 +27,19 @@ export default class ListVersionCommand extends Command {
     const { flags } = this.parse(ListVersionCommand);
     const envId = flags.envId || (await chooseEnvId());
     const serviceName = flags.serviceName || (await chooseServiceId(envId));
-    const { VersionItems } = await DescribeCloudBaseRunServer({
-      EnvId: envId,
-      ServerName: serviceName,
-      Limit: 100,
-      Offset: parseInt(flags.page) || 0,
-    });
+    const { VersionItems } = await execWithLoading(
+      () =>
+        DescribeCloudBaseRunServer({
+          EnvId: envId,
+          ServerName: serviceName,
+          Limit: 100,
+          Offset: parseInt(flags.page) || 0,
+        }),
+      {
+        startTip: "获取版本列表中...",
+        failTip: "获取版本列表失败，请重试！",
+      }
+    );
     if (flags.json) {
       const result = {
         code: 0,
