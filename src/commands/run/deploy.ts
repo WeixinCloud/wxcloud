@@ -8,6 +8,7 @@ import {
   DescribeServiceBaseConfig,
   UpdateServerBaseConfig,
   DescribeServerManageTask,
+  DescribeCloudBaseRunImages,
 } from "../../api";
 import {
   chooseEnvId,
@@ -42,6 +43,7 @@ export default class RunDeployCommand extends Command {
     targetDir: flags.string({ description: "目标目录" }),
     containerPort: flags.integer({ description: "监听端口" }),
     dockerfile: flags.string({ description: "Dockerfile文件名" }),
+    libraryImage: flags.string({ description: "线上镜像仓库的tag" }),
     detach: flags.boolean({
       description: "是否直接返回，不显示部署日志",
       default: false,
@@ -95,16 +97,15 @@ export default class RunDeployCommand extends Command {
       }, 3000);
     });
   }
-  async run() {
-    const { args, flags } = this.parse(RunDeployCommand);
-    const { override } = flags;
+
+  async getReleaseConfig(): Promise<Parameters<typeof SubmitServerRelease>[0]> {
+    const { flags } = this.parse(RunDeployCommand);
     const envId = flags.envId || (await chooseEnvId());
     const serviceName = flags.serviceName || (await chooseServiceId(envId));
     const buildInfo = await DescribeCloudBaseBuildService({
       EnvId: envId,
       ServiceName: serviceName,
     });
-
     const latestVersionInfo = await execWithLoading(async () => {
       const { VersionItems } = await DescribeCloudBaseRunServer({
         EnvId: envId,
@@ -119,10 +120,26 @@ export default class RunDeployCommand extends Command {
       });
     });
 
-    const newReleaseConfig = {
+    let newReleaseConfig: any = {
       ServerName: serviceName,
       EnvId: envId,
-      DeployType: "package",
+      DeployType: flags.libraryImage
+        ? "image"
+        : flags.targetDir
+        ? "package"
+        : (
+            await inquirer.prompt([
+              {
+                name: "deployType",
+                message: "请选择部署方式",
+                type: "list",
+                choices: [
+                  { name: "手动上传代码包", value: "package" },
+                  { name: "镜像拉取", value: "image" },
+                ],
+              },
+            ])
+          ).deployType,
       ReleaseType: (
         await inquirer.prompt([
           {
@@ -138,38 +155,70 @@ export default class RunDeployCommand extends Command {
       ).releaseType,
       HasDockerfile: true,
       WxAppId: (await readLoginState()).appid,
-      PackageName: buildInfo.PackageName,
-      PackageVersion: buildInfo.PackageVersion,
-      BuildDir:
+    };
+
+    if (newReleaseConfig.DeployType === "package") {
+      newReleaseConfig.PackageName = buildInfo.PackageName;
+      newReleaseConfig.PackageVersion = buildInfo.PackageVersion;
+      newReleaseConfig.BuildDir =
         flags.targetDir ||
-        (override
+        (flags.override
           ? latestVersionInfo.BuildDir
           : await cli.prompt('请输入工作目录（不填默认为根目录"."）', {
               required: false,
               default: ".",
-            })),
-      Dockerfile:
+            }));
+      newReleaseConfig.Dockerfile =
         flags.dockerfile ||
-        (override
+        (flags.override
           ? latestVersionInfo.DockerfilePath
           : await cli.prompt("请输入Dockerfile文件名（不填默认为Dockerfile）", {
               required: false,
               default: "Dockerfile",
-            })),
-      Port:
-        flags.containerPort ||
-        (override
-          ? latestVersionInfo.ContainerPort
-          : parseInt(
-              await cli.prompt("请输入端口号（不填默认为80）", {
-                required: false,
-                default: "80",
-              })
-            )),
-      VersionRemark:
-        flags.remark ||
-        (await cli.prompt("请输入版本备注", { required: false })),
-    };
+            }));
+    } else {
+      const Images = await execWithLoading(async () => {
+        const { Images } = await DescribeCloudBaseRunImages({
+          EnvId: envId,
+          ServiceName: serviceName,
+        });
+        return Images;
+      });
+      if (flags.libraryImage) {
+        const imageInfo = Images.find(({ Tag }) => Tag === flags.libraryImage);
+        if (!imageInfo) {
+          this.error("镜像不存在");
+        }
+        newReleaseConfig.ImageUrl = imageInfo.ImageUrl;
+      } else {
+        newReleaseConfig.ImageUrl = (
+          await inquirer.prompt([
+            {
+              name: "imageUrl",
+              message: "请选择镜像",
+              type: "list",
+              choices: Images.map(({ Tag, ImageUrl }) => ({
+                name: Tag,
+                value: ImageUrl,
+              })),
+            },
+          ])
+        ).imageUrl;
+      }
+    }
+
+    newReleaseConfig.Port =
+      flags.containerPort ||
+      (flags.override
+        ? latestVersionInfo.ContainerPort
+        : parseInt(
+            await cli.prompt("请输入端口号（不填默认为80）", {
+              required: false,
+              default: "80",
+            })
+          ));
+    newReleaseConfig.VersionRemark =
+      flags.remark || (await cli.prompt("请输入版本备注", { required: false }));
 
     console.log("\n以下为本次发布的信息：");
     console.log("========================================");
@@ -178,13 +227,23 @@ export default class RunDeployCommand extends Command {
         { 微信AppId: newReleaseConfig.WxAppId },
         { 环境ID: newReleaseConfig.EnvId },
         { 服务名称: newReleaseConfig.ServerName },
-        { Dockerfile文件名: newReleaseConfig.Dockerfile },
-        { 目标目录: newReleaseConfig.BuildDir },
-        { 端口号: newReleaseConfig.Port },
+        {
+          部署方式:
+            newReleaseConfig.DeployType === "package"
+              ? "手动上传代码包"
+              : "镜像拉取",
+        },
         {
           发布模式:
             newReleaseConfig.ReleaseType === "FULL" ? "全量发布" : "灰度发布",
         },
+        ...(newReleaseConfig.DeployType === "package"
+          ? [
+              { Dockerfile文件名: newReleaseConfig.Dockerfile },
+              { 目标目录: newReleaseConfig.BuildDir },
+            ]
+          : [{ 镜像地址: newReleaseConfig.ImageUrl }]),
+        { 端口号: newReleaseConfig.Port },
         flags.envParams && {
           服务参数: flags.envParams,
         },
@@ -192,75 +251,92 @@ export default class RunDeployCommand extends Command {
       ].filter(Boolean)
     );
     console.log("========================================");
-    if (flags.noConfirm || (await cli.confirm("确定发布？(请输入yes或no)"))) {
-      const zipFile = `.cloudrun_${serviceName}_${Date.now()}.zip`;
-      const srcPath = path.resolve(process.cwd(), args.path);
-      const destPath = path.resolve(process.cwd(), zipFile);
-      await zipDir(srcPath, destPath);
-      try {
-        if (flags.envParams) {
-          await execWithLoading(
-            async () => {
-              const { ServiceBaseConfig: lastConfig } =
-                await DescribeServiceBaseConfig({
-                  EnvId: envId,
-                  ServerName: serviceName,
-                });
-              await UpdateServerBaseConfig({
-                EnvId: envId,
-                ServerName: serviceName,
-                Conf: {
-                  ...lastConfig,
-                  EnvParams: JSON.stringify(
-                    flags.envParams.split("&").reduce((prev, cur) => {
-                      prev[cur.split("=")[0]] = cur.split("=")[1];
-                      return prev;
-                    }, {})
-                  ),
-                },
-              });
-            },
-            {
-              startTip: "服务参数更新中...",
-              failTip: "服务参数更新失败",
-            }
-          );
-        }
+    return newReleaseConfig;
+  }
 
-        await execWithLoading(
-          async () => {
-            await uploadVersionPackage(
-              buildInfo.UploadUrl,
-              fs.readFileSync(zipFile)
-            );
+  async updateEnvParams(EnvId, ServerName, envParams) {
+    await execWithLoading(
+      async () => {
+        const { ServiceBaseConfig: lastConfig } =
+          await DescribeServiceBaseConfig({
+            EnvId,
+            ServerName,
+          });
+        await UpdateServerBaseConfig({
+          EnvId,
+          ServerName,
+          Conf: {
+            ...lastConfig,
+            EnvParams: JSON.stringify(
+              envParams.split("&").reduce((prev, cur) => {
+                prev[cur.split("=")[0]] = cur.split("=")[1];
+                return prev;
+              }, {})
+            ),
           },
-          {
-            startTip: "代码包上传中...",
-            failTip: "代码包上传失败",
-          }
-        );
-        await execWithLoading(
-          async () => {
-            await SubmitServerRelease(newReleaseConfig);
-            await this.getTaskResult({
-              envId,
-              serviceName,
-              isPrintLog: !flags.detach,
-            });
-          },
-          {
-            startTip: flags.detach ? "部署中..." : "",
-            successTip: "部署完成，请前往控制台查看详情。",
-            failTip: "部署失败",
-          }
-        );
-        cli.url(
-          "点击前往控制台",
-          `https://cloud.weixin.qq.com/cloudrun/service/${newReleaseConfig.ServerName}`
-        );
-      } finally {
-        await fs.promises.unlink(destPath);
+        });
+      },
+      {
+        startTip: "服务参数更新中...",
+        failTip: "服务参数更新失败",
       }
+    );
+  }
+  async packageDeploy(releaseConfig) {
+    const { args } = this.parse(RunDeployCommand);
+    const { ServerName, EnvId } = releaseConfig;
+    const zipFile = `.cloudrun_${ServerName}_${Date.now()}.zip`;
+    const srcPath = path.resolve(process.cwd(), args.path);
+    const destPath = path.resolve(process.cwd(), zipFile);
+    await zipDir(srcPath, destPath);
+    try {
+      await execWithLoading(
+        async () => {
+          const { UploadUrl } = await DescribeCloudBaseBuildService({
+            EnvId,
+            ServiceName: ServerName,
+          });
+          await uploadVersionPackage(UploadUrl, fs.readFileSync(zipFile));
+        },
+        {
+          startTip: "代码包上传中...",
+          failTip: "代码包上传失败",
+        }
+      );
+    } finally {
+      await fs.promises.unlink(destPath);
+    }
+  }
+  async run() {
+    const { flags } = this.parse(RunDeployCommand);
+    const newReleaseConfig = await this.getReleaseConfig();
+    const { ServerName, EnvId, DeployType } = newReleaseConfig;
+    if (flags.noConfirm || (await cli.confirm("确定发布？(请输入yes或no)"))) {
+      if (flags.envParams) {
+        await this.updateEnvParams(EnvId, ServerName, flags.envParams);
+      }
+      if (DeployType === "package") {
+        await this.packageDeploy(newReleaseConfig);
+      }
+      await execWithLoading(
+        async () => {
+          await SubmitServerRelease(newReleaseConfig);
+          await this.getTaskResult({
+            envId: EnvId,
+            serviceName: ServerName,
+            isPrintLog: !flags.detach,
+          });
+        },
+        {
+          startTip: flags.detach ? "部署中..." : "",
+          successTip: "部署完成，请前往控制台查看详情。",
+          failTip: "部署失败",
+        }
+      );
+      cli.url(
+        "点击前往控制台",
+        `https://cloud.weixin.qq.com/cloudrun/service/${newReleaseConfig.ServerName}`
+      );
     } else {
       console.log("取消发布");
     }

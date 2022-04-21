@@ -200,3 +200,27 @@ export interface ServiceBaseConfig {
   /** 创建时间 */
   CreateTime?: string;
 }
+
+export interface CloudBaseRunImageItem {
+  /** 镜像地址 */
+  ImageUrl: string;
+  /** 镜像tag */
+  Tag: string;
+  /** 创建时间 */
+  CreateTime: string;
+  /** 更新时间 */
+  UpdateTime: string;
+  /** 关联版本 */
+  ReferVersions: CloudBaseRunVersionItem[];
+  /** 镜像大小 */
+  Size: string;
+}
+/** 服务版本 */
+export interface CloudBaseRunVersionItem {
+  /** 环境id */
+  EnvId: string;
+  /** 服务名称 */
+  ServiceName: string;
+  /** 服务版本名称 */
+  VersionName: string;
+}

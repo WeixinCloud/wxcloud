@@ -2,6 +2,7 @@ import { readLoginState } from "../utils/auth";
 import { logger } from "../utils/log";
 import { fetchApi } from "./base";
 import {
+  CloudBaseRunImageItem,
   CloudBaseRunServer,
   DomainInfo,
   EnvInfo,
@@ -266,6 +267,16 @@ export async function UpdateServerBaseConfig(params: {
     ...params,
     WxAppId: appid,
   });
+}
+
+export async function DescribeCloudBaseRunImages(params: {
+  EnvId: string;
+  ServiceName: string;
+}): Promise<{
+  Images: CloudBaseRunImageItem[];
+  TotalCount?: number;
+}> {
+  return callCloudApi("DescribeCloudBaseRunImages", params);
 }
 
 export async function callCloudApi(action: string, data: Object) {
