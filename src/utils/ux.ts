@@ -93,8 +93,8 @@ export async function chooseVersionName({
     const { VersionItems } = await execWithLoading(
       () =>
         DescribeCloudBaseRunServer({
-          EnvId: envId,
-          ServerName: serverName,
+          EnvId: envId!,
+          ServerName: serverName!,
           Offset: 0,
           Limit: 100,
         }),

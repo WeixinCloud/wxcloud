@@ -1,6 +1,6 @@
 import { checkLoginState, writeLoginState } from './utils/auth';
 import { fetchApi } from './api/base';
-import * as cloudapi from './api/cloudapi'
+import * as cloudapi from './api/cloudapiDirect'
 export class WXCloud {
   async init(appid: string, privateKey: string) {
     // ensure appid and pk is entered when using node sdk

@@ -4,7 +4,7 @@ import {
   DescribeCloudBaseRunServer,
   DescribeServerManageTask,
   SubmitServerRollback,
-} from "../../api/cloudapi";
+} from "../../api";
 import { execWithLoading } from "../../utils/loading";
 import { computedBuildLog, computedTaskLog } from "../../utils/run";
 import {
@@ -122,7 +122,7 @@ export default class RunRollbackCommand extends Command {
     if (
       flags.noConfirm ||
       (await cli.confirm(
-        `确定从当前版本${currentVersion.VersionName}回退到${versionName}版本吗？(请输入yes或no)`
+        `确定从当前版本${currentVersion!.VersionName}回退到${versionName}版本吗？(请输入yes或no)`
       ))
     ) {
       await execWithLoading(
@@ -130,7 +130,7 @@ export default class RunRollbackCommand extends Command {
           await SubmitServerRollback({
             EnvId: envId,
             ServerName: serviceName,
-            CurrentVersionName: currentVersion.VersionName,
+            CurrentVersionName: currentVersion!.VersionName,
             RollbackVersionName: versionName,
           });
           await this.getTaskResult({

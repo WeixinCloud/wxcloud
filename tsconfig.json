@@ -9,10 +9,9 @@
     "target": "es2017",
     "noImplicitAny": false,
     "esModuleInterop": true,
-    "strictNullChecks": false,
-    "skipLibCheck": true
   },
-  "include": [
-    "src/**/*"
+  "include": ["src/**/*"],
+  "exclude": [
+    "src/api/cloudapi/crawler"
   ]
 }

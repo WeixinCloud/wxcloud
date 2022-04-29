@@ -60,3 +60,34 @@ OPTIONS
   --override                     缺省的参数是否沿用旧版本配置
   --targetDir=targetDir          目标目录
 ```
+
+### 云存储上传文件
+
+```
+wxcloud storage:upload <文件目录>
+```
+
+可选参数
+```
+OPTIONS
+  -c, --concurrency=concurrency       并发上传数量
+  -e, --envId=envId                   环境ID
+  -h, --help                          查看帮助信息
+  -m, --mode=(staticstorage|storage)  上传模式
+  -r, --remotePath=remotePath         目标目录
+```
+
+### 上传云函数（仅云开发环境可用）
+
+```
+wxcloud function:upload <云函数代码目录>
+```
+
+可选参数
+```
+OPTIONS
+  -e, --envId=envId   环境ID
+  -h, --help          查看帮助信息
+  -n, --name=name     函数名
+  --remoteNpmInstall  是否云端安装依赖
+```

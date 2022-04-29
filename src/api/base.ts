@@ -2,10 +2,10 @@ import axios from "axios";
 import { stat } from "fs";
 import { createSign, readLoginState } from "../utils/auth";
 import { logger } from "../utils/log";
-
+import { setTransactType, setDefaultAppID, setRequest } from './cloudapi/src/index'
 export const BASE_URL = "https://servicewechat.com";
 
-interface fetchApiOptions {
+export interface fetchApiOptions {
   skipSign?: boolean;
   params?: any;
   method?: any;

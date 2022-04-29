@@ -33,7 +33,7 @@ export default class ListVersionCommand extends Command {
           EnvId: envId,
           ServerName: serviceName,
           Limit: 100,
-          Offset: parseInt(flags.page) || 0,
+          Offset: parseInt(flags.page ?? '0') || 0,
         }),
       {
         startTip: "获取版本列表中...",

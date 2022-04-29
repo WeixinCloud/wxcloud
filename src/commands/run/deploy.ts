@@ -248,7 +248,7 @@ export default class RunDeployCommand extends Command {
           服务参数: flags.envParams,
         },
         { 版本备注: newReleaseConfig.VersionRemark || "-" },
-      ].filter(Boolean)
+      ].filter((x): x is any => Boolean(x))
     );
     console.log("========================================");
     return newReleaseConfig;

@@ -1,6 +1,6 @@
 import { Command, flags } from "@oclif/command";
 import { cli } from "cli-ux";
-import { EstablishCloudBaseRunServerWx } from "../../api/cloudapi";
+import { EstablishCloudBaseRunServerWx } from "../../api";
 import { execWithLoading } from "../../utils/loading";
 import { chooseEnvId } from "../../utils/ux";
 

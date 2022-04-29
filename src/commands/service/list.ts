@@ -33,7 +33,7 @@ export default class ListServiceCommand extends Command {
           EnvId: envId,
           ServerName: serviceName,
           Limit: 100,
-          Offset: parseInt(flags.page, 10) || 0,
+          Offset: parseInt(flags.page || '0', 10) || 0,
         });
         const CloudBaseRunServiceDomains = await Promise.all(
           CloudBaseRunServerSet.map(async ({ ServerName }) => {
@@ -52,7 +52,7 @@ export default class ListServiceCommand extends Command {
           const { AccessTypes, DefaultPublicDomain } =
             CloudBaseRunServiceDomains.find(
               (item) => CloudBaseRunServer?.ServerName === item?.ServerName
-            );
+            )!;
           const CustomDomain = DomainList?.find(
             (item) => CloudBaseRunServer?.ServerName === item?.ServiceName
           );
