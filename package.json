@@ -1,7 +1,7 @@
 {
   "name": "@wxcloud/cli",
   "description": "微信云服务 CLI 工具",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "wxcloud",
   "bin": {
     "wxcloud": "./bin/run"
