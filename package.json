@@ -70,7 +70,7 @@
     "commands": "./lib/commands",
     "hooks": {
       "init": "./lib/hooks/init",
-      "prerun": "./src/hooks/prerun"
+      "prerun": "./lib/hooks/prerun"
     },
     "bin": "wxcloud",
     "plugins": [
