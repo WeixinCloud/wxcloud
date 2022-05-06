@@ -1,5 +1,5 @@
 import Command, { flags } from '@oclif/command';
-import { tcbGetEnvironments } from '../../api/cloudapi';
+import { tcbGetEnvironments } from '../../api/cloudapi/src/index';
 import { resolve, relative } from 'path'
 import { promises } from 'fs'
 import COS from 'cos-nodejs-sdk-v5'
