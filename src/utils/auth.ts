@@ -3,11 +3,11 @@ import * as fs from "fs";
 import * as path from "path";
 import { constantCase } from "change-case";
 import cli from "cli-ux";
-import { fetchApi, getCloudRunCliRandStr } from "../api/base";
-import * as crypto from "crypto";
+import { fetchApi } from "../api/base";
 import * as dotenv from "dotenv";
 import * as shortid from "shortid";
 import axios from "axios";
+import { execWithLoading } from "./loading";
 
 const NodeRSA = require("node-rsa");
 
@@ -84,28 +84,24 @@ export async function checkLoginState(appid: string, privateKey: string) {
     return false;
   }
 }
-export async function writeLoginState(
-  appid: string,
-  privateKey: string,
-) {
+export async function writeLoginState(appid: string, privateKey: string) {
   await fs.promises.writeFile(
     WXCLOUD_CONFIG_PATH,
     generateDotenv({ appid, privateKey })
   );
 }
 
-// with cli actions
-export async function saveLoginState(
-  appid: string,
-  privateKey: string
-) {
-  cli.action.start(`写入配置文件：${WXCLOUD_CONFIG_PATH}`);
-  await writeLoginState(appid, privateKey);
-  cli.action.stop();
+export async function saveLoginState(appid: string, privateKey: string) {
+  await execWithLoading(() => writeLoginState(appid, privateKey), {
+    startTip: `写入配置文件中：${WXCLOUD_CONFIG_PATH}`,
+    failTip: "写入配置文件失败，请重试！",
+  });
 }
 
 export async function removeLoginState() {
-  await fs.promises.unlink(WXCLOUD_CONFIG_PATH);
+  if (fs.existsSync(WXCLOUD_CONFIG_PATH)) {
+    await fs.promises.unlink(WXCLOUD_CONFIG_PATH);
+  }
 }
 
 export async function readLoginState(): Promise<{ [key: string]: string }> {
