@@ -1,7 +1,7 @@
 {
   "name": "@wxcloud/cli",
   "description": "微信云服务 CLI 工具",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": "wxcloud",
   "bin": {
     "wxcloud": "./bin/run"
@@ -13,6 +13,7 @@
     "@oclif/plugin-help": "^3",
     "archiver": "^5.3.0",
     "axios": "^0.24.0",
+    "chalk": "^2.4.2",
     "cos-nodejs-sdk-v5": "^2.11.4",
     "change-case": "^4.1.2",
     "cli-table3": "^0.5.1",
@@ -68,7 +69,8 @@
   "oclif": {
     "commands": "./lib/commands",
     "hooks": {
-      "init": "./lib/hooks/init"
+      "init": "./lib/hooks/init",
+      "prerun": "./src/hooks/prerun"
     },
     "bin": "wxcloud",
     "plugins": [

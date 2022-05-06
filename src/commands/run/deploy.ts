@@ -52,8 +52,8 @@ export default class RunDeployCommand extends Command {
       description:
         "服务环境变量，在此版本开始生效，同步到服务设置，格式为xx=a&yy=b，默认为空",
     }),
-    strategy: flags.string({
-      description: "发布策略；FULL-全量；GRAY-灰度；",
+    releaseType: flags.string({
+      description: "发布类型：FULL-全量发布；GRAY-灰度发布；",
       options: ["FULL", "GRAY"],
     }),
     remark: flags.string({
@@ -89,8 +89,11 @@ export default class RunDeployCommand extends Command {
           const taskLog = await computedTaskLog(envId, manageTask);
           const buildLog = await computedBuildLog(envId, versionItem);
           this.log(`${taskLog}\n${buildLog}`);
-        }
-        if (manageTask?.Status === "finished") {
+          if (manageTask?.Status === "finished") {
+            clearInterval(timer);
+            resolve();
+          }
+        } else {
           clearInterval(timer);
           resolve();
         }
@@ -140,19 +143,22 @@ export default class RunDeployCommand extends Command {
               },
             ])
           ).deployType,
-      ReleaseType: (
-        await inquirer.prompt([
-          {
-            name: "releaseType",
-            message: "请选择发布类型",
-            type: "list",
-            choices: [
-              { name: "全量发布", value: "FULL" },
-              { name: "灰度发布", value: "GRAY" },
-            ],
-          },
-        ])
-      ).releaseType,
+      ReleaseType: flags.noConfirm
+        ? "FULL"
+        : flags.releaseType ??
+          (
+            await inquirer.prompt([
+              {
+                name: "releaseType",
+                message: "请选择发布类型",
+                type: "list",
+                choices: [
+                  { name: "全量发布", value: "FULL" },
+                  { name: "灰度发布", value: "GRAY" },
+                ],
+              },
+            ])
+          ).releaseType,
       HasDockerfile: true,
       WxAppId: (await readLoginState()).appid,
     };
