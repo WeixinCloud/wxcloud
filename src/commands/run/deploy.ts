@@ -109,19 +109,21 @@ export default class RunDeployCommand extends Command {
       EnvId: envId,
       ServiceName: serviceName,
     });
-    const latestVersionInfo = await execWithLoading(async () => {
-      const { VersionItems } = await DescribeCloudBaseRunServer({
-        EnvId: envId,
-        ServerName: serviceName,
-        Offset: 0,
-        Limit: 10,
-      });
-      return await DescribeCloudBaseRunServerVersion({
-        EnvId: envId,
-        ServerName: serviceName,
-        VersionName: VersionItems?.[0]?.VersionName,
-      });
-    });
+    const latestVersionInfo = flags.override
+      ? await execWithLoading(async () => {
+          const { VersionItems } = await DescribeCloudBaseRunServer({
+            EnvId: envId,
+            ServerName: serviceName,
+            Offset: 0,
+            Limit: 10,
+          });
+          return await DescribeCloudBaseRunServerVersion({
+            EnvId: envId,
+            ServerName: serviceName,
+            VersionName: VersionItems?.[0]?.VersionName,
+          });
+        })
+      : await Promise.resolve(null);
 
     let newReleaseConfig: any = {
       ServerName: serviceName,
@@ -169,7 +171,7 @@ export default class RunDeployCommand extends Command {
       newReleaseConfig.BuildDir =
         flags.targetDir ||
         (flags.override
-          ? latestVersionInfo.BuildDir
+          ? latestVersionInfo!.BuildDir
           : await cli.prompt('请输入工作目录（不填默认为根目录"."）', {
               required: false,
               default: ".",
@@ -177,7 +179,7 @@ export default class RunDeployCommand extends Command {
       newReleaseConfig.Dockerfile =
         flags.dockerfile ||
         (flags.override
-          ? latestVersionInfo.DockerfilePath
+          ? latestVersionInfo!.DockerfilePath
           : await cli.prompt("请输入Dockerfile文件名（不填默认为Dockerfile）", {
               required: false,
               default: "Dockerfile",
@@ -216,7 +218,7 @@ export default class RunDeployCommand extends Command {
     newReleaseConfig.Port =
       flags.containerPort ||
       (flags.override
-        ? latestVersionInfo.ContainerPort
+        ? latestVersionInfo!.ContainerPort
         : parseInt(
             await cli.prompt("请输入端口号（不填默认为80）", {
               required: false,
@@ -296,13 +298,15 @@ export default class RunDeployCommand extends Command {
     const destPath = path.resolve(process.cwd(), zipFile);
     await zipDir(srcPath, destPath);
     try {
-      await execWithLoading(
+      return await execWithLoading(
         async () => {
-          const { UploadUrl } = await DescribeCloudBaseBuildService({
-            EnvId,
-            ServiceName: ServerName,
-          });
+          const { UploadUrl, PackageName, PackageVersion } =
+            await DescribeCloudBaseBuildService({
+              EnvId,
+              ServiceName: ServerName,
+            });
           await uploadVersionPackage(UploadUrl, fs.readFileSync(zipFile));
+          return { PackageName, PackageVersion };
         },
         {
           startTip: "代码包上传中...",
@@ -315,14 +319,18 @@ export default class RunDeployCommand extends Command {
   }
   async run() {
     const { flags } = this.parse(RunDeployCommand);
-    const newReleaseConfig = await this.getReleaseConfig();
+    let newReleaseConfig = await this.getReleaseConfig();
     const { ServerName, EnvId, DeployType } = newReleaseConfig;
     if (flags.noConfirm || (await cli.confirm("确定发布？(请输入yes或no)"))) {
       if (flags.envParams) {
         await this.updateEnvParams(EnvId, ServerName, flags.envParams);
       }
       if (DeployType === "package") {
-        await this.packageDeploy(newReleaseConfig);
+        const { PackageName, PackageVersion } = await this.packageDeploy(
+          newReleaseConfig
+        );
+        newReleaseConfig.PackageName = PackageName;
+        newReleaseConfig.PackageVersion = PackageVersion;
       }
       await execWithLoading(
         async () => {
