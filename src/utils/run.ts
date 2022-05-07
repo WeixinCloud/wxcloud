@@ -32,23 +32,25 @@ export async function computedBuildLog(envId: string, version: VersionItems) {
       EndTime: moment().add(10, "m").format("YYYY-MM-DD HH:mm:ss"),
       QueryString: `tcb_type:CloudBaseRun AND container_name:${version?.VersionName}`,
       Limit: 100,
-    }).then(({ LogResults = {} }) =>
-      LogResults?.Results?.sort((a, b) => {
-        if (a.timestamp === b.timestamp) {
-          return 0;
-        }
-        return -1;
-      })
-        .map((r) => {
-          try {
-            const maybeJSON = JSON.parse(r.content);
-            return maybeJSON.log || "";
-          } catch (error) {
-            return r.content;
+    })
+      .then(({ LogResults = {} }) =>
+        LogResults?.Results?.sort((a, b) => {
+          if (a.timestamp === b.timestamp) {
+            return 0;
           }
+          return -1;
         })
-        .join("\n")
-    ),
+          .map((r) => {
+            try {
+              const maybeJSON = JSON.parse(r.content);
+              return maybeJSON.log || "";
+            } catch (error) {
+              return r.content;
+            }
+          })
+          .join("\n")
+      )
+      .catch(() => ""),
   ]);
   const pipelineHtml = runBuildLog?.Log?.Text?.trim() || "";
   const cbrHtml = cbrLog?.Logs?.join("\n") || "";
