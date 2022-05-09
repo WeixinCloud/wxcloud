@@ -5,7 +5,6 @@
     "node": true
   },
   "parser": "@typescript-eslint/parser",
-  "parserOptions": { "project": "./tsconfig.lint.json" },
   "plugins": ["import", "@typescript-eslint"],
   "ignorePatterns": ["scripts/*", "ava.config.mjs", "esbuild-hook.js"],
   "extends": [

@@ -5,10 +5,8 @@
     "lib": ["es2020"],
     "module": "commonjs",
     "target": "es2020",
-
     "rootDir": "./src",
     "outDir": "build",
-
     "strict": true,
     "sourceMap": true,
     "esModuleInterop": true,
