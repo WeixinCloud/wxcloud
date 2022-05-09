@@ -3,7 +3,7 @@ import * as cloudAPI from './cloudapi/src/index'
 import axios from "axios";
 import { BASE_URL, fetchApiOptions } from './base';
 import { readLoginState } from '../utils/auth';
-import { merge, pick } from 'lodash';
+import { merge } from 'lodash';
 import { getApiCommonParameters } from './common';
 
 export function initCloudAPI(appid: string) {
