@@ -11,6 +11,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "/build"
+  ],
   "scripts": {
     "build": "npm run clean && npm run type:dts && npm run type:build",
     "clean": "node -r ./esbuild-hook ./scripts/clean",
