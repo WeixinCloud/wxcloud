@@ -5,6 +5,8 @@ import { promises } from 'fs'
 import COS from 'cos-nodejs-sdk-v5'
 import { fetchApi } from '../../api/base';
 import { readLoginState } from '../../utils/auth';
+import { REGION_COMMAND_FLAG } from '../../utils/flags';
+import { ApiRegion, setApiCommonParameters } from '../../api/common';
 
 const { readdir, readFile } = promises
 export default class UploadStorageCommand extends Command {
@@ -14,6 +16,7 @@ export default class UploadStorageCommand extends Command {
   static args = [{ name: "path", description: "文件目录", default: "." }];
   static flags = {
     help: flags.help({ char: "h", description: "查看帮助信息" }),
+    region: REGION_COMMAND_FLAG,
     envId: flags.string({ char: "e", description: "环境ID" }),
     remotePath: flags.string({ char: "r", description: "目标目录" }),
     concurrency: flags.integer({ char: "c", description: "并发上传数量" }),
@@ -22,6 +25,7 @@ export default class UploadStorageCommand extends Command {
 
   async run() {
     const { args, flags } = this.parse(UploadStorageCommand);
+    setApiCommonParameters({ region: flags.region as ApiRegion });
     const { remotePath = '', concurrency = 5, mode = 'storage' } = flags;
     const envId = flags.envId;
     const path = args.path || '.';

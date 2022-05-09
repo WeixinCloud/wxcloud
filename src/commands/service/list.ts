@@ -6,6 +6,8 @@ import {
 } from "../../api";
 import { chooseEnvId, printHorizontalTable } from "../../utils/ux";
 import { execWithLoading } from "../../utils/loading";
+import { REGION_COMMAND_FLAG } from "../../utils/flags";
+import { ApiRegion, setApiCommonParameters } from "../../api/common";
 
 export default class ListServiceCommand extends Command {
   static description = "获取服务列表";
@@ -14,6 +16,7 @@ export default class ListServiceCommand extends Command {
 
   static flags = {
     help: flags.help({ char: "h", description: "查看帮助" }),
+    region: REGION_COMMAND_FLAG,
     envId: flags.string({ char: "e", description: "环境ID" }),
     serviceName: flags.string({ char: "s", description: "服务名称" }),
     page: flags.string({ char: "p" }),
@@ -25,6 +28,7 @@ export default class ListServiceCommand extends Command {
 
   async run() {
     const { flags } = this.parse(ListServiceCommand);
+    setApiCommonParameters({ region: flags.region as ApiRegion });
     const envId = flags.envId || (await chooseEnvId());
     const serviceName = flags.serviceName;
     const CloudBaseRunServerInfo = await execWithLoading(

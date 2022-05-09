@@ -3,6 +3,8 @@ import * as cloudAPI from './cloudapi/src/index'
 import axios from "axios";
 import { BASE_URL, fetchApiOptions } from './base';
 import { readLoginState } from '../utils/auth';
+import { merge } from 'lodash';
+import { getApiCommonParameters } from './common';
 
 export function initCloudAPI(appid: string) {
   cloudAPI.setDefaultAppID(appid)
@@ -76,7 +78,7 @@ async function transactRequest<T = any>(
       method: 'post',
       data: {
         postdata: options.postdata,
-        ...options.identity,
+        ...merge({}, options.identity, getApiCommonParameters()),
       },
       headers: {
         ...options.headers,

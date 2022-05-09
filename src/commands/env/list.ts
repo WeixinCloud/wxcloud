@@ -1,7 +1,9 @@
 import { Command, flags } from "@oclif/command";
 import { DescribeWxCloudBaseRunEnvs } from "../../api";
+import { ApiRegion, setApiCommonParameters } from "../../api/common";
 import { execWithLoading } from "../../utils/loading";
 import { printHorizontalTable } from "../../utils/ux";
+import { REGION_COMMAND_FLAG } from "../../utils/flags";
 
 export default class ListEnvCommand extends Command {
   static description = "查看环境列表";
@@ -10,6 +12,7 @@ export default class ListEnvCommand extends Command {
 
   static flags = {
     help: flags.help({ char: "h", description: "查看帮助" }),
+    region: REGION_COMMAND_FLAG,
     json: flags.boolean({
       description: "是否以json格式展示结果",
       default: false,
@@ -18,6 +21,9 @@ export default class ListEnvCommand extends Command {
 
   async run() {
     const { flags } = this.parse(ListEnvCommand);
+
+    setApiCommonParameters({ region: flags.region as ApiRegion });
+
     const { EnvList } = await execWithLoading(
       () => DescribeWxCloudBaseRunEnvs(),
       {

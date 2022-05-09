@@ -5,6 +5,7 @@ import {
   DescribeServerManageTask,
   SubmitServerRollback,
 } from "../../api";
+import { ApiRegion, setApiCommonParameters } from "../../api/common";
 import { execWithLoading } from "../../utils/loading";
 import { computedBuildLog, computedTaskLog } from "../../utils/run";
 import {
@@ -12,6 +13,7 @@ import {
   chooseServiceId,
   chooseVersionName,
 } from "../../utils/ux";
+import { REGION_COMMAND_FLAG } from "../../utils/flags";
 
 export default class RunRollbackCommand extends Command {
   static description = "版本回退";
@@ -20,6 +22,7 @@ export default class RunRollbackCommand extends Command {
 
   static flags = {
     help: flags.help({ char: "h", description: "查看帮助" }),
+    region: REGION_COMMAND_FLAG,
     noConfirm: flags.boolean({
       description: "发布前是否跳过二次确认",
       default: false,
@@ -110,6 +113,7 @@ export default class RunRollbackCommand extends Command {
   }
   async run() {
     const { flags } = this.parse(RunRollbackCommand);
+    setApiCommonParameters({ region: flags.region as ApiRegion });
     const envId = flags.envId || (await chooseEnvId());
     const serviceName = flags.serviceName || (await chooseServiceId(envId));
     const { rollbackVersions, currentVersion } = await this.getRollbackVersions(

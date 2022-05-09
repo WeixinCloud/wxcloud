@@ -1,6 +1,7 @@
 import { readLoginState } from "../utils/auth";
 import { logger } from "../utils/log";
 import { fetchApi } from "./base";
+import { getApiCommonParameters } from "./common";
 import {
   CloudBaseRunImageItem,
   CloudBaseRunServer,
@@ -283,7 +284,7 @@ export async function callCloudApi(action: string, data: Object) {
   const res = await fetchApi("wxa-dev-qbase/apihttpagent", {
     action,
     postdata: JSON.stringify(data),
-    region: "",
+    region: getApiCommonParameters().region ?? "",
     service: "tcb",
     version: "2018-06-08",
   });
