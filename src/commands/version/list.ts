@@ -1,11 +1,13 @@
 import { Command, flags } from "@oclif/command";
 import { DescribeCloudBaseRunServer } from "../../api";
+import { ApiRegion, setApiCommonParameters } from "../../api/common";
 import { execWithLoading } from "../../utils/loading";
 import {
   chooseEnvId,
   chooseServiceId,
   printHorizontalTable,
 } from "../../utils/ux";
+import { REGION_COMMAND_FLAG } from "../../utils/flags";
 
 export default class ListVersionCommand extends Command {
   static description = "获取版本列表";
@@ -14,6 +16,7 @@ export default class ListVersionCommand extends Command {
 
   static flags = {
     help: flags.help({ char: "h" }),
+    region: REGION_COMMAND_FLAG,
     envId: flags.string({ char: "e" }),
     serviceName: flags.string({ char: "s" }),
     page: flags.string({ char: "p" }),
@@ -25,6 +28,7 @@ export default class ListVersionCommand extends Command {
 
   async run() {
     const { flags } = this.parse(ListVersionCommand);
+    setApiCommonParameters({ region: flags.region as ApiRegion });
     const envId = flags.envId || (await chooseEnvId());
     const serviceName = flags.serviceName || (await chooseServiceId(envId));
     const { VersionItems } = await execWithLoading(

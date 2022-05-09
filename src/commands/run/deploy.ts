@@ -23,6 +23,8 @@ import * as inquirer from "inquirer";
 import { zipDir } from "../../utils/zip";
 import { execWithLoading } from "../../utils/loading";
 import { computedBuildLog, computedTaskLog } from "../../utils/run";
+import { REGION_COMMAND_FLAG } from "../../utils/flags";
+import { ApiRegion, setApiCommonParameters } from "../../api/common";
 export default class RunDeployCommand extends Command {
   static description = "创建版本";
 
@@ -31,6 +33,7 @@ export default class RunDeployCommand extends Command {
   static flags = {
     help: flags.help({ char: "h", description: "查看帮助信息" }),
     envId: flags.string({ char: "e", description: "环境ID" }),
+    region: REGION_COMMAND_FLAG,
     serviceName: flags.string({ char: "s", description: "服务名" }),
     override: flags.boolean({
       description: "缺省的参数是否沿用旧版本配置",
@@ -319,6 +322,9 @@ export default class RunDeployCommand extends Command {
   }
   async run() {
     const { flags } = this.parse(RunDeployCommand);
+
+    setApiCommonParameters({ region: flags.region as ApiRegion });
+
     let newReleaseConfig = await this.getReleaseConfig();
     const { ServerName, EnvId, DeployType } = newReleaseConfig;
     if (flags.noConfirm || (await cli.confirm("确定发布？(请输入yes或no)"))) {
