@@ -30,7 +30,8 @@
     "shortid": "^2.2.16",
     "simple-git": "^3.5.0",
     "tslib": "^1",
-    "@wxcloud/cloudkit": "workspace:*"
+    "@wxcloud/cloudkit": "workspace:*",
+    "@wxcloud/cloudapi": "workspace:*"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",

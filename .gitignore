@@ -4,6 +4,7 @@
 /dist
 /lib
 packages/**/lib
+packages/**/dist
 package-lock.json
 /tmp
 node_modules

@@ -2,7 +2,7 @@ import Command, { flags } from "@oclif/command";
 import {
   tcbGetEnvironments,
   tcbDescribeWxCloudBaseRunEnvs,
-} from "../../api/cloudapi/src/index";
+} from "@wxcloud/cloudapi";
 import { resolve, relative } from "path";
 import { promises } from "fs";
 import COS from "cos-nodejs-sdk-v5";

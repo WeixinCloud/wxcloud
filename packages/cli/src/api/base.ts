@@ -6,7 +6,7 @@ import {
   setTransactType,
   setDefaultAppID,
   setRequest,
-} from "./cloudapi/src/index";
+} from "@wxcloud/cloudapi";
 export const BASE_URL = "https://servicewechat.com";
 
 export interface fetchApiOptions {
