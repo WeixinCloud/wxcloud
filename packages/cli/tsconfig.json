@@ -9,6 +9,7 @@
     "target": "es2017",
     "noImplicitAny": false,
     "esModuleInterop": true,
+    "preserveSymlinks": true,
   },
   "include": ["src/**/*"],
   "exclude": [

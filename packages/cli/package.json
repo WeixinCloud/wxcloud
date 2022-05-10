@@ -29,7 +29,8 @@
     "ora": "^4.0.2",
     "shortid": "^2.2.16",
     "simple-git": "^3.5.0",
-    "tslib": "^1"
+    "tslib": "^1",
+    "@wxcloud/cloudkit": "workspace:*"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
@@ -46,6 +47,7 @@
     "eslint": "^7.14.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.2",
     "globby": "^10",
     "mocha": "^9.2.2",
     "nyc": "^14",
@@ -81,6 +83,7 @@
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "build": "tsc -b",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md"
   },

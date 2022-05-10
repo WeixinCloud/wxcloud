@@ -12,7 +12,7 @@
     "access": "public"
   },
   "files": [
-    "/build"
+    "/lib"
   ],
   "scripts": {
     "build": "npm run clean && npm run type:dts && npm run type:build",
