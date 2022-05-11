@@ -34,7 +34,7 @@ await Promise.all(
     const source = (await readFile(file)).toString();
     const [result, identifiers, hasReference] = addExports(source);
     identifiers.forEach((id) => identifierSet.add(id));
-    if (hasReference) {
+    if (!hasReference) {
       files.unshift(result);
     } else {
       files.push(result);
