@@ -1,4 +1,5 @@
 import { Command, flags } from "@oclif/command";
+import rimraf from "rimraf";
 import {
   tcbDescribeCloudBaseBuildService,
   tcbDescribeWxCloudBaseRunEnvs,
@@ -78,6 +79,8 @@ export default class DeployCommand extends Command {
         versionRemark: "cloudkit",
       });
       console.log("[+] release result: ", releaseRes);
+      // cleanup
+      rimraf.sync(res.runTarget);
     }
     if (res.staticTarget) {
       console.log("[+] uploading static files");

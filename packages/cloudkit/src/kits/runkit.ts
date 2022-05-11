@@ -18,7 +18,7 @@ export class RunKit extends Kit {
     options?: IRunKitOptions
   ): Promise<IKitDeployTarget> {
     // determine which file to be packed
-    const zipName = `temp-runkit-${Date.now()}.zip`;
+    const zipName = `.temp-runkit-${Date.now()}.zip`;
     const archive = archiver("zip");
     const output = createWriteStream(path.join(ctx.fullPath, zipName));
     if (options?.fileGlob) {
