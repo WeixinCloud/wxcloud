@@ -11,12 +11,12 @@ export interface IKitContext {
   staticDomain?: string;
 }
 export interface IKitDeployTarget {
-  staticTarget?: string[];
-  runTarget?: string[];
+  staticTarget?: Record<string, string>;
+  runTarget?: string;
 }
 export abstract class Kit {
   static description: string | undefined;
   static type: KitType;
-  abstract run(ctx: IKitContext): Promise<IKitDeployTarget | void>;
+  abstract run(ctx: IKitContext): Promise<IKitDeployTarget>;
   abstract detect(ctx: IKitContext): Promise<boolean> | boolean;
 }

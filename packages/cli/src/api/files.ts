@@ -5,5 +5,7 @@ export async function uploadVersionPackage(url, zipFile) {
     headers: {
       "content-type": "application/zip",
     },
+    maxBodyLength: Infinity,
+    maxContentLength: Infinity,
   });
 }

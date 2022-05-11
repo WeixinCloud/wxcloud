@@ -1,7 +1,7 @@
-import { IKitContext, Kit } from "./common/kit";
+import { IKitContext, IKitDeployTarget, Kit } from "./common/kit";
 import { NextKit } from "./kits/nextkit";
 
-export async function execAllKits(ctx: IKitContext): Promise<void> {
+export async function execAllKits(ctx: IKitContext): Promise<IKitDeployTarget> {
   const universalKits = [new NextKit()];
   const staticKits: Kit[] = [];
   const runKits: Kit[] = [];
@@ -25,5 +25,5 @@ export async function execAllKits(ctx: IKitContext): Promise<void> {
   if (!targetKit) {
     throw new Error("no available kit detected.");
   }
-  await targetKit.run(ctx);
+  return await targetKit.run(ctx);
 }

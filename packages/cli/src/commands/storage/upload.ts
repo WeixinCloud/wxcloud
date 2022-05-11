@@ -84,7 +84,7 @@ export default class UploadStorageCommand extends Command {
   }
 }
 
-async function beginUpload(
+export async function beginUpload(
   path: string,
   storage: IGenericStorage,
   normalizedRemotePath: string,

@@ -8,6 +8,7 @@ const baseConfig = {
   nodePaths: [path.join(__dirname, "../src")],
   sourcemap: true,
   external: [],
+  bundle: true,
 };
 
 async function main() {
