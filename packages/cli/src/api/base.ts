@@ -1,12 +1,6 @@
 import axios from "axios";
-import { stat } from "fs";
-import { createSign, readLoginState } from "../utils/auth";
+import { readLoginState } from "../utils/auth";
 import { logger } from "../utils/log";
-import {
-  setTransactType,
-  setDefaultAppID,
-  setRequest,
-} from "@wxcloud/cloudapi";
 export const BASE_URL = "https://servicewechat.com";
 
 export interface fetchApiOptions {

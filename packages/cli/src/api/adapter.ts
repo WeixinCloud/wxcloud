@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import * as cloudAPI from '@wxcloud/cloudapi'
+import * as cloudAPI from '@wxcloud/core'
 import axios from "axios";
 import { BASE_URL, fetchApiOptions } from './base';
 import { readLoginState } from '../utils/auth';

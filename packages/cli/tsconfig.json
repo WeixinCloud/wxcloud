@@ -10,9 +10,9 @@
     "noImplicitAny": false,
     "esModuleInterop": true,
     "preserveSymlinks": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true
   },
   "include": ["src/**/*"],
-  "exclude": [
-    "src/api/cloudapi/crawler"
-  ]
+  "exclude": ["src/api/cloudapi/crawler"]
 }

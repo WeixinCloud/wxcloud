@@ -1,7 +1,7 @@
 import * as os from "os";
 import * as fs from "fs";
 import * as path from "path";
-import { constantCase } from "change-case";
+import { constantCase } from "constant-case";
 import cli from "cli-ux";
 import { fetchApi } from "../api/base";
 import * as dotenv from "dotenv";
