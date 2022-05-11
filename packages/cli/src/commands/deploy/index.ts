@@ -3,7 +3,7 @@ import {
   tcbDescribeCloudBaseBuildService,
   tcbDescribeWxCloudBaseRunEnvs,
   tcbSubmitServerRelease,
-} from "@wxcloud/cloudapi";
+} from "@wxcloud/core";
 import * as CloudKit from "@wxcloud/cloudkit";
 import { cli } from "cli-ux";
 import { existsSync, readFileSync } from "node:fs";
