@@ -1,6 +1,18 @@
 import { Command, flags } from "@oclif/command";
 import * as CloudKit from "@wxcloud/cloudkit";
+import path from "node:path";
 
+function extractCloudConfig(): CloudKit.CloudConfig {
+  const cwd = process.cwd();
+  const configFile = path.join(cwd, "wxcloud.config.js");
+  const config = require(configFile);
+  return (
+    config || {
+      type: "run",
+      server: ",",
+    }
+  );
+}
 export default class DeployCommand extends Command {
   static description = "Unified Deploy";
 
@@ -9,8 +21,10 @@ export default class DeployCommand extends Command {
   static flags = {};
 
   async run() {
-    // testing monorepo
-    const res = CloudKit.foo(1, 2);
-    console.log(res);
+    const cloudConfig = extractCloudConfig();
+    CloudKit.execAllKits({
+      fullPath: process.cwd(),
+      config: cloudConfig,
+    });
   }
 }
