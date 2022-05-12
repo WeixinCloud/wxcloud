@@ -9,6 +9,22 @@ export class ServerApi {
 
   constructor(private readonly serverUrl: string) {}
 
+  async queryNpmPackage(name: string, versionConstraint: string) {
+    const url = new URL(`npm/${name}/${versionConstraint}`, this.serverUrl);
+    const response = await fetchUrl(url.toString());
+
+    if (response.status === 404) {
+      return null;
+    }
+
+    if (!response.ok) {
+      throw new Error(`unexpected response: ${response.text}`);
+    }
+
+    const version = await response.text();
+    return version;
+  }
+
   async queryRuntimeImage(runtime: string, versionConstraint: string, categories: string[] = []) {
     const url = new URL(`${runtime}/${versionConstraint}`, this.serverUrl);
     categories.forEach(item => url.searchParams.append('category', item));

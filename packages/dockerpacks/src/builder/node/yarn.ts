@@ -37,8 +37,13 @@ export const yarnBuilder: Builder = {
 
 async function inferYarnVersion(ctx: BuilderContext) {
   const packageJson = ctx.files.readJson(PACKAGE_JSON);
-  const range = packageJson?.engines?.yarn || (isYarn2(ctx) ? '2' : '1');
-  const version = await (await ctx.fetch(`https://semver.io/yarn/resolve/${range}`)).text();
+  const constraint = packageJson?.engines?.yarn || (isYarn2(ctx) ? '2' : '1');
+
+  const version = await ctx.api.queryNpmPackage('yarn', constraint);
+  if (!version) {
+    ctx.panic('未找到合适的 yarn 版本，请联系客服');
+  }
+
   return version;
 }
 

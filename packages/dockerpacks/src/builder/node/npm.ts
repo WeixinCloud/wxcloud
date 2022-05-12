@@ -22,7 +22,7 @@ export const npmBuilder: Builder = {
       if (!lockFileName) {
         dockerfile.copy(PACKAGE_JSON, '.').comment('将 package.json 拷贝到容器中');
       } else {
-        dockerfile.copy(PACKAGE_JSON, lockFileName, '.').comment('将这些文件拷贝到容器中');
+        dockerfile.copy(PACKAGE_JSON, lockFileName, './').comment('将这些文件拷贝到容器中');
       }
       dockerfile.run(...installCmd).comment('安装依赖'); // TODO: prune
 

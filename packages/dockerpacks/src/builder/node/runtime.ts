@@ -59,10 +59,10 @@ async function getRecommendedNodeImage(ctx: BuilderContext) {
 
 async function inferNpmVersion(ctx: BuilderContext): Promise<string | null> {
   const packageJson = ctx.files.readJson(PACKAGE_JSON);
-  const range = packageJson?.engines?.npm;
-  if (!range) {
+  const constraint = packageJson?.engines?.npm;
+  if (!constraint) {
     return null;
   }
-  const version = await (await ctx.fetch(`https://semver.io/npm/resolve/${range}`)).text();
+  const version = await ctx.api.queryNpmPackage('npm', constraint);
   return version;
 }
