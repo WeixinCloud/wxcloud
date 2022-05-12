@@ -11,7 +11,8 @@
     "esModuleInterop": true,
     "preserveSymlinks": true,
     "moduleResolution": "node",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "useUnknownInCatchVariables": false
   },
   "include": ["src/**/*"],
   "exclude": ["src/api/cloudapi/crawler"]

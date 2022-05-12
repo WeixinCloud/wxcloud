@@ -1,10 +1,6 @@
 import { Command, flags } from "@oclif/command";
 import rimraf from "rimraf";
-import {
-  tcbDescribeCloudBaseBuildService,
-  tcbDescribeWxCloudBaseRunEnvs,
-  tcbSubmitServerRelease,
-} from "@wxcloud/core";
+import { CloudAPI } from "@wxcloud/core";
 import * as CloudKit from "@wxcloud/cloudkit";
 import { CloudConfig } from "@wxcloud/core";
 import { cli } from "cli-ux";
@@ -14,6 +10,12 @@ import { uploadVersionPackage } from "../../api/files";
 import { readLoginState } from "../../utils/auth";
 import { chooseEnvId } from "../../utils/ux";
 import { beginUpload } from "../storage/upload";
+
+const {
+  tcbDescribeCloudBaseBuildService,
+  tcbDescribeWxCloudBaseRunEnvs,
+  tcbSubmitServerRelease,
+} = CloudAPI;
 
 function extractCloudConfig(): CloudConfig {
   const cwd = process.cwd();

@@ -1,8 +1,5 @@
 import Command, { flags } from "@oclif/command";
-import {
-  tcbGetEnvironments,
-  tcbDescribeWxCloudBaseRunEnvs,
-} from "@wxcloud/core";
+import { CloudAPI } from "@wxcloud/core";
 import { resolve, relative } from "path";
 import { promises } from "fs";
 import COS from "cos-nodejs-sdk-v5";
@@ -11,6 +8,7 @@ import { readLoginState } from "../../utils/auth";
 import { REGION_COMMAND_FLAG } from "../../utils/flags";
 import { ApiRegion, setApiCommonParameters } from "../../api/common";
 
+const { tcbGetEnvironments, tcbDescribeWxCloudBaseRunEnvs } = CloudAPI;
 const { readdir, readFile } = promises;
 export default class UploadStorageCommand extends Command {
   static description = "上传对象存储";

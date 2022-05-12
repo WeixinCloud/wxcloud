@@ -1,5 +1,5 @@
 import crypto from 'crypto'
-import * as cloudAPI from '@wxcloud/core'
+import { CloudAPI } from '@wxcloud/core'
 import axios from "axios";
 import { BASE_URL, fetchApiOptions } from './base';
 import { readLoginState } from '../utils/auth';
@@ -7,9 +7,9 @@ import { merge } from 'lodash';
 import { getApiCommonParameters } from './common';
 
 export function initCloudAPI(appid: string) {
-  cloudAPI.setDefaultAppID(appid)
-  cloudAPI.setTransactType(cloudAPI.TransactType.IDE)
-  cloudAPI.setRequest(transactRequest as any)
+  CloudAPI.setDefaultAppID(appid)
+  CloudAPI.setTransactType(CloudAPI.TransactType.IDE)
+  CloudAPI.setRequest(transactRequest as any)
 }
 
 const SERVICE_CLOUD_URL: Record<string, string> = {
@@ -20,7 +20,7 @@ const SERVICE_CLOUD_URL: Record<string, string> = {
 const DIRECT_CLOUD_API_SET = new Set(['UpdateFunctionCode', 'CreateFunction'])
 
 async function transactRequest<T = any>(
-  options: cloudAPI.IRequestOptions & fetchApiOptions
+  options: CloudAPI.IRequestOptions & fetchApiOptions
 ): Promise<T> {
   const appid = options.wxCloudConfig?.appid || (await readLoginState()).appid;
   const privateKey =

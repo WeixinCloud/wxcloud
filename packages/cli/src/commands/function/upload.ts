@@ -1,15 +1,14 @@
 import Command, { flags } from "@oclif/command";
-import {
+import { CloudAPI } from "@wxcloud/core";
+import { zipFile, zipToBuffer } from "../../utils/jszip";
+const HelloWorldCode = `UEsDBBQACAAIALB+WU4AAAAAAAAAAAAAAAAIABAAaW5kZXguanNVWAwAAZ9zXPuec1z1ARQAdY7BCsIwEETv+Yoll6ZQ+wOhnv0DD+IhxkWC664kWwmI/27V3IpzGuYNw3RzQSiaU9TOG6x3yVrGW0gMEzh8IOsAUVixfkwgOoV47WHawtPAooUVIRxJLs7ukEhgL5nOtl/h79qf+GBZeIM1FbXHdac9aKC9cDwTDfCb9eblzRtQSwcI6+pcr4AAAADOAAAAUEsBAhUDFAAIAAgAsH5ZTuvqXK+AAAAAzgAAAAgADAAAAAAAAAAAQKSBAAAAAGluZGV4LmpzVVgIAAGfc1z7nnNcUEsFBgAAAAABAAEAQgAAAMYAAAAAAA==`;
+const {
   scfGetFunctionInfo,
   tcbGetEnvironments,
   scfCreateFunction,
   scfUpdateFunctionInfo,
   scfUpdateFunction,
-  IAPISCFGetFunctionInfoResult,
-} from "@wxcloud/core";
-import { zipFile, zipToBuffer } from "../../utils/jszip";
-const HelloWorldCode = `UEsDBBQACAAIALB+WU4AAAAAAAAAAAAAAAAIABAAaW5kZXguanNVWAwAAZ9zXPuec1z1ARQAdY7BCsIwEETv+Yoll6ZQ+wOhnv0DD+IhxkWC664kWwmI/27V3IpzGuYNw3RzQSiaU9TOG6x3yVrGW0gMEzh8IOsAUVixfkwgOoV47WHawtPAooUVIRxJLs7ukEhgL5nOtl/h79qf+GBZeIM1FbXHdac9aKC9cDwTDfCb9eblzRtQSwcI6+pcr4AAAADOAAAAUEsBAhUDFAAIAAgAsH5ZTuvqXK+AAAAAzgAAAAgADAAAAAAAAAAAQKSBAAAAAGluZGV4LmpzVVgIAAGfc1z7nnNcUEsFBgAAAAABAAEAQgAAAMYAAAAAAA==`;
-
+} = CloudAPI;
 async function waitFuncDeploy(options: {
   namespace: string;
   region: string;
@@ -30,7 +29,7 @@ async function waitFuncDeploy(options: {
     maxWaitTimeout = 15 * 60 * 1000,
   } = options;
 
-  return new Promise(async (res, rej) => {
+  return new Promise<void>(async (res, rej) => {
     const timeout = setTimeout(rej, maxWaitTimeout);
     try {
       let lastStatus = "";
@@ -129,7 +128,7 @@ export default class UploadFunctionCommand extends Command {
     });
 
     let shouldCreate = false;
-    let info!: IAPISCFGetFunctionInfoResult;
+    let info!: Awaited<ReturnType<typeof scfGetFunctionInfo>>;
 
     try {
       info = await scfGetFunctionInfo({
