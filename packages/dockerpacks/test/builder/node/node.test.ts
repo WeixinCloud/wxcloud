@@ -58,6 +58,12 @@ const CASES: BuilderTestCase[] = [
     promptAnswers: {
       environments: ['DATABASE_URL=mongo://test']
     }
+  },
+  {
+    id: 'nextjs-cli',
+    promptAnswers: {
+      environments: []
+    }
   }
 ];
 

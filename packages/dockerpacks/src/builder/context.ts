@@ -57,9 +57,10 @@ export class Environment {
 }
 
 export class Files {
-  readonly writtenFiles = new Map<string, string>();
-
+  private readonly IGNORED_FILES = ['./**/node_modules/**/*'];
   private readonly cache = new Map<string, string>();
+
+  readonly writtenFiles = new Map<string, string>();
 
   constructor(private readonly root: string) {}
 
@@ -98,11 +99,11 @@ export class Files {
   }
 
   someExists(...files: NonEmptyArray<string>) {
-    return files.some(f => sync(f, { cwd: this.root }).length > 0);
+    return files.some(f => sync(f, { cwd: this.root, ignore: this.IGNORED_FILES }).length > 0);
   }
 
   everyExists(...files: NonEmptyArray<string>) {
-    return files.every(f => sync(f, { cwd: this.root }).length > 0);
+    return files.every(f => sync(f, { cwd: this.root, ignore: this.IGNORED_FILES }).length > 0);
   }
 }
 

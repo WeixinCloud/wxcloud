@@ -10,6 +10,5 @@
       "@utils/*": ["src/utils/*"],
       "@test/*": ["test/*"]
     }
-  },
-  "exclude": ["./**/*.spec.ts", "./**/*.test.ts"]
+  }
 }
