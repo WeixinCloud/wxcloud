@@ -1,4 +1,4 @@
-import { CloudConfig } from "./cloudconfig";
+import { CloudConfig } from "@wxcloud/core";
 
 export enum KitType {
   UNIVERSAL = "universal",

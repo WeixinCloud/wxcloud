@@ -23,7 +23,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rimraf dist && node modify-cloudapi.mjs && tsup && rimraf src/cloud-api-modified"
+    "build": "rimraf dist src/cloud-api-modified && node modify-cloudapi.mjs && tsup && rimraf src/cloud-api-modified"
   },
   "dependencies": {
     "eventemitter3": "^4.0.7",
