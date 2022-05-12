@@ -12,3 +12,4 @@ node_modules
 private.key
 yarn.lock
 .turbo
+packages/cli/oclif.manifest.json
