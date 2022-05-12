@@ -39,6 +39,7 @@
     "@types/glob": "^7.2.0",
     "@types/lodash": "^4.14.182",
     "@types/node": "^16.11.26",
+    "@types/node-fetch": "^2.6.1",
     "@types/semver": "^7.3.9",
     "rimraf": "^3.0.2",
     "tsconfig-paths": "^3.14.1",
@@ -55,5 +56,12 @@
     "semver": "^7.3.5",
     "split-cmd": "^1.0.1",
     "yaml": "^2.0.0"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "vite"
+      ]
+    }
   }
 }
