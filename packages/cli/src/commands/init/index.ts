@@ -2,8 +2,9 @@ import * as fs from "fs";
 import * as path from "path";
 import * as inquirer from "inquirer";
 import simpleGit from "simple-git";
-import listr from "listr";
+import { Listr } from "listr2";
 import { Command, flags } from "@oclif/command";
+import { isDirectoryEmpty, isDirectoryExists } from "../../utils/file";
 
 interface Template {
   name: string;
@@ -43,7 +44,7 @@ export class InitCommand extends Command {
 
   async run() {
     const { args, flags } = this.parse(InitCommand);
-    await this.checkTargetPath(args.path);
+    this.checkTargetPath(args.path);
     if (!flags.template) {
       flags.template = await this.promptTemplate();
     }
@@ -52,7 +53,7 @@ export class InitCommand extends Command {
 
     // TODO: check git
 
-    const tasks = new listr([
+    const tasks = new Listr([
       {
         title: "克隆模板文件",
         task: async () => {
@@ -75,19 +76,11 @@ export class InitCommand extends Command {
     await tasks.run();
   }
 
-  private async checkTargetPath(path: string) {
-    let stat;
-    try {
-      stat = await fs.promises.lstat(path);
-    } catch {
-      return;
-    }
-    if (stat && !stat.isDirectory()) {
+  private checkTargetPath(path: string) {
+    if (!isDirectoryExists(path)) {
       this.error("请指定一个文件夹作为路径");
     }
-
-    const files = await fs.promises.readdir(path);
-    if (files.length > 0) {
+    if (!isDirectoryEmpty(path)) {
       this.error("目标文件夹已经含有文件");
     }
   }

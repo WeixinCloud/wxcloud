@@ -1,5 +1,5 @@
 {
-  "name": "dockerpacks",
+  "name": "@wxcloud/dockerpacks",
   "version": "0.0.1",
   "description": "A powerful library for generating a Dockerfile file from arbitrary source code",
   "main": "./dist/index.cjs",
