@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "esnext",
+    "lib": ["esnext"],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "noImplicitAny": false,
+    "baseUrl": ".",
+    "paths": {
+      "@api/*": ["src/api/*"],
+      "@builder/*": ["src/builder/*"],
+      "@dockerfile/*": ["src/dockerfile/*"],
+      "@runner/*": ["src/runner/*"],
+      "@utils/*": ["src/utils/*"],
+      "@test/*": ["test/*"]
+    }
+  }
+}

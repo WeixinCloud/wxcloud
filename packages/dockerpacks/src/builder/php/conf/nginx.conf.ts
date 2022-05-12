@@ -1,0 +1,60 @@
+export const phpNginxConf = (root: string) =>
+  String.raw`
+# 以下配置基于 nginx 默认配置修改
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+  worker_connections 768;
+}
+
+http {
+  sendfile on;
+  tcp_nopush on;
+  types_hash_max_size 2048;
+
+  include /etc/nginx/mime.types;
+  default_type application/octet-stream;
+
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_prefer_server_ciphers on;
+
+  access_log /var/log/nginx/access.log;
+  error_log /var/log/nginx/error.log;
+
+  gzip on;
+
+  server {
+    listen       80;
+    server_name  _;
+    root         /app/${root};
+    index        index.html index.htm index.php;
+
+    location / {
+      try_files $uri @rewrite;
+    }
+
+    location @rewrite {
+      set $static 0;
+      if ($uri ~ \.(css|js|jpg|jpeg|png|gif|ico|woff|eot|svg|css\.map|min\.map)$) {
+        set $static 1;
+      }
+      if ($static = 0) {
+        rewrite ^/(.*)$ /index.php?s=/$1;
+      }
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+  }
+}`.trim();

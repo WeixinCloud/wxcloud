@@ -1,0 +1,268 @@
+// Vitest Snapshot v1
+
+exports[`builders test (node cases) > case 0 > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 将 package.json 拷贝到容器中
+COPY package.json .
+
+# 安装依赖
+RUN npm ci
+
+# 将包括源文件在内的所有文件拷贝到容器中
+COPY . .
+
+# 运行编译
+RUN npm run build
+
+ENV NODE_ENV=production
+
+# 运行项目
+CMD npm run start:prod",
+  "files": Map {},
+}
+`;
+
+exports[`builders test (node cases) > case 1 > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# 运行项目
+CMD node test/index.js",
+  "files": Map {},
+}
+`;
+
+exports[`builders test (node cases) > case 2 > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 安装指定版本的 npm
+RUN npm install -g npm@5.10.0
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 将 package.json 拷贝到容器中
+COPY package.json .
+
+# 安装依赖
+RUN npm ci
+
+# 将包括源文件在内的所有文件拷贝到容器中
+COPY . .
+
+ENV NODE_ENV=production
+
+# 运行项目
+CMD node index.js",
+  "files": Map {},
+}
+`;
+
+exports[`builders test (node cases) > case 3 > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 将这些文件拷贝到容器中
+COPY package.json yarn.lock ./
+
+# 安装依赖
+RUN yarn install --non-interactive --prefer-offline
+
+# 将包括源文件在内的所有文件拷贝到容器中
+COPY . .
+
+ENV NODE_ENV=production
+
+# 运行项目
+CMD node index.js",
+  "files": Map {},
+}
+`;
+
+exports[`builders test (node cases) > case 4 > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 安装 yarn
+RUN npm install -g yarn@2.4.3
+
+# 将这些文件拷贝到容器中
+COPY package.json yarn.lock ./
+
+# 安装依赖
+RUN yarn install --immutable
+
+# 将包括源文件在内的所有文件拷贝到容器中
+COPY . .
+
+ENV NODE_ENV=production
+
+# 运行项目
+CMD node index.js",
+  "files": Map {},
+}
+`;
+
+exports[`builders test (node cases) > case 5 > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 将这些文件拷贝到容器中
+COPY package.json yarn.lock ./
+
+# 安装依赖
+RUN yarn install --non-interactive --prefer-offline
+
+# 将包括源文件在内的所有文件拷贝到容器中
+COPY . .
+
+# 运行编译
+RUN yarn run build
+
+ENV NODE_ENV=production
+
+# 运行项目
+CMD npm run start",
+  "files": Map {},
+}
+`;
+
+exports[`builders test (node cases) > case 6 > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 将这些文件拷贝到容器中
+COPY package.json yarn.lock ./
+
+# 安装依赖
+RUN yarn install --non-interactive --prefer-offline
+
+# 将包括源文件在内的所有文件拷贝到容器中
+COPY . .
+
+# 运行编译
+RUN yarn run build
+
+ENV NODE_ENV=production
+
+# 运行项目
+CMD npm run start",
+  "files": Map {},
+}
+`;
+
+exports[`builders test (node cases) > case 7 > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 将这些文件拷贝到容器中
+COPY package.json yarn.lock ./
+
+# 安装依赖
+RUN yarn install --non-interactive --prefer-offline
+
+# 将包括源文件在内的所有文件拷贝到容器中
+COPY . .
+
+# 运行编译
+RUN yarn run build
+
+ENV NODE_ENV=production
+
+# 运行项目
+CMD node build/index.js",
+  "files": Map {},
+}
+`;
+
+exports[`builders test (node cases) > case 8 > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 用户设置的环境变量
+ENV DATABASE_URL=mongo://test
+
+# 将这些文件拷贝到容器中
+COPY package.json yarn.lock ./
+
+# 安装依赖
+RUN yarn install --non-interactive --prefer-offline
+
+# 将包括源文件在内的所有文件拷贝到容器中
+COPY . .
+
+# 运行编译
+RUN yarn run build
+
+ENV NODE_ENV=production
+
+# 运行项目
+CMD npm run start",
+  "files": Map {},
+}
+`;
