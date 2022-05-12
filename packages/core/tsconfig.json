@@ -1,19 +1,10 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
       "@cloud-api-modified/types": ["src/cloud-api-modified/src/types.ts"]
     },
-    "lib": ["es2020", "dom"],
-    "module": "commonjs",
-    "target": "es2020",
-    "rootDir": "./src",
-    "outDir": "lib",
-    "strict": true,
-    "sourceMap": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "declaration": true,
-    "useUnknownInCatchVariables": false
+    "lib": ["es2020", "dom"]
   }
 }

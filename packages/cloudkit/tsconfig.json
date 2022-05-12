@@ -1,17 +1,8 @@
 {
-  "include": ["./src/**/*.ts"],
-  "exclude": ["./src/**/__tests__"],
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "lib": ["es2020"],
-    "module": "commonjs",
-    "target": "es2020",
-    "rootDir": "./src",
-    "outDir": "lib",
-    "strict": true,
-    "sourceMap": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "declaration": true
-  }
+    "rootDir": "./src"
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": ["./src/**/__tests__"]
 }
