@@ -1,6 +1,18 @@
 import { NonEmptyArray } from '@utils/types';
 import { last } from 'lodash';
 
+export class DockerIgnore {
+  private files: string[] = [];
+
+  append(...files: NonEmptyArray<string>) {
+    this.files.push(...files);
+  }
+
+  build() {
+    return this.files.join('\n');
+  }
+}
+
 export interface BuildStage {
   commands: Command<any>[];
 }

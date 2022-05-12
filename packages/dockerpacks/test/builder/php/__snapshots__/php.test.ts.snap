@@ -102,6 +102,12 @@ http {
     }
   }
 }",
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md",
   },
 }
 `;
@@ -201,6 +207,12 @@ http {
     }
   }
 }",
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md",
   },
 }
 `;
@@ -309,6 +321,12 @@ http {
     }
   }
 }",
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md",
   },
 }
 `;

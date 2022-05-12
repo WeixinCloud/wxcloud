@@ -17,7 +17,7 @@ COPY package.json .
 # 安装依赖
 RUN npm ci
 
-# 将包括源文件在内的所有文件拷贝到容器中
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
 # 运行编译
@@ -27,7 +27,15 @@ ENV NODE_ENV=production
 
 # 运行项目
 CMD npm run start:prod",
-  "files": Map {},
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
 }
 `;
 
@@ -46,7 +54,14 @@ ENV NODE_ENV=production
 
 # 运行项目
 CMD node test/index.js",
-  "files": Map {},
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md",
+  },
 }
 `;
 
@@ -70,14 +85,22 @@ COPY package.json .
 # 安装依赖
 RUN npm ci
 
-# 将包括源文件在内的所有文件拷贝到容器中
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
 ENV NODE_ENV=production
 
 # 运行项目
 CMD node index.js",
-  "files": Map {},
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
 }
 `;
 
@@ -98,14 +121,22 @@ COPY package.json yarn.lock ./
 # 安装依赖
 RUN yarn install --non-interactive --prefer-offline
 
-# 将包括源文件在内的所有文件拷贝到容器中
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
 ENV NODE_ENV=production
 
 # 运行项目
 CMD node index.js",
-  "files": Map {},
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
 }
 `;
 
@@ -129,14 +160,22 @@ COPY package.json yarn.lock ./
 # 安装依赖
 RUN yarn install --immutable
 
-# 将包括源文件在内的所有文件拷贝到容器中
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
 ENV NODE_ENV=production
 
 # 运行项目
 CMD node index.js",
-  "files": Map {},
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
 }
 `;
 
@@ -157,7 +196,7 @@ COPY package.json yarn.lock ./
 # 安装依赖
 RUN yarn install --non-interactive --prefer-offline
 
-# 将包括源文件在内的所有文件拷贝到容器中
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
 # 运行编译
@@ -167,7 +206,15 @@ ENV NODE_ENV=production
 
 # 运行项目
 CMD npm run start",
-  "files": Map {},
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
 }
 `;
 
@@ -188,7 +235,7 @@ COPY package.json yarn.lock ./
 # 安装依赖
 RUN yarn install --non-interactive --prefer-offline
 
-# 将包括源文件在内的所有文件拷贝到容器中
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
 # 运行编译
@@ -198,7 +245,15 @@ ENV NODE_ENV=production
 
 # 运行项目
 CMD npm run start",
-  "files": Map {},
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
 }
 `;
 
@@ -219,7 +274,7 @@ COPY package.json yarn.lock ./
 # 安装依赖
 RUN yarn install --non-interactive --prefer-offline
 
-# 将包括源文件在内的所有文件拷贝到容器中
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
 # 运行编译
@@ -229,7 +284,15 @@ ENV NODE_ENV=production
 
 # 运行项目
 CMD node build/index.js",
-  "files": Map {},
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
 }
 `;
 
@@ -253,7 +316,7 @@ COPY package.json yarn.lock ./
 # 安装依赖
 RUN yarn install --non-interactive --prefer-offline
 
-# 将包括源文件在内的所有文件拷贝到容器中
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
 # 运行编译
@@ -263,7 +326,15 @@ ENV NODE_ENV=production
 
 # 运行项目
 CMD npm run start",
-  "files": Map {},
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
 }
 `;
 
@@ -284,7 +355,7 @@ COPY package.json .
 # 安装依赖
 RUN npm ci
 
-# 将包括源文件在内的所有文件拷贝到容器中
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
 # 运行编译
@@ -294,6 +365,14 @@ ENV NODE_ENV=production
 
 # 运行项目
 CMD npm run start",
-  "files": Map {},
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
 }
 `;

@@ -1,4 +1,4 @@
-import { Dockerfile } from '@dockerfile/file';
+import { Dockerfile, DockerIgnore } from '@dockerfile/file';
 import { BuilderContext } from './context';
 
 export interface Builder {
@@ -10,4 +10,4 @@ export interface DetectionResult {
   hit: boolean;
 }
 
-export type BuildResult = (dockerfile: Dockerfile) => void;
+export type BuildResult = (dockerfile: Dockerfile, ignore: DockerIgnore) => void;

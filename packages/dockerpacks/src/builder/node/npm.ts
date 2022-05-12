@@ -18,15 +18,18 @@ export const npmBuilder: Builder = {
 
     ctx.env.set(NODE_PACKAGE_MANAGER, 'npm');
 
-    return dockerfile => {
+    return (dockerfile, ignore) => {
       if (!lockFileName) {
         dockerfile.copy(PACKAGE_JSON, '.').comment('将 package.json 拷贝到容器中');
       } else {
-        dockerfile.copy(PACKAGE_JSON, lockFileName, './').comment('将这些文件拷贝到容器中');
+        dockerfile.copy(PACKAGE_JSON, lockFileName, '.').comment('将这些文件拷贝到容器中');
       }
       dockerfile.run(...installCmd).comment('安装依赖'); // TODO: prune
 
-      dockerfile.copy('.', '.').comment('将包括源文件在内的所有文件拷贝到容器中');
+      ignore.append('node_modules');
+      dockerfile
+        .copy('.', '.')
+        .comment('将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）');
     };
   }
 };

@@ -2,6 +2,7 @@ import { ServerApi } from '@api/server';
 import { Builder, DetectionResult } from '@builder/builder';
 import { BuilderContext, MessageHandler, PromptHandler, PromptIO } from '@builder/context';
 import { DockerfileFactory } from '@dockerfile/factory';
+import { DockerIgnore } from '@dockerfile/file';
 import { BuilderGroup, extractBuilder, isBuilderWithOptionalProp } from '@runner/group';
 import { range } from 'lodash';
 import { DEFAULT_BUILDER_GROUPS } from './group';
@@ -85,13 +86,15 @@ export abstract class DockerpacksRunnerBase {
   }
 
   private async build(result: SelectionResult): Promise<BuildResult> {
-    const factory = new DockerfileFactory();
+    const dockerIgnore = new DockerIgnore();
+    dockerIgnore.append('.git', '.gitignore', '.dockerignore', 'Dockerfile*', 'LICENSE', '*.md');
 
+    const factory = new DockerfileFactory();
     for (const index of result.hitBuilders) {
       const builder = extractBuilder(result.group.builders[index]);
       try {
         const fn = await builder.build(this.ctx);
-        factory.edit(fn);
+        fn(factory.getDockerfile(), dockerIgnore);
       } catch (e: any) {
         if (e instanceof Error) {
           throw new BuildError(result.group, { builder, reason: e }, '构建过程中出错', e);
@@ -102,10 +105,10 @@ export abstract class DockerpacksRunnerBase {
     }
 
     const dockerfile = factory.build();
-    return {
-      dockerfile,
-      files: this.ctx.files.writtenFiles
-    };
+    const files = this.ctx.files.writtenFiles;
+    files.set('.dockerignore', dockerIgnore.build());
+
+    return { dockerfile, files };
   }
 }
 

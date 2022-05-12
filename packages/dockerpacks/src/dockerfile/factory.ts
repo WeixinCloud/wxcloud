@@ -20,10 +20,8 @@ export class DockerfileFactory {
     };
   }
 
-  edit(...fnList: NonEmptyArray<DockerfileEditFn>) {
-    for (const fn of fnList) {
-      fn(this.dockerfile);
-    }
+  getDockerfile() {
+    return this.dockerfile;
   }
 
   build() {

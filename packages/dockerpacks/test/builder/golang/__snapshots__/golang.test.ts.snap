@@ -19,7 +19,14 @@ RUN go mod download
 RUN go build -o wxcloudrun-files/main
 
 CMD wxcloudrun-files/main",
-  "files": Map {},
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md",
+  },
 }
 `;
 
@@ -42,6 +49,13 @@ RUN go mod download
 RUN go build -o wxcloudrun-files/main
 
 CMD wxcloudrun-files/main",
-  "files": Map {},
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md",
+  },
 }
 `;

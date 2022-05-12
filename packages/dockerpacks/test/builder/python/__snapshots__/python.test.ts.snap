@@ -22,7 +22,14 @@ COPY . .
 
 # 启动 flask
 CMD python3 -m flask run --host=0.0.0.0",
-  "files": Map {},
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md",
+  },
 }
 `;
 
@@ -48,6 +55,13 @@ COPY . .
 
 # 启动 django
 CMD python3 manage.py 0.0.0.0",
-  "files": Map {},
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md",
+  },
 }
 `;

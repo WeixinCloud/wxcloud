@@ -18,7 +18,7 @@ export const yarnBuilder: Builder = {
 
     ctx.env.set(NODE_PACKAGE_MANAGER, 'yarn');
 
-    return dockerfile => {
+    return (dockerfile, ignore) => {
       // node 镜像目前已经自带 yarn v1
       if (!yarnVersion.startsWith('1')) {
         dockerfile.run('npm', 'install', '-g', `yarn@${yarnVersion}`).comment('安装 yarn');
@@ -27,7 +27,10 @@ export const yarnBuilder: Builder = {
       dockerfile.copy(PACKAGE_JSON, YARN_LOCK, './').comment('将这些文件拷贝到容器中');
       dockerfile.run(...installCmd).comment('安装依赖'); // TODO: prune
 
-      dockerfile.copy('.', '.').comment('将包括源文件在内的所有文件拷贝到容器中');
+      ignore.append('node_modules');
+      dockerfile
+        .copy('.', '.')
+        .comment('将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）');
     };
   }
 };
