@@ -3,7 +3,6 @@
   "compilerOptions": {
     "importHelpers": true,
     "outDir": "lib",
-<<<<<<< HEAD
     "rootDir": "src",
     "strict": true,
     "target": "es2017",
@@ -13,9 +12,6 @@
     "moduleResolution": "node",
     "skipLibCheck": true,
     "useUnknownInCatchVariables": false
-=======
-    "rootDir": "src"
->>>>>>> chore: use root tsconfig.json
   },
   "include": ["src/**/*"],
   "exclude": ["src/api/cloudapi/crawler"]
