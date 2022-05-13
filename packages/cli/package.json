@@ -24,9 +24,12 @@
     "constant-case": "^3.0.4",
     "cos-nodejs-sdk-v5": "^2.11.4",
     "dotenv": "^10.0.0",
+    "enquirer": "^2.3.6",
     "eventemitter3": "^4.0.7",
     "inquirer": "^8.2.0",
     "jszip": "^3.9.1",
+    "kolorist": "^1.5.1",
+    "listr2": "^4.0.5",
     "lodash": "^4.17.21",
     "minimatch": "^5.0.1",
     "moment": "^2.24.0",
@@ -36,9 +39,7 @@
     "rimraf": "^3.0.2",
     "shortid": "^2.2.16",
     "simple-git": "^3.5.0",
-    "tslib": "^2.4.0",
-    "kolorist": "^1.5.1",
-    "listr2": "^4.0.5"
+    "tslib": "^2.4.0"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
