@@ -15,7 +15,7 @@ WORKDIR /app
 COPY package.json .
 
 # 安装依赖
-RUN npm ci
+RUN npm install
 
 # 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
@@ -79,8 +79,8 @@ RUN npm install -g npm@5.10.0
 # 设置容器内的当前目录
 WORKDIR /app
 
-# 将 package.json 拷贝到容器中
-COPY package.json .
+# 将这些文件拷贝到容器中
+COPY package.json package-lock.json ./
 
 # 安装依赖
 RUN npm ci
@@ -105,6 +105,45 @@ node_modules",
 `;
 
 exports[`builders test (node cases) > case 3 > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 安装指定版本的 npm
+RUN npm install -g npm@5.10.0
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 将 package.json 拷贝到容器中
+COPY package.json .
+
+# 安装依赖
+RUN npm install
+
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
+COPY . .
+
+ENV NODE_ENV=production
+
+# 运行项目
+CMD node index.js",
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
+}
+`;
+
+exports[`builders test (node cases) > case 4 > should have correct outputs 1`] = `
 {
   "dockerfile": "# 由 Dockerpacks 自动生成
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
@@ -140,7 +179,7 @@ node_modules",
 }
 `;
 
-exports[`builders test (node cases) > case 4 > should have correct outputs 1`] = `
+exports[`builders test (node cases) > case 5 > should have correct outputs 1`] = `
 {
   "dockerfile": "# 由 Dockerpacks 自动生成
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
@@ -179,7 +218,7 @@ node_modules",
 }
 `;
 
-exports[`builders test (node cases) > case 5 > should have correct outputs 1`] = `
+exports[`builders test (node cases) > case 6 > should have correct outputs 1`] = `
 {
   "dockerfile": "# 由 Dockerpacks 自动生成
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
@@ -209,45 +248,6 @@ ENV NODE_ENV=production
 
 # 运行项目
 CMD node index.js",
-  "files": Map {
-    ".dockerignore" => ".git
-.gitignore
-.dockerignore
-Dockerfile*
-LICENSE
-*.md
-node_modules",
-  },
-}
-`;
-
-exports[`builders test (node cases) > case 6 > should have correct outputs 1`] = `
-{
-  "dockerfile": "# 由 Dockerpacks 自动生成
-# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
-
-# 使用基于 alpine 的 node 官方镜像
-FROM node:lts-alpine
-
-# 设置容器内的当前目录
-WORKDIR /app
-
-# 将这些文件拷贝到容器中
-COPY package.json yarn.lock ./
-
-# 安装依赖
-RUN yarn install --non-interactive --prefer-offline
-
-# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
-COPY . .
-
-# 运行编译
-RUN yarn run build
-
-ENV NODE_ENV=production
-
-# 运行项目
-CMD npm run start",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -325,7 +325,7 @@ RUN yarn run build
 ENV NODE_ENV=production
 
 # 运行项目
-CMD node build/index.js",
+CMD npm run start",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -339,6 +339,45 @@ node_modules",
 `;
 
 exports[`builders test (node cases) > case 9 > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 将这些文件拷贝到容器中
+COPY package.json yarn.lock ./
+
+# 安装依赖
+RUN yarn install --non-interactive --prefer-offline
+
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
+COPY . .
+
+# 运行编译
+RUN yarn run build
+
+ENV NODE_ENV=production
+
+# 运行项目
+CMD node build/index.js",
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
+}
+`;
+
+exports[`builders test (node cases) > case 10 > should have correct outputs 1`] = `
 {
   "dockerfile": "# 由 Dockerpacks 自动生成
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
@@ -380,7 +419,7 @@ node_modules",
 }
 `;
 
-exports[`builders test (node cases) > case 10 > should have correct outputs 1`] = `
+exports[`builders test (node cases) > case 11 > should have correct outputs 1`] = `
 {
   "dockerfile": "# 由 Dockerpacks 自动生成
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
@@ -395,7 +434,7 @@ WORKDIR /app
 COPY package.json .
 
 # 安装依赖
-RUN npm ci
+RUN npm install
 
 # 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
@@ -419,7 +458,7 @@ node_modules",
 }
 `;
 
-exports[`builders test (node cases) > case 11 > should have correct outputs 1`] = `
+exports[`builders test (node cases) > case 12 > should have correct outputs 1`] = `
 {
   "dockerfile": "# 由 Dockerpacks 自动生成
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服

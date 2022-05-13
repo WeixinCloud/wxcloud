@@ -13,8 +13,8 @@ export const npmBuilder: Builder = {
     };
   },
   async build(ctx) {
-    const installCmd = getNpmInstallCmd(ctx);
     const lockFileName = getLockFileName(ctx);
+    const installCmd = getNpmInstallCmd(ctx, !!lockFileName);
 
     ctx.env.set(NODE_PACKAGE_MANAGER, 'npm');
 
@@ -34,9 +34,9 @@ export const npmBuilder: Builder = {
   }
 };
 
-function getNpmInstallCmd(ctx: BuilderContext): NonEmptyArray<string> {
+function getNpmInstallCmd(ctx: BuilderContext, hasLockfile: boolean): NonEmptyArray<string> {
   const version = ctx.env.mustGet(NODE_VERSION);
-  if (lt(version, '11.0.0')) {
+  if (!hasLockfile || lt(version, '11.0.0')) {
     return ['npm', 'install'];
   } else {
     return ['npm', 'ci'];

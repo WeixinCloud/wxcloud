@@ -17,6 +17,12 @@ const CASES: BuilderTestCase[] = [
     }
   },
   {
+    id: 'package-lock',
+    promptAnswers: {
+      environments: []
+    }
+  },
+  {
     id: 'npm',
     promptAnswers: {
       environments: []
