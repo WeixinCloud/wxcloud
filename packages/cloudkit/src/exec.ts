@@ -1,18 +1,10 @@
 import { IKitContext, IKitDeployTarget, Kit } from './common/kit';
-import { NextKit } from './kits/nextkit';
-
+import { CloudKits } from './kits';
+import { logger } from './utils/debug';
 export async function execAllKits(ctx: IKitContext): Promise<IKitDeployTarget> {
-  const universalKits = [new NextKit()];
-  const staticKits: Kit[] = [];
-  const runKits: Kit[] = [];
   // take kit according to ctx.config.type
-  console.log('kit::type', ctx.config.type);
-  const kits =
-    ctx.config.type === 'universal'
-      ? universalKits
-      : ctx.config.type === 'static'
-      ? staticKits
-      : runKits;
+  logger.debug('kit::type', ctx.config.type);
+  const kits = CloudKits[ctx.config.type];
   // Parallel run kit detection
   const promises = kits.map(kit => kit.detect(ctx));
   const result = await Promise.all(promises);

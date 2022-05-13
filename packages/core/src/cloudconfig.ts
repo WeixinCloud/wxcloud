@@ -1,5 +1,6 @@
+export type CloudKitType = 'universal' | 'static' | 'run';
 export interface CloudConfig extends Record<string, any> {
-  type: "universal" | "static" | "run";
+  type: CloudKitType;
   server: string;
   client?: {
     target: string | string[];
