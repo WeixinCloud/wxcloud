@@ -35,6 +35,12 @@ const CASES: BuilderTestCase[] = [
     }
   },
   {
+    id: 'pnpm',
+    promptAnswers: {
+      environments: []
+    }
+  },
+  {
     id: 'starters-nuxt',
     promptAnswers: {
       environments: []
@@ -61,6 +67,12 @@ const CASES: BuilderTestCase[] = [
   },
   {
     id: 'nextjs-cli',
+    promptAnswers: {
+      environments: []
+    }
+  },
+  {
+    id: 'nextjs-cli-pnpm',
     promptAnswers: {
       environments: []
     }

@@ -190,22 +190,25 @@ FROM node:lts-alpine
 # 设置容器内的当前目录
 WORKDIR /app
 
+# 安装 pnpm
+RUN npm install -g pnpm@7.1.0
+
 # 将这些文件拷贝到容器中
-COPY package.json yarn.lock ./
+COPY package.json pnpm-lock.yml ./
+
+# 为 pnpm 设置的环境变量
+ENV CI=true
 
 # 安装依赖
-RUN yarn install --non-interactive --prefer-offline
+RUN pnpm install --prefer-offline
 
 # 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
-# 运行编译
-RUN yarn run build
-
 ENV NODE_ENV=production
 
 # 运行项目
-CMD npm run start",
+CMD node index.js",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -283,7 +286,7 @@ RUN yarn run build
 ENV NODE_ENV=production
 
 # 运行项目
-CMD node build/index.js",
+CMD npm run start",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -297,6 +300,45 @@ node_modules",
 `;
 
 exports[`builders test (node cases) > case 8 > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 将这些文件拷贝到容器中
+COPY package.json yarn.lock ./
+
+# 安装依赖
+RUN yarn install --non-interactive --prefer-offline
+
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
+COPY . .
+
+# 运行编译
+RUN yarn run build
+
+ENV NODE_ENV=production
+
+# 运行项目
+CMD node build/index.js",
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
+}
+`;
+
+exports[`builders test (node cases) > case 9 > should have correct outputs 1`] = `
 {
   "dockerfile": "# 由 Dockerpacks 自动生成
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
@@ -338,7 +380,7 @@ node_modules",
 }
 `;
 
-exports[`builders test (node cases) > case 9 > should have correct outputs 1`] = `
+exports[`builders test (node cases) > case 10 > should have correct outputs 1`] = `
 {
   "dockerfile": "# 由 Dockerpacks 自动生成
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
@@ -360,6 +402,51 @@ COPY . .
 
 # 运行编译
 RUN npm run build
+
+ENV NODE_ENV=production
+
+# 运行项目
+CMD npm run start",
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
+}
+`;
+
+exports[`builders test (node cases) > case 11 > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 安装 pnpm
+RUN npm install -g pnpm@7.1.0
+
+# 将这些文件拷贝到容器中
+COPY package.json pnpm-lock.yaml ./
+
+# 为 pnpm 设置的环境变量
+ENV CI=true
+
+# 安装依赖
+RUN pnpm install --prefer-offline
+
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
+COPY . .
+
+# 运行编译
+RUN pnpm run build
 
 ENV NODE_ENV=production
 
