@@ -16,15 +16,17 @@ export class NextKit extends Kit {
   async run(ctx: IKitContext): Promise<IKitDeployTarget> {
     // patch next.config.js
     const nextConfigPath = path.join(ctx.fullPath, 'next.config.js');
-    const nextConfig = require(nextConfigPath);
+    const nextConfig = existsSync(nextConfigPath) ? require(nextConfigPath) : {};
     if (!ctx.staticDomain) {
       throw new Error('static domain is required using NextKit.');
     }
-    if (!nextConfig.assetPrefix) {
+    nextConfig.assetPrefix = ctx.staticDomain;
+    if (existsSync(nextConfigPath)) {
       // backup old next.config.js
       writeFileSync(path.join(ctx.fullPath, 'next.config.js.bak'), readFileSync(nextConfigPath));
       console.log('patching next.config.js for CDN assets.');
-      nextConfig.assetPrefix = ctx.staticDomain;
+      writeFileSync(nextConfigPath, `module.exports = ${JSON.stringify(nextConfig)}`);
+    } else {
       writeFileSync(nextConfigPath, `module.exports = ${JSON.stringify(nextConfig)}`);
     }
     await new Promise<void>((res, rej) => {
@@ -39,6 +41,8 @@ export class NextKit extends Kit {
     if (existsSync(path.join(ctx.fullPath, 'next.config.js.bak'))) {
       writeFileSync(nextConfigPath, readFileSync(path.join(ctx.fullPath, 'next.config.js.bak')));
       unlinkSync(path.join(ctx.fullPath, 'next.config.js.bak'));
+    } else {
+      unlinkSync(path.join(ctx.fullPath, 'next.config.js'));
     }
     // execute runkit directly without detection
     const runKit = new RunKit();

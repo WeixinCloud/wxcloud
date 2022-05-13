@@ -76,7 +76,9 @@ export default class DeployCommand extends Command {
         startTip: '云托管产物上传中...',
         successTip: '云托管产物上传成功'
       });
-      rimraf.sync(res.runTarget);
+      if (!process.env.KEEP_DEPLOY_TARGET) {
+        rimraf.sync(res.runTarget);
+      }
       await tcbSubmitServerRelease({
         deployType: 'package',
         envId,
