@@ -8,8 +8,10 @@ import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { uploadVersionPackage } from '../../api/files';
 import { readLoginState } from '../../utils/auth';
-import { chooseEnvId } from '../../utils/ux';
+import { chooseEnvId, chooseServiceId } from '../../utils/ux';
 import { beginUpload } from '../storage/upload';
+import chalk from 'chalk';
+import { execWithLoading } from '../../utils/loading';
 
 const { tcbDescribeCloudBaseBuildService, tcbDescribeWxCloudBaseRunEnvs, tcbSubmitServerRelease } =
   CloudAPI;
@@ -43,30 +45,39 @@ export default class DeployCommand extends Command {
     const { flags } = this.parse(DeployCommand);
 
     const envId = flags.envId || (await chooseEnvId());
-    const serviceName = flags.serviceName || (await cli.prompt('请输入服务名称'));
+    const serviceName = flags.serviceName || (await chooseServiceId(envId));
     const env = await tcbDescribeWxCloudBaseRunEnvs({});
     const target = env.envList.find(env => env.envId === envId);
     if (!target) {
       throw new Error(`环境 ${envId} 不存在`);
     }
     const cloudConfig = extractCloudConfig();
-    console.log('[+] target static: ', target.staticStorages[0]?.staticDomain);
+    let staticDomain: string | undefined;
+    if (cloudConfig.type === 'universal') {
+      if (target.staticStorages[0]?.staticDomain) {
+        console.log(chalk.green.bold('静态资源'), target.staticStorages[0]?.staticDomain);
+        staticDomain = `https://${target.staticStorages[0]?.staticDomain}`;
+      } else {
+        throw new Error('该环境尚未开通静态资源能力，请到控制台开通后再试');
+      }
+    }
     const res = await CloudKit.execAllKits({
       fullPath: process.cwd(),
       config: cloudConfig,
-      staticDomain: 'https://' + target.staticStorages[0]?.staticDomain
+      staticDomain
     });
-    console.log('[+] kit result: ', res);
+    console.log(chalk.yellow.bold('CloudKit'), res);
     if (res.runTarget) {
-      // todo: check service exists
       const { uploadUrl, packageName, packageVersion } = await tcbDescribeCloudBaseBuildService({
         envId,
         serviceName: serviceName
       });
-      console.log('[+] uploading package');
-      await uploadVersionPackage(uploadUrl, readFileSync(res.runTarget));
-      console.log('[+] submitting package');
-      const releaseRes = await tcbSubmitServerRelease({
+      await execWithLoading(() => uploadVersionPackage(uploadUrl, readFileSync(res.runTarget!)), {
+        startTip: '云托管产物上传中...',
+        successTip: '云托管产物上传成功'
+      });
+      rimraf.sync(res.runTarget);
+      await tcbSubmitServerRelease({
         deployType: 'package',
         envId,
         hasDockerfile: true,
@@ -79,12 +90,10 @@ export default class DeployCommand extends Command {
         port: 3000,
         versionRemark: 'cloudkit'
       });
-      console.log('[+] release result: ', releaseRes);
-      // cleanup
-      rimraf.sync(res.runTarget);
+      console.log(chalk.green('云托管'), '版本创建成功');
     }
     if (res.staticTarget) {
-      console.log('[+] uploading static files');
+      console.log(chalk.green('静态资源'), '准备上传中');
       for (const [local, remote] of Object.entries(res.staticTarget)) {
         await beginUpload(local, target.staticStorages[0], remote, 5);
       }
