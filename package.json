@@ -2,7 +2,10 @@
   "name": "@wxcloud/monorepo",
   "private": true,
   "version": "0.0.0",
-  "scripts": {},
+  "scripts": {
+    "build": "pnpm --filter=!*-server -r build",
+    "release": "pnpm --filter=!*-server -r publish"
+  },
   "devDependencies": {
     "@types/node": "^16",
     "@typescript-eslint/eslint-plugin": "^5.23.0",
