@@ -1,6 +1,6 @@
 import { Kit, KitType, IKitContext, IKitDeployTarget } from '../common/kit';
 import archiver from 'archiver';
-import { createWriteStream } from 'node:fs';
+import { createWriteStream, existsSync } from 'node:fs';
 import path from 'node:path';
 
 export interface IRunKitOptions {
@@ -22,7 +22,14 @@ export class RunKit extends Kit {
     if (options?.fileGlob) {
       options?.fileGlob?.forEach(fg => archive.glob(fg, { cwd: ctx.fullPath }));
     } else {
-      archive.directory(ctx.fullPath, false);
+      archive.glob(
+        '**/*',
+        {
+          cwd: ctx.fullPath,
+          dot: false
+        },
+        {}
+      );
     }
     // add provided file
     if (options?.providedFile) {
@@ -43,6 +50,6 @@ export class RunKit extends Kit {
     };
   }
   async detect(ctx: IKitContext) {
-    return true;
+    return existsSync(path.join(ctx.fullPath, 'Dockerfile'));
   }
 }

@@ -102,7 +102,7 @@ export async function beginUpload(
     storage,
     concurrency
   );
-  log.info(res);
+  log.info("上传完成");
 }
 
 async function getFiles(dir: string) {

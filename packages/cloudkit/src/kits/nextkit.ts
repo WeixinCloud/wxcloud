@@ -1,8 +1,8 @@
-import { exec } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
-import { promisify } from 'node:util';
 import { IKitContext, IKitDeployTarget, Kit, KitType } from '../common/kit';
+import { logger } from '../utils/debug';
 import { RunKit } from './runkit';
 
 export class NextKit extends Kit {
@@ -10,7 +10,7 @@ export class NextKit extends Kit {
   static type = KitType.UNIVERSAL;
   detect(ctx: IKitContext): boolean | Promise<boolean> {
     const packageJson = require(path.join(ctx.fullPath, 'package.json'));
-    console.log('nextkit::detect', packageJson);
+    logger.debug('nextkit::detect', packageJson);
     return !!packageJson.dependencies.next;
   }
   async run(ctx: IKitContext): Promise<IKitDeployTarget> {
@@ -18,7 +18,7 @@ export class NextKit extends Kit {
     const nextConfigPath = path.join(ctx.fullPath, 'next.config.js');
     const nextConfig = require(nextConfigPath);
     if (!ctx.staticDomain) {
-      throw new Error('staticDomain is required using NextKit.');
+      throw new Error('static domain is required using NextKit.');
     }
     if (!nextConfig.assetPrefix) {
       // backup old next.config.js
@@ -27,22 +27,23 @@ export class NextKit extends Kit {
       nextConfig.assetPrefix = ctx.staticDomain;
       writeFileSync(nextConfigPath, `module.exports = ${JSON.stringify(nextConfig)}`);
     }
-    const execp = promisify(exec);
-    const result = await execp(`cd ${ctx.fullPath} && npm run build`);
-    if (result.stderr) {
-      throw new Error(result.stderr);
-    }
-    console.log(result.stdout);
+    await new Promise<void>((res, rej) => {
+      const child = spawn('npm', ['run', 'build'], {
+        cwd: ctx.fullPath,
+        stdio: 'inherit'
+      });
+      child.on('close', () => res());
+      child.on('error', err => rej(err));
+    });
     // restore user next.config.js
     if (existsSync(path.join(ctx.fullPath, 'next.config.js.bak'))) {
       writeFileSync(nextConfigPath, readFileSync(path.join(ctx.fullPath, 'next.config.js.bak')));
       unlinkSync(path.join(ctx.fullPath, 'next.config.js.bak'));
     }
-    // execute runkit
+    // execute runkit directly without detection
     const runKit = new RunKit();
-    runKit.detect(ctx);
     const runKitResult = await runKit.run(ctx, {
-      fileGlob: ['package*.json', '.next/**/*'],
+      fileGlob: ['package*.json', '.next/**/*', 'public/**/*'],
       providedFile: {
         Dockerfile: `FROM node:alpine
 COPY . /app
