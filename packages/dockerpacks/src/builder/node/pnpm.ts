@@ -37,9 +37,13 @@ async function inferPnpmVersion(ctx: BuilderContext) {
   const packageJson = ctx.files.readJson(PACKAGE_JSON);
   const constraint = packageJson?.engines?.pnpm;
 
-  const version =
-    (await ctx.api.queryNpmPackage('pnpm', constraint)) ??
-    (await ctx.api.queryNpmPackage('pnpm', 'latest'));
+  let version: string | null = null;
+  if (constraint) {
+    version = await ctx.api.queryNpmPackage('pnpm', constraint);
+  }
+  if (!version) {
+    version = await ctx.api.queryNpmPackage('pnpm', 'latest');
+  }
   if (!version) {
     ctx.panic('未找到合适的 pnpm 版本，请联系客服');
   }
