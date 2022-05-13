@@ -1,7 +1,7 @@
 {
   "name": "@wxcloud/cli",
   "description": "微信云服务 CLI 工具",
-  "version": "1.1.9-development",
+  "version": "2.0.0",
   "author": "wxcloud",
   "bin": {
     "wxcloud": "./bin/run"
@@ -56,7 +56,8 @@
     "ts-node": "^8"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": "^16",
+    "pnpm": "^7"
   },
   "files": [
     "/bin",
