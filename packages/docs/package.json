@@ -1,6 +1,6 @@
 {
   "name": "docs",
-  "version": "2.0.1-beta.10",
+  "version": "2.0.1-beta.11",
   "description": "微信云 CLI 的官方文档",
   "private": true,
   "scripts": {
