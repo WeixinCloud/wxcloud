@@ -47,6 +47,12 @@ const CASES: BuilderTestCase[] = [
     }
   },
   {
+    id: 'create-react-app',
+    promptAnswers: {
+      environments: []
+    }
+  },
+  {
     id: 'starters-nuxt',
     promptAnswers: {
       environments: []
