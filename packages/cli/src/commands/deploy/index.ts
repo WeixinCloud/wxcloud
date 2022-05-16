@@ -12,6 +12,8 @@ import { chooseEnvId, chooseServiceId } from '../../utils/ux';
 import { beginUpload } from '../storage/upload';
 import chalk from 'chalk';
 import { execWithLoading } from '../../utils/loading';
+import { getDeployResult } from '../../functions/getDeployResult';
+import ora from 'ora';
 
 const { tcbDescribeCloudBaseBuildService, tcbDescribeWxCloudBaseRunEnvs, tcbSubmitServerRelease } =
   CloudAPI;
@@ -25,14 +27,11 @@ function extractCloudConfig(): CloudConfig {
     const config = require(configFile);
     return config;
   }
-  // todo: no config file, should prompt user to run `wxcloud migrate` first.
-  return {
-    type: 'run',
-    server: ','
-  };
+  // no config file, should prompt user to run `wxcloud migrate` first.
+  throw new Error('没有配置文件，请先执行 `wxcloud migrate` 将项目迁移到云托管');
 }
 export default class DeployCommand extends Command {
-  static description = 'Unified Deploy';
+  static description = '部署项目';
 
   static examples = [`wxcloud deploy`];
 
@@ -100,5 +99,20 @@ export default class DeployCommand extends Command {
         await beginUpload(local, target.staticStorages[0], remote, 5);
       }
     }
+    await getDeployResult({
+      envId,
+      isPrintLog: true,
+      log: console.log,
+      serviceName
+    });
+    // 部署完成，展示域名
+    const domain = await CloudAPI.tcbDescribeCloudBaseRunServiceDomain({
+      envId,
+      serviceName
+    });
+    ora().succeed(`部署完成
+
+    服务 ${serviceName} 访问地址: 
+    > https://${domain.defaultPublicDomain} `);
   }
 }
