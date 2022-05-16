@@ -4,10 +4,15 @@
   "description": "微信云 CLI 的官方文档",
   "private": true,
   "scripts": {
-    "dev": "vuepress dev src",
-    "build": "vuepress build src"
+    "dev": "vuepress dev docs",
+    "build": "vuepress build docs"
   },
   "devDependencies": {
-    "vuepress": "^1.5.3"
+    "@vuepress/client": "^2.0.0-beta.42",
+    "@vuepress/plugin-back-to-top": "2.0.0-beta.45",
+    "@vuepress/plugin-nprogress": "2.0.0-beta.45",
+    "@vuepress/plugin-search": "2.0.0-beta.45",
+    "vue": "^3.2.33",
+    "vuepress": "next"
   }
 }
