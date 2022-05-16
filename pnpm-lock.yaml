@@ -249,7 +249,7 @@ importers:
       tsx: 2.1.0
       vitest: 0.10.5
 
-  packages/docs:
+  packages/docs-server:
     specifiers:
       '@vuepress/client': ^2.0.0-beta.42
       '@vuepress/plugin-back-to-top': 2.0.0-beta.45
