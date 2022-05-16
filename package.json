@@ -22,7 +22,8 @@
   "pnpm": {
     "peerDependencyRules": {
       "ignoreMissing": [
-        "vite"
+        "vite",
+        "typescript"
       ]
     }
   }
