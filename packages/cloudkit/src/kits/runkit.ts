@@ -26,7 +26,8 @@ export class RunKit extends Kit {
         '**/*',
         {
           cwd: ctx.fullPath,
-          dot: false
+          dot: true,
+          ignore: [zipName]
         },
         {}
       );
