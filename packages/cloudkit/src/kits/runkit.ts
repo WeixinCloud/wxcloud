@@ -39,13 +39,13 @@ export class RunKit extends Kit {
       });
     }
     archive.pipe(output);
-    ctx.lifecycleHooks?.enterStage('packing runkit');
+    ctx.lifecycleHooks?.enterStage('runkit::pack');
     await new Promise<void>((resolve, reject) => {
       archive.on('error', err => reject(err));
       archive.on('end', () => resolve());
       archive.finalize();
     });
-    ctx.lifecycleHooks?.leaveStage('packing runkit');
+    ctx.lifecycleHooks?.leaveStage('runkit::pack');
     return {
       runTarget: zipName
     };
