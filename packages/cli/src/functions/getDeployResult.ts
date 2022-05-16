@@ -1,7 +1,6 @@
 import { DescribeServerManageTask, DescribeCloudBaseRunServer } from '../api';
 import { computedTaskLog, computedBuildLog } from '../utils/run';
 import logUpdate from 'log-update';
-
 export async function getDeployResult({
   envId,
   serviceName,
@@ -15,7 +14,6 @@ export async function getDeployResult({
 }) {
   return new Promise<void>(resolve => {
     const timer = setInterval(async () => {
-      
       const { Task: manageTask } = await DescribeServerManageTask({
         EnvId: envId,
         ServerName: serviceName
