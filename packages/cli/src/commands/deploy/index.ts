@@ -14,6 +14,13 @@ import chalk from 'chalk';
 import { execWithLoading } from '../../utils/loading';
 import { getDeployResult } from '../../functions/getDeployResult';
 import ora from 'ora';
+import { logger } from '../../utils/log';
+import inquirer from 'inquirer';
+
+const oraStages: Record<string, ora.Ora> = {};
+const stageName = {
+  'runkit::pack': '打包云托管产物'
+};
 
 const { tcbDescribeCloudBaseBuildService, tcbDescribeWxCloudBaseRunEnvs, tcbSubmitServerRelease } =
   CloudAPI;
@@ -54,27 +61,60 @@ export default class DeployCommand extends Command {
     let staticDomain: string | undefined;
     if (cloudConfig.type === 'universal') {
       if (target.staticStorages[0]?.staticDomain) {
-        console.log(chalk.green.bold('静态资源'), target.staticStorages[0]?.staticDomain);
-        staticDomain = `https://${target.staticStorages[0]?.staticDomain}`;
+        const domainWithoutPrefix = target.staticStorages[0]?.staticDomain;
+        console.log(chalk.green.bold('静态资源'), domainWithoutPrefix);
+        // check is cors enabled in static storage
+        const tcbAttr = await CloudAPI.cdnTcbCheckResource({
+          domains: [domainWithoutPrefix]
+        });
+        if (!tcbAttr.domains[0].domainConfig.rspHeader?.switch) {
+          const answer = (
+            await inquirer.prompt([
+              {
+                type: 'confirm',
+                name: 'answer',
+                message: '检测到静态资源未开启跨域访问，是否开启？'
+              }
+            ])
+          ).answer;
+          if (answer) {
+            await CloudAPI.cdnTcbModifyAttribute({
+              domain: tcbAttr.domains[0].domain,
+              domainId: tcbAttr.domains[0].domainId,
+              domainConfig: {
+                rspHeader: {
+                  switch: 'on',
+                  headerRules: [
+                    {
+                      headerName: 'Access-Control-Allow-Origin',
+                      headerValue: ['*']
+                    }
+                  ]
+                }
+              }
+            });
+          }
+        }
+        staticDomain = `https://${domainWithoutPrefix}`;
       } else {
         throw new Error('该环境尚未开通静态资源能力，请到控制台开通后再试');
       }
     }
-    const oraStages: Record<string, ReturnType<typeof ora>> = {};
+
     const res = await CloudKit.execAllKits({
       fullPath: process.cwd(),
       config: cloudConfig,
       staticDomain,
       lifecycleHooks: {
         enterStage(stage) {
-          oraStages[stage] = ora(stage).start();
+          oraStages[stage] = ora(stageName[stage]).start();
         },
         leaveStage(stage) {
           oraStages[stage].succeed();
         }
       }
     });
-    console.log(chalk.yellow.bold('CloudKit'), res);
+    logger.debug(chalk.yellow.bold('CloudKit'), res);
     if (res.runTarget) {
       const { uploadUrl, packageName, packageVersion } = await tcbDescribeCloudBaseBuildService({
         envId,
