@@ -4,6 +4,7 @@ import { nodeEntrypointBuilder } from '@builder/node/entrypoint';
 import { npmBuilder } from '@builder/node/npm';
 import { pnpmBuilder } from '@builder/node/pnpm';
 import { nodeRuntimeBuilder } from '@builder/node/runtime';
+import { svelteKitStaticBuilder } from '@builder/node/sveltekit-static';
 import { yarnBuilder } from '@builder/node/yarn';
 import { BuilderGroup } from '../group';
 
@@ -12,6 +13,7 @@ export const NODE_GROUPS: BuilderGroup[] = [
     label: 'Dockerpacks Node builder group for pnpm with build stage',
     builders: [
       nodeRuntimeBuilder,
+      [svelteKitStaticBuilder, true],
       commonEnvBuilder,
       pnpmBuilder,
       buildBuilder,
@@ -20,12 +22,19 @@ export const NODE_GROUPS: BuilderGroup[] = [
   },
   {
     label: 'Dockerpacks Node builder group for pnpm',
-    builders: [nodeRuntimeBuilder, commonEnvBuilder, pnpmBuilder, nodeEntrypointBuilder]
+    builders: [
+      nodeRuntimeBuilder,
+      [svelteKitStaticBuilder, true],
+      commonEnvBuilder,
+      pnpmBuilder,
+      nodeEntrypointBuilder
+    ]
   },
   {
     label: 'Dockerpacks Node builder group for Yarn with build stage',
     builders: [
       nodeRuntimeBuilder,
+      [svelteKitStaticBuilder, true],
       commonEnvBuilder,
       yarnBuilder,
       buildBuilder,
@@ -34,12 +43,19 @@ export const NODE_GROUPS: BuilderGroup[] = [
   },
   {
     label: 'Dockerpacks Node builder group for Yarn',
-    builders: [nodeRuntimeBuilder, commonEnvBuilder, yarnBuilder, nodeEntrypointBuilder]
+    builders: [
+      nodeRuntimeBuilder,
+      [svelteKitStaticBuilder, true],
+      commonEnvBuilder,
+      yarnBuilder,
+      nodeEntrypointBuilder
+    ]
   },
   {
     label: 'Dockerpacks Node builder group for NPM with build stage',
     builders: [
       nodeRuntimeBuilder,
+      [svelteKitStaticBuilder, true],
       commonEnvBuilder,
       npmBuilder,
       buildBuilder,
@@ -48,10 +64,21 @@ export const NODE_GROUPS: BuilderGroup[] = [
   },
   {
     label: 'Dockerpacks Node builder group for NPM',
-    builders: [nodeRuntimeBuilder, commonEnvBuilder, npmBuilder, nodeEntrypointBuilder]
+    builders: [
+      nodeRuntimeBuilder,
+      [svelteKitStaticBuilder, true],
+      commonEnvBuilder,
+      npmBuilder,
+      nodeEntrypointBuilder
+    ]
   },
   {
     label: 'Dockerpacks Node builder group for general Node projects',
-    builders: [nodeRuntimeBuilder, commonEnvBuilder, nodeEntrypointBuilder]
+    builders: [
+      nodeRuntimeBuilder,
+      [svelteKitStaticBuilder, true],
+      commonEnvBuilder,
+      nodeEntrypointBuilder
+    ]
   }
 ];
