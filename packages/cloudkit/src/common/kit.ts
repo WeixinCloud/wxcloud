@@ -1,14 +1,18 @@
-import { CloudConfig } from "@wxcloud/core";
+import { CloudConfig } from '@wxcloud/core';
 
 export enum KitType {
-  UNIVERSAL = "universal",
-  RUN = "run",
-  STATIC = "static",
+  UNIVERSAL = 'universal',
+  RUN = 'run',
+  STATIC = 'static'
 }
 export interface IKitContext {
   fullPath: string;
   config: CloudConfig;
   staticDomain?: string;
+  lifecycleHooks?: {
+    enterStage: (stageName: string, ...info: any) => void;
+    leaveStage: (stageName: string, ...info: any) => void;
+  };
 }
 export interface IKitDeployTarget {
   staticTarget?: Record<string, string>;

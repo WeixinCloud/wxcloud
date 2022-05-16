@@ -60,10 +60,19 @@ export default class DeployCommand extends Command {
         throw new Error('该环境尚未开通静态资源能力，请到控制台开通后再试');
       }
     }
+    const oraStages: Record<string, ReturnType<typeof ora>> = {};
     const res = await CloudKit.execAllKits({
       fullPath: process.cwd(),
       config: cloudConfig,
-      staticDomain
+      staticDomain,
+      lifecycleHooks: {
+        enterStage(stage) {
+          oraStages[stage] = ora(stage).start();
+        },
+        leaveStage(stage) {
+          oraStages[stage].succeed();
+        }
+      }
     });
     console.log(chalk.yellow.bold('CloudKit'), res);
     if (res.runTarget) {

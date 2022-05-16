@@ -30,7 +30,7 @@ export async function getDeployResult({
         });
         const taskLog = await computedTaskLog(envId, manageTask);
         const buildLog = await computedBuildLog(envId, versionItem);
-        logUpdate(`${taskLog}\n${buildLog}`);
+        logUpdate(`${taskLog}\n${buildLog}\n`);
         if (manageTask?.Status === 'finished') {
           clearInterval(timer);
           resolve();

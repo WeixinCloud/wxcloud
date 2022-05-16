@@ -1,14 +1,24 @@
-import { padEnd } from "lodash";
-import moment from "moment";
-import {
-  DescribeCloudBaseRunBuildLog,
-  DescribeCloudBaseRunProcessLog,
-  SearchClsLog,
-} from "../api";
-import { VersionItems, IServerManageTaskInfo } from "../api/interface";
-import { STAGE_TEXT, STATUS_TEXT, STAGE_COST } from "../constants";
-import { readLoginState } from "./auth";
+import { padEnd } from 'lodash';
+import moment from 'moment';
+import { DescribeCloudBaseRunBuildLog, DescribeCloudBaseRunProcessLog, SearchClsLog } from '../api';
+import { VersionItems, IServerManageTaskInfo } from '../api/interface';
+import { STAGE_TEXT, STATUS_TEXT, STAGE_COST } from '../constants';
+import { readLoginState } from './auth';
+function ansiRegex({ onlyFirst = false } = {}) {
+  const pattern = [
+    '[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)',
+    '(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-nq-uy=><~]))'
+  ].join('|');
 
+  return new RegExp(pattern, onlyFirst ? undefined : 'g');
+}
+function stripAnsi(string) {
+  if (typeof string !== 'string') {
+    throw new TypeError(`Expected a \`string\`, got \`${typeof string}\``);
+  }
+
+  return string.replace(ansiRegex(), '');
+}
 export async function computedBuildLog(envId: string, version: VersionItems) {
   const buildId = version?.BuildId;
   const runId = version?.RunId;
@@ -17,21 +27,21 @@ export async function computedBuildLog(envId: string, version: VersionItems) {
       ? DescribeCloudBaseRunBuildLog({
           EnvId: envId,
           ServiceVersion: version?.VersionName,
-          BuildId: buildId,
+          BuildId: buildId
         })
       : Promise.resolve(null),
     runId
       ? DescribeCloudBaseRunProcessLog({
           EnvId: envId,
-          RunId: runId,
+          RunId: runId
         })
       : Promise.resolve(null),
     SearchClsLog({
       EnvId: envId,
-      StartTime: moment().subtract(10, "m").format("YYYY-MM-DD HH:mm:ss"),
-      EndTime: moment().add(10, "m").format("YYYY-MM-DD HH:mm:ss"),
+      StartTime: moment().subtract(10, 'm').format('YYYY-MM-DD HH:mm:ss'),
+      EndTime: moment().add(10, 'm').format('YYYY-MM-DD HH:mm:ss'),
       QueryString: `tcb_type:CloudBaseRun AND container_name:${version?.VersionName}`,
-      Limit: 100,
+      Limit: 100
     })
       .then(({ LogResults = {} }) =>
         LogResults?.Results?.sort((a, b) => {
@@ -40,51 +50,43 @@ export async function computedBuildLog(envId: string, version: VersionItems) {
           }
           return -1;
         })
-          .map((r) => {
+          .map(r => {
             try {
               const maybeJSON = JSON.parse(r.content);
-              return maybeJSON.log || "";
+              return maybeJSON.log || '';
             } catch (error) {
               return r.content;
             }
           })
-          .join("\n")
+          .join('\n')
       )
-      .catch(() => ""),
+      .catch(() => '')
   ]);
-  const pipelineHtml = runBuildLog?.Log?.Text?.trim() || "";
-  const cbrHtml = cbrLog?.Logs?.join("\n") || "";
-  const userHtml = userLog?.trim() || "";
+  const pipelineHtml = runBuildLog?.Log?.Text?.trim() || '';
+  const cbrHtml = cbrLog?.Logs?.join('\n') || '';
+  const userHtml = userLog?.trim() || '';
 
-  return [pipelineHtml, cbrHtml, userHtml]
-    .filter(Boolean)
-    .join("<br/>***<br/>");
+  return [pipelineHtml, cbrHtml, userHtml].map(stripAnsi).filter(Boolean).join('<br/>***<br/>');
 }
-export async function computedTaskLog(
-  envId: string,
-  task: IServerManageTaskInfo
-) {
+export async function computedTaskLog(envId: string, task: IServerManageTaskInfo) {
   const { appid } = await readLoginState();
-  const stepsToConsider =
-    task?.Steps?.filter(({ Status }) => Status !== "notInvolve") ?? [];
+  const stepsToConsider = task?.Steps?.filter(({ Status }) => Status !== 'notInvolve') ?? [];
   const taskDisplayInfo = task?.Steps
     ? `部署开始于 ${task.CreateTime}\n\nAppID: ${appid}\n环境名称：${envId}\n
       ${stepsToConsider
-        .filter(({ Status }) => Status !== "todo")
+        .filter(({ Status }) => Status !== 'todo')
         .map(({ Name, Status, FailReason, CostTime }, i) => {
           return [
             `[${i + 1}/${stepsToConsider?.length}]`,
-            padEnd(STAGE_TEXT[Name] || Name, 8, "　"),
-            padEnd(STATUS_TEXT[Status] || Status, 3, "　"),
-            Status === "running"
-              ? `预计需要 ${STAGE_COST[Name]}...`
-              : `${CostTime}s`,
-            FailReason,
+            padEnd(STAGE_TEXT[Name] || Name, 8, '　'),
+            padEnd(STATUS_TEXT[Status] || Status, 3, '　'),
+            Status === 'running' ? `预计需要 ${STAGE_COST[Name]}...` : `${CostTime}s`,
+            FailReason
           ]
-            .filter((v) => v)
-            .join(" ");
+            .filter(v => v)
+            .join(' ');
         })
-        .join("\n")}`
-    : "";
+        .join('\n')}`
+    : '';
   return taskDisplayInfo;
 }
