@@ -1,0 +1,12 @@
+{
+  "name": "docs",
+  "description": "微信云 CLI 的官方文档",
+  "private": true,
+  "scripts": {
+    "dev": "vuepress dev src",
+    "build": "vuepress build src"
+  },
+  "devDependencies": {
+    "vuepress": "^1.5.3"
+  }
+}
