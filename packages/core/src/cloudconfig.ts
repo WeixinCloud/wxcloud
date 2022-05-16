@@ -7,3 +7,12 @@ export interface CloudConfig extends Record<string, any> {
     domain?: string;
   };
 }
+
+export const DefaultCloudConfig = `/** @type {import('@wxcloud/core').CloudConfig} */
+const cloudConfig = {
+  server: '.',
+  type: 'run',
+}
+
+module.exports = cloudConfig
+`;
