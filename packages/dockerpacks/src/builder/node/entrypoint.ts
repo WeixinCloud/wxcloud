@@ -21,6 +21,7 @@ export const nodeEntrypointBuilder: Builder = {
 
     return dockerfile => {
       dockerfile.env('NODE_ENV', NODE_ENV_PRODUCTION);
+      dockerfile.env('HOST', '0.0.0.0');
       dockerfile.cmd(...entrypoint).comment('运行项目');
     };
   }
