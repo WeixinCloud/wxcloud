@@ -3,10 +3,10 @@
   "private": true,
   "version": "2.0.1-beta.10",
   "scripts": {
-    "build": "pnpm --filter=!dockerpacks-server -r run build",
+    "build": "pnpm --filter=!dockerpacks-server --filter=!docs -r run build",
     "build:all": "pnpm -r run build",
     "bump": "bumpp package.json packages/*/package.json --commit --push --tag",
-    "release": "pnpm -r publish --filter=!dockerpacks-server --access=public --registry=https://registry.npmjs.org/ --no-git-checks --tag=alpha"
+    "release": "pnpm -r publish --filter=!dockerpacks-server --filter=!docs --access=public --registry=https://registry.npmjs.org/ --no-git-checks --tag=alpha"
   },
   "devDependencies": {
     "@types/node": "^16",
