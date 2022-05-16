@@ -1,6 +1,6 @@
 import { DescribeServerManageTask, DescribeCloudBaseRunServer } from '../api';
 import { computedTaskLog, computedBuildLog } from '../utils/run';
-
+import logUpdate from 'log-update';
 export async function getDeployResult({
   envId,
   serviceName,
@@ -30,7 +30,7 @@ export async function getDeployResult({
         });
         const taskLog = await computedTaskLog(envId, manageTask);
         const buildLog = await computedBuildLog(envId, versionItem);
-        log(`${taskLog}\n${buildLog}`);
+        logUpdate(`${taskLog}\n${buildLog}`);
         if (manageTask?.Status === 'finished') {
           clearInterval(timer);
           resolve();

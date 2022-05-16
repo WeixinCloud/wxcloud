@@ -31,6 +31,7 @@
     "kolorist": "^1.5.1",
     "listr2": "^4.0.5",
     "lodash": "^4.17.21",
+    "log-update": "4",
     "minimatch": "^5.0.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",

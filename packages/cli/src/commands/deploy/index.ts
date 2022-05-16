@@ -112,7 +112,7 @@ export default class DeployCommand extends Command {
     });
     ora().succeed(`部署完成
 
-    服务 ${serviceName} 访问地址: 
-    > https://${domain.defaultPublicDomain} `);
+服务 ${serviceName} 访问地址: 
+> ${domain.defaultPublicDomain} `);
   }
 }
