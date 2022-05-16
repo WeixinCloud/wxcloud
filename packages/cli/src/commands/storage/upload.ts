@@ -92,7 +92,8 @@ export async function beginUpload(
       Body: files[i]
     })),
     storage,
-    concurrency
+    concurrency,
+    path
   );
   ora().succeed('上传文件成功');
 }
@@ -115,7 +116,8 @@ interface IGenericStorage {
 async function putObjectToCos(
   files: COS.PutObjectParams[],
   storage: IGenericStorage,
-  concurrency: number
+  concurrency: number,
+  path: string
 ) {
   const cos = new COS({
     getAuthorization: await getAuthorizationThunk(storage)
@@ -137,7 +139,7 @@ async function putObjectToCos(
     let lastUpload = '';
     // need to fire up cos by putting one first
     const customBar = cli.progress({
-      format: 'PROGRESS | {bar} | {value}/{total} Files',
+      format: `${path} | {bar} | {value}/{total} Files`,
       barCompleteChar: '\u2588',
       barIncompleteChar: '\u2591'
     });
