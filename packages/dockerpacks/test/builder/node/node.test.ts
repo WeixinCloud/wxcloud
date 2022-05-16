@@ -72,6 +72,21 @@ const CASES: BuilderTestCase[] = [
     }
   },
   {
+    id: 'sveltekit-cli-node-adapter',
+    promptAnswers: {
+      environments: [],
+      generalEntrypoint: 'node build/index.js'
+    }
+  },
+  {
+    id: 'sveltekit-cli-static-adapter',
+    expectPanic: /adapter-static/i,
+    promptAnswers: {
+      environments: [],
+      generalEntrypoint: 'node build/index.js'
+    }
+  },
+  {
     id: 'nextjs-cli',
     promptAnswers: {
       environments: []

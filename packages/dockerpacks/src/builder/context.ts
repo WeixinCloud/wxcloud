@@ -134,6 +134,8 @@ export interface PromptIO {
 }
 
 export class PromptHandler {
+  private promptFailedCounts = new Map<string, number>();
+
   constructor(
     private readonly io: PromptIO,
     private readonly messageHandler: MessageHandler,
@@ -156,11 +158,20 @@ export class PromptHandler {
         if (this.throwOnInvalidInput) {
           throw new Error(message);
         } else {
+          if (!this.promptFailedCounts.has(config.id)) {
+            this.promptFailedCounts.set(config.id, 0);
+          }
+          const count = this.promptFailedCounts.get(config.id)!;
+          if (count > 5) {
+            throw new Error(`错误次数过多：${message}`);
+          }
+          this.promptFailedCounts.set(config.id, count + 1);
           this.messageHandler.pass(message);
         }
         continue;
       }
 
+      this.promptFailedCounts.delete(config.id);
       break;
     }
 
