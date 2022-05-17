@@ -6,14 +6,6 @@ export function safeRequire(filePath: string) {
       return require(filePath);
     } catch (e) {
       logger.debug(e);
-      if (e?.message?.includes(`Unexpected token 'export'`)) {
-        let content = readFileSync(filePath, 'utf-8');
-        if (content.startsWith('export default')) {
-          content = content.replace('export default', 'module.exports =');
-          writeFileSync(filePath, content);
-          return require(filePath);
-        }
-      }
       if (e?.message?.includes('require() of ES Module')) {
         let content = readFileSync(filePath, 'utf-8');
         const cjs = filePath.replace('.js', '.cjs');
