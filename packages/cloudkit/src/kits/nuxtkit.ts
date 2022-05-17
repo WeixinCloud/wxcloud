@@ -5,7 +5,8 @@ import { IKitContext, IKitDeployTarget, Kit, KitType } from '../common/kit';
 import { logger } from '../utils/debug';
 import { RunKit } from './runkit';
 import { safeRequire } from '../utils/safeRequire';
-
+import j from 'jscodeshift';
+import { namedTypes } from 'ast-types';
 export class NuxtKit extends Kit {
   static description = 'CloudKit for Nuxt.js';
   static type = KitType.UNIVERSAL;
@@ -14,24 +15,86 @@ export class NuxtKit extends Kit {
     logger.debug('nuxtkit::detect', packageJson);
     return !!packageJson.dependencies.nuxt;
   }
+  // add build options to nuxt config
+  transformConfig(sourceCode: string, ctx: IKitContext): string {
+    // use https://astexplorer.net/ for debug
+    const buildProperty = j(sourceCode).find(j.Property, {
+      key: {
+        name: 'build'
+      }
+    });
+    // if build option is already in config
+    if (buildProperty.length !== 0) {
+      buildProperty.forEach(p => {
+        const properties = (p?.node?.value as j.ObjectExpression)?.properties;
+        const publicPathNode = properties?.find(
+          item => item.type === 'Property' && (item?.key as j.Identifier)?.name === 'publicPath'
+        ) as namedTypes.Property;
+
+        // if already has publicPath, we need to change it
+        if (publicPathNode) {
+          (publicPathNode?.value as j.Literal).value = ctx.staticDomain!;
+        } else {
+          // else add publicPath
+          const item = j.property('init', j.identifier('publicPath'), j.literal(ctx.staticDomain!));
+          properties.push(item);
+        }
+      });
+      return buildProperty.toSource();
+    } else {
+      const root = j(sourceCode).find(j.ExportDefaultDeclaration);
+      const obj = j.property(
+        'init',
+        j.identifier('build'),
+        j.objectExpression([
+          j.property('init', j.identifier('publicPath'), j.literal(ctx.staticDomain!))
+        ])
+      );
+      // es6 export default
+      if (root.length > 0) {
+        root.forEach(item => {
+          // add build props:
+          // build: {
+          //   publicPath: 'xxx'
+          // }
+          (item?.node?.declaration as j.ObjectExpression)?.properties.push(obj);
+        });
+        return root.toSource();
+      } else {
+        // module.exports
+        const root = j(sourceCode).find(j.AssignmentExpression)?.at(0);
+        if (root.length > 0) {
+          root.forEach(item => {
+            (item.node.right as j.ObjectExpression)?.properties?.push(obj);
+          });
+        }
+        return root.toSource();
+      }
+    }
+  }
   async run(ctx: IKitContext): Promise<IKitDeployTarget> {
     logger.debug('nuxtkit::runt', ctx);
     // patch nuxt.config.js
     const nuxtConfigPath = path.join(ctx.fullPath, 'nuxt.config.js');
-    const nuxtConfig = safeRequire(nuxtConfigPath);
     if (!ctx.staticDomain) {
       throw new Error('static domain is required using nuxtKit.');
     }
-    nuxtConfig.build = {
-      ...(nuxtConfig.build || {}),
-      publicPath: ctx.staticDomain
-    };
     if (existsSync(nuxtConfigPath)) {
       // backup old nuxt.config.js
-      writeFileSync(path.join(ctx.fullPath, 'nuxt.config.js.bak'), readFileSync(nuxtConfigPath));
-      console.log('patching nuxt.config.js for CDN assets.');
+      const nuxtConfigSourceString = readFileSync(nuxtConfigPath, 'utf8');
+      writeFileSync(path.join(ctx.fullPath, 'nuxt.config.js.bak'), nuxtConfigSourceString);
+      const nuxtConfigString = this.transformConfig(nuxtConfigSourceString, ctx);
+      writeFileSync(nuxtConfigPath, nuxtConfigString);
+      logger.debug('nuxt patched config', nuxtConfigSourceString);
+    } else {
+      const nuxtConfig = {
+        build: {
+          publicPath: ctx.staticDomain
+        }
+      };
+      writeFileSync(nuxtConfigPath, `export default ${JSON.stringify(nuxtConfig)}`);
     }
-    writeFileSync(nuxtConfigPath, `export default ${JSON.stringify(nuxtConfig)}`);
+    console.log('patching nuxt.config.js for CDN assets.');
     await new Promise<void>((res, rej) => {
       const child = spawn('npm', ['run', 'build'], {
         cwd: ctx.fullPath,
@@ -48,7 +111,7 @@ export class NuxtKit extends Kit {
         Dockerfile: `FROM node
 COPY . /app
 WORKDIR /app
-RUN npm i --registry https://mirrors.cloud.tencent.com/npm/
+RUN npm i --registry=https://registry.npmmirror.com
 ENV NUXT_HOST=0.0.0.0
 ENTRYPOINT [ "npm", "start" ]`
       }

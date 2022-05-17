@@ -52,7 +52,7 @@ export class NextKit extends Kit {
         Dockerfile: `FROM node:alpine
 COPY . /app
 WORKDIR /app
-RUN npm install --registry=https://mirrors.cloud.tencent.com/npm/
+RUN npm install --registry=https://registry.npmmirror.com
 ENTRYPOINT [ "npm", "start" ]`
       }
     });
