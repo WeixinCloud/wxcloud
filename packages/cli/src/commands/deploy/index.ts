@@ -50,16 +50,17 @@ export default class DeployCommand extends Command {
   async run() {
     const { flags } = this.parse(DeployCommand);
 
+    const cloudConfig = extractCloudConfig();
+    const isStatic = cloudConfig.type === 'static';
     const envId = flags.envId || (await chooseEnvId());
-    const serviceName = flags.serviceName || (await chooseServiceId(envId));
+    const serviceName = flags.serviceName || isStatic ? undefined : await chooseServiceId(envId);
     const env = await tcbDescribeWxCloudBaseRunEnvs({});
     const target = env.envList.find(env => env.envId === envId);
     if (!target) {
       throw new Error(`环境 ${envId} 不存在`);
     }
-    const cloudConfig = extractCloudConfig();
     let staticDomain: string | undefined;
-    if (cloudConfig.type === 'universal') {
+    if (cloudConfig.type === 'universal' || cloudConfig.type === 'static') {
       if (target.staticStorages[0]?.staticDomain) {
         const domainWithoutPrefix = target.staticStorages[0]?.staticDomain;
         console.log(chalk.green.bold('静态资源'), domainWithoutPrefix);
@@ -148,20 +149,29 @@ export default class DeployCommand extends Command {
         await beginUpload(local, target.staticStorages[0], remote, 5);
       }
     }
-    await getDeployResult({
-      envId,
-      isPrintLog: true,
-      log: console.log,
-      serviceName
-    });
-    // 部署完成，展示域名
-    const domain = await CloudAPI.tcbDescribeCloudBaseRunServiceDomain({
-      envId,
-      serviceName
-    });
-    ora().succeed(`部署完成
+    switch (cloudConfig.type) {
+      case 'universal':
+      case 'run':
+        await getDeployResult({
+          envId,
+          isPrintLog: true,
+          log: console.log,
+          serviceName
+        });
+        // 部署完成，展示域名
+        const domain = await CloudAPI.tcbDescribeCloudBaseRunServiceDomain({
+          envId,
+          serviceName
+        });
+        ora().succeed(`部署完成
 
-服务 ${serviceName} 访问地址: 
-> ${domain.defaultPublicDomain} `);
+      服务 ${serviceName} 访问地址: 
+      > ${domain.defaultPublicDomain} `);
+
+        break;
+      case 'static':
+        ora().succeed(`静态资源部署完成 \n\n 访问地址：${staticDomain}`);
+        break;
+    }
   }
 }
