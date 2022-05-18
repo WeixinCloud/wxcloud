@@ -6,10 +6,11 @@ import { phpFpmBuilder } from '@builder/php/fpm';
 import { laravelBuilder } from '@builder/php/laravel';
 import { nginxBuilder } from '@builder/php/nginx';
 import { thinkPhpBuilder } from '@builder/php/thinkphp';
-import { BuilderGroup } from '../group';
+import { BuilderGroup } from './group';
 
 export const PHP_GROUPS: BuilderGroup[] = [
   {
+    type: 'php',
     label: 'Dockerpacks Python builder group for php thinkphp framework',
     builders: [
       phpFpmBuilder,
@@ -22,6 +23,7 @@ export const PHP_GROUPS: BuilderGroup[] = [
     ]
   },
   {
+    type: 'php',
     label: 'Dockerpacks Python builder group for php laravel framework',
     builders: [
       phpFpmBuilder,
@@ -34,6 +36,7 @@ export const PHP_GROUPS: BuilderGroup[] = [
     ]
   },
   {
+    type: 'php',
     label: 'Dockerpacks Python builder group for general php frameworks',
     builders: [
       phpFpmBuilder,

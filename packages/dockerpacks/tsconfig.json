@@ -1,15 +1,16 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
       "@api/*": ["src/api/*"],
       "@builder/*": ["src/builder/*"],
       "@dockerfile/*": ["src/dockerfile/*"],
+      "@group/*": ["src/group/*"],
       "@runner/*": ["src/runner/*"],
-      "@utils/*": ["src/utils/*"],
-      "@test/*": ["test/*"]
-    }
-  }
+      "@test/*": ["test/*"],
+      "@utils/*": ["src/utils/*"]
+    },
+    "resolveJsonModule": true
+  },
+  "extends": "../../tsconfig.json"
 }

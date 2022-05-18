@@ -6,10 +6,11 @@ import { pnpmBuilder } from '@builder/node/pnpm';
 import { nodeRuntimeBuilder } from '@builder/node/runtime';
 import { svelteKitStaticBuilder } from '@builder/node/sveltekit-static';
 import { yarnBuilder } from '@builder/node/yarn';
-import { BuilderGroup } from '../group';
+import { BuilderGroup } from './group';
 
 export const NODE_GROUPS: BuilderGroup[] = [
   {
+    type: 'node',
     label: 'Dockerpacks Node builder group for pnpm with build stage',
     builders: [
       nodeRuntimeBuilder,
@@ -21,6 +22,7 @@ export const NODE_GROUPS: BuilderGroup[] = [
     ]
   },
   {
+    type: 'node',
     label: 'Dockerpacks Node builder group for pnpm',
     builders: [
       nodeRuntimeBuilder,
@@ -31,6 +33,7 @@ export const NODE_GROUPS: BuilderGroup[] = [
     ]
   },
   {
+    type: 'node',
     label: 'Dockerpacks Node builder group for Yarn with build stage',
     builders: [
       nodeRuntimeBuilder,
@@ -42,6 +45,7 @@ export const NODE_GROUPS: BuilderGroup[] = [
     ]
   },
   {
+    type: 'node',
     label: 'Dockerpacks Node builder group for Yarn',
     builders: [
       nodeRuntimeBuilder,
@@ -52,6 +56,7 @@ export const NODE_GROUPS: BuilderGroup[] = [
     ]
   },
   {
+    type: 'node',
     label: 'Dockerpacks Node builder group for NPM with build stage',
     builders: [
       nodeRuntimeBuilder,
@@ -63,6 +68,7 @@ export const NODE_GROUPS: BuilderGroup[] = [
     ]
   },
   {
+    type: 'node',
     label: 'Dockerpacks Node builder group for NPM',
     builders: [
       nodeRuntimeBuilder,
@@ -73,6 +79,7 @@ export const NODE_GROUPS: BuilderGroup[] = [
     ]
   },
   {
+    type: 'node',
     label: 'Dockerpacks Node builder group for general Node projects',
     builders: [
       nodeRuntimeBuilder,

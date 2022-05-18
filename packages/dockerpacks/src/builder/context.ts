@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { readFileSync } from 'fs';
 import { join, normalize } from 'path';
 import { sync } from 'glob';
 import { ServerApi } from '@api/server';
