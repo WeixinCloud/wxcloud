@@ -47,7 +47,7 @@ export default defineUserConfig({
     navbar: [
       {
         text: '使用文档',
-        link: ''
+        link: '/guide'
       },
       {
         text: '微信云托管',
@@ -59,7 +59,6 @@ export default defineUserConfig({
       {
         text: '使用文档',
         children: [
-          '/',
           {
             text: '命令',
             children: commandDocs
