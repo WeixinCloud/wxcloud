@@ -1,9 +1,9 @@
 {
   "name": "@wxcloud/cloudkit",
   "version": "2.0.1-beta.12",
-  "main": "./lib/cjs/index.js",
-  "module": "./lib/esm/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "license": "MIT",
   "engines": {
     "node": "^16",
@@ -16,15 +16,8 @@
     "/lib"
   ],
   "scripts": {
-    "build": "npm run clean && npm run type:dts && npm run type:build",
-    "clean": "node -r ./esbuild-hook ./scripts/clean",
-    "type:dts": "tsc --emitDeclarationOnly",
-    "type:check": "tsc --noEmit",
-    "type:build": "node -r ./esbuild-hook ./scripts/build",
-    "format": "prettier \"src/**/*.ts\" --write",
-    "format:check": "prettier \"src/**/*.ts\" --check",
-    "lint": "eslint src --ext .ts --fix",
-    "lint:check": "eslint src --ext .ts",
+    "build": "rimraf dist && tsup",
+    "clean": "rimraf dist",
     "test": "ava",
     "test:coverage": "nyc ava && nyc report --reporter=html",
     "test:setup": "node -r ./esbuild-hook ./scripts/testSetup"
@@ -42,7 +35,8 @@
     "esbuild": "^0.14.38",
     "nyc": "^15.1.0",
     "semantic-release": "^19.0.2",
-    "source-map-support": "^0.5.21"
+    "source-map-support": "^0.5.21",
+    "tsup": "^5.12.8"
   },
   "volta": {
     "node": "16.15.0",
