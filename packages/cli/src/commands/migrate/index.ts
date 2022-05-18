@@ -2,19 +2,20 @@ import path from 'path';
 import * as inquirer from 'inquirer';
 import { writeFile } from 'fs/promises';
 import {
-  DockerpacksRunner,
+  Dockerpacks,
   MessageHandler,
   PromptIO,
   MessageLevel,
-  BuildResult
+  DockerpacksBuildResult,
+  DockerpacksDetectionResult
 } from '@wxcloud/dockerpacks';
 import { Command, flags } from '@oclif/command';
-import { existsSync, writeFileSync, writeSync } from 'fs';
+import { existsSync } from 'fs';
 import { Listr, PromptOptions } from 'listr2';
 import { isDirectoryEmpty, isDirectoryExists } from '../../utils/file';
 import { serializeError } from '../../utils/errors';
 import { wrapDebug, wrapError, wrapInfo, wrapWarn } from '../../utils/colors';
-import { DefaultCloudConfig } from '@wxcloud/core';
+import { DEFAULT_CLOUD_CONFIG, DEFAULT_CLOUD_CONFIG_JS_CONTENT } from '@wxcloud/core';
 import ora from 'ora';
 
 export class MigrateCommand extends Command {
@@ -52,30 +53,48 @@ export class MigrateCommand extends Command {
       }
     }
 
-    const runner = new DockerpacksRunner();
+    const dockerpacks = new Dockerpacks();
     const messageHandler = new CliMessageHandler();
     const promptIo = new CliPromptIO();
 
     const tasks = new Listr(
       [
         {
-          title: '构建 Dockerfile',
-          skip: ctx => ctx.skip,
+          title: '分析项目文件',
           task: async (ctx, task) => {
             messageHandler.setOutput(task.stdout());
             promptIo.setPrompt(async (...args) => await task.prompt(...args));
 
-            let result: BuildResult | null = null;
+            const result = await dockerpacks.detectBuilders(appRoot, promptIo, messageHandler);
+            if (!result) {
+              messageHandler.pass(
+                '没有找到合适的构造器，当前项目的语言或框架可能暂未被我们支持',
+                'fatal'
+              );
+              messageHandler.pass('您也可以检查指定的路径是否正确', 'fatal');
+              throw new Error('分析失败');
+            } else {
+              ctx.detectionResult = result;
+            }
+          },
+          options: {
+            persistentOutput: true,
+            bottomBar: Infinity
+          }
+        },
+        {
+          title: '构建容器化文件',
+          skip: ctx => ctx.skip,
+          task: async (ctx, task) => {
+            messageHandler.setOutput(task.stdout());
+            promptIo.setPrompt(async (...args) => await task.prompt(...args));
+            const detectionResult: DockerpacksDetectionResult = ctx.detectionResult;
+
+            let result: DockerpacksBuildResult | null = null;
             try {
-              result = await runner.run(appRoot, promptIo, messageHandler);
+              result = await detectionResult.build();
             } catch (e) {
               throw serializeError(e);
-            }
-
-            if (!result) {
-              messageHandler.pass('暂不支持此项目', 'fatal');
-              ctx.skip = true;
-              return;
             }
 
             ctx.buildResult = result;
@@ -86,11 +105,13 @@ export class MigrateCommand extends Command {
           }
         },
         {
-          title: '写入文件',
+          title: '写入相关文件',
           skip: ctx => ctx.skip,
           task: async (ctx, task) => {
             messageHandler.setOutput(task.stdout());
             promptIo.setPrompt(async (...args) => await task.prompt(...args));
+
+            const detectionResult: DockerpacksDetectionResult = ctx.detectionResult;
 
             try {
               const writeFileLogged = async (fullPath: string, content: string) => {
@@ -105,6 +126,20 @@ export class MigrateCommand extends Command {
                   writeFileLogged(path.join(appRoot, relativePath), content)
                 )
               ]);
+
+              if (!existsSync(path.join(appRoot, 'wxcloud.config.js'))) {
+                if (detectionResult.hitGroup.type === 'node') {
+                  await writeFileLogged(
+                    path.join(appRoot, 'wxcloud.config.js'),
+                    DEFAULT_CLOUD_CONFIG_JS_CONTENT
+                  );
+                } else {
+                  await writeFileLogged(
+                    path.join(appRoot, 'wxcloud.config.json'),
+                    JSON.stringify(DEFAULT_CLOUD_CONFIG, null, 2)
+                  );
+                }
+              }
             } catch (e) {
               throw serializeError(e);
             }
@@ -127,11 +162,6 @@ export class MigrateCommand extends Command {
 
     await tasks.run();
 
-    // wxcloud.config.js/json
-    if (!existsSync(path.join(appRoot, 'wxcloud.config.js'))) {
-      writeFileSync(path.join(appRoot, 'wxcloud.config.js'), DefaultCloudConfig);
-      ora().succeed('写入 wxcloud.config.js');
-    }
     console.log('\n\n');
     ora().succeed('项目容器化成功，执行 `wxcloud deploy` 立即部署');
   }

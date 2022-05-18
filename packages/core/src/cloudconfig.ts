@@ -8,11 +8,16 @@ export interface CloudConfig extends Record<string, any> {
   };
 }
 
-export const DefaultCloudConfig = `/** @type {import('@wxcloud/core').CloudConfig} */
-const cloudConfig = {
+export const DEFAULT_CLOUD_CONFIG: CloudConfig = {
   server: '.',
-  type: 'run',
-}
+  type: 'run'
+};
+
+const convertToJsObject = (input: Record<string, any>) =>
+  JSON.stringify(input, null, 2).replaceAll(/"([^"]+)":/gi, '$1:');
+
+export const DEFAULT_CLOUD_CONFIG_JS_CONTENT = `/** @type {import('@wxcloud/core').CloudConfig} */
+const cloudConfig = ${convertToJsObject(DEFAULT_CLOUD_CONFIG)}
 
 module.exports = cloudConfig
 `;

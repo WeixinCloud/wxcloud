@@ -5,6 +5,6 @@
     "paths": {
       "@cloud-api-modified/types": ["src/cloud-api-modified/src/types.ts"]
     },
-    "lib": ["es2020", "dom"]
+    "lib": ["esnext", "dom"]
   }
 }
