@@ -4,7 +4,6 @@ import path from 'node:path';
 import { IKitContext, IKitDeployTarget, Kit, KitType } from '../common/kit';
 import { logger } from '../utils/debug';
 import { RunKit } from './runkit';
-import { safeRequire } from '../utils/safeRequire';
 import j from 'jscodeshift';
 import { namedTypes } from 'ast-types';
 export class NuxtKit extends Kit {
@@ -62,7 +61,18 @@ export class NuxtKit extends Kit {
         return root.toSource();
       } else {
         // module.exports
-        const root = j(sourceCode).find(j.AssignmentExpression)?.at(0);
+        const root = j(sourceCode)
+          .find(j.AssignmentExpression, {
+            left: {
+              object: {
+                name: 'module'
+              },
+              property: {
+                name: 'exports'
+              }
+            }
+          })
+          ?.at(0);
         if (root.length > 0) {
           root.forEach(item => {
             (item.node.right as j.ObjectExpression)?.properties?.push(obj);
