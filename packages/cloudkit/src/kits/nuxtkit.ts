@@ -4,82 +4,17 @@ import path from 'node:path';
 import { IKitContext, IKitDeployTarget, Kit, KitType } from '../common/kit';
 import { logger } from '../utils/debug';
 import { RunKit } from './runkit';
-import j from 'jscodeshift';
-import { namedTypes } from 'ast-types';
+import { JSConfigASTHelper } from '../utils/astHelper/jsConfig';
 export class NuxtKit extends Kit {
   static description = 'CloudKit for Nuxt.js';
   static type = KitType.UNIVERSAL;
   detect(ctx: IKitContext): boolean | Promise<boolean> {
-    const packageJson = require(path.join(ctx.fullPath, 'package.json'));
-    logger.debug('nuxtkit::detect', packageJson);
-    return !!packageJson.dependencies.nuxt;
-  }
-  // add build options to nuxt config
-  transformConfig(sourceCode: string, ctx: IKitContext): string {
-    // use https://astexplorer.net/ for debug
-    const buildProperty = j(sourceCode).find(j.Property, {
-      key: {
-        name: 'build'
-      }
-    });
-    // if build option is already in config
-    if (buildProperty.length !== 0) {
-      buildProperty.forEach(p => {
-        const properties = (p?.node?.value as j.ObjectExpression)?.properties;
-        const publicPathNode = properties?.find(
-          item => item.type === 'Property' && (item?.key as j.Identifier)?.name === 'publicPath'
-        ) as namedTypes.Property;
-
-        // if already has publicPath, we need to change it
-        if (publicPathNode) {
-          (publicPathNode?.value as j.Literal).value = ctx.staticDomain!;
-        } else {
-          // else add publicPath
-          const item = j.property('init', j.identifier('publicPath'), j.literal(ctx.staticDomain!));
-          properties.push(item);
-        }
-      });
-      return buildProperty.toSource();
-    } else {
-      const root = j(sourceCode).find(j.ExportDefaultDeclaration);
-      const obj = j.property(
-        'init',
-        j.identifier('build'),
-        j.objectExpression([
-          j.property('init', j.identifier('publicPath'), j.literal(ctx.staticDomain!))
-        ])
-      );
-      // es6 export default
-      if (root.length > 0) {
-        root.forEach(item => {
-          // add build props:
-          // build: {
-          //   publicPath: 'xxx'
-          // }
-          (item?.node?.declaration as j.ObjectExpression)?.properties.push(obj);
-        });
-        return root.toSource();
-      } else {
-        // module.exports
-        const root = j(sourceCode)
-          .find(j.AssignmentExpression, {
-            left: {
-              object: {
-                name: 'module'
-              },
-              property: {
-                name: 'exports'
-              }
-            }
-          })
-          ?.at(0);
-        if (root.length > 0) {
-          root.forEach(item => {
-            (item.node.right as j.ObjectExpression)?.properties?.push(obj);
-          });
-        }
-        return root.toSource();
-      }
+    try {
+      const packageJson = require(path.join(ctx.fullPath, 'package.json'));
+      logger.debug('nuxtkit::detect', packageJson);
+      return !!packageJson.dependencies.nuxt;
+    } catch (e) {
+      return false;
     }
   }
   async run(ctx: IKitContext): Promise<IKitDeployTarget> {
@@ -93,7 +28,11 @@ export class NuxtKit extends Kit {
       // backup old nuxt.config.js
       const nuxtConfigSourceString = readFileSync(nuxtConfigPath, 'utf8');
       writeFileSync(path.join(ctx.fullPath, 'nuxt.config.js.bak'), nuxtConfigSourceString);
-      const nuxtConfigString = this.transformConfig(nuxtConfigSourceString, ctx);
+      const helper = new JSConfigASTHelper(nuxtConfigSourceString);
+      if (helper.getValue<string>('target') === 'static') {
+        throw Error(`please change wxcloud.config['type'] with static`);
+      }
+      const nuxtConfigString = helper.setValue('build.publicPath', ctx.staticDomain).toSource();
       writeFileSync(nuxtConfigPath, nuxtConfigString);
       logger.debug('nuxt patched config', nuxtConfigSourceString);
     } else {
