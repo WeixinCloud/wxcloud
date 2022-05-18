@@ -1,4 +1,3 @@
-import { NonEmptyArray } from '@utils/types';
 import { BuildStage, Dockerfile } from './file';
 
 export type DockerfileEditFn = (dockerfile: Dockerfile) => void;
