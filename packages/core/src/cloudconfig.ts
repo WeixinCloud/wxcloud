@@ -13,11 +13,11 @@ export const DEFAULT_CLOUD_CONFIG: CloudConfig = {
   type: 'run'
 };
 
-const convertToJsObject = (input: Record<string, any>) =>
-  JSON.stringify(input, null, 2).replaceAll(/"([^"]+)":/gi, '$1:');
+const convertToInlineObject = (input: Record<string, any>) =>
+  JSON.stringify(input, null, 2).replaceAll(/^(\s*)"([^"]+)":/gim, '$1$2:');
 
-export const DEFAULT_CLOUD_CONFIG_JS_CONTENT = `/** @type {import('@wxcloud/core').CloudConfig} */
-const cloudConfig = ${convertToJsObject(DEFAULT_CLOUD_CONFIG)}
+export const DEFAULT_CLOUD_CONFIG_JS_CONTENT = `/** @type {import("@wxcloud/core").CloudConfig} */
+const cloudConfig = ${convertToInlineObject(DEFAULT_CLOUD_CONFIG)}
 
 module.exports = cloudConfig
 `;
