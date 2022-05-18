@@ -203,7 +203,7 @@ export class CmdCommand extends Command<CmdCommandArgs> {
   }
 
   protected serializeArgs() {
-    return serializeArgsItem(this.args);
+    return `["${this.args.join('", "')}"]`;
   }
 }
 

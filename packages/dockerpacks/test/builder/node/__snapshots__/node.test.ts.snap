@@ -25,8 +25,10 @@ RUN npm run build
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD npm run start:prod",
+CMD [\\"npm\\", \\"run\\", \\"start:prod\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -52,8 +54,10 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD node test/index.js",
+CMD [\\"node\\", \\"test/index.js\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -90,8 +94,10 @@ COPY . .
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD node index.js",
+CMD [\\"node\\", \\"index.js\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -129,8 +135,10 @@ COPY . .
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD node index.js",
+CMD [\\"node\\", \\"index.js\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -165,8 +173,10 @@ COPY . .
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD node index.js",
+CMD [\\"node\\", \\"index.js\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -204,8 +214,10 @@ COPY . .
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD node index.js",
+CMD [\\"node\\", \\"index.js\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -230,7 +242,7 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # 安装 pnpm
-RUN npm install -g pnpm@7.1.0
+RUN npm install -g pnpm@7.1.1
 
 # 将这些文件拷贝到容器中
 COPY package.json pnpm-lock.yml ./
@@ -246,8 +258,10 @@ COPY . .
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD node index.js",
+CMD [\\"node\\", \\"index.js\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -285,8 +299,10 @@ RUN npm run build
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD npm run start",
+CMD [\\"npm\\", \\"run\\", \\"start\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -324,8 +340,10 @@ RUN yarn run build
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD npm run start",
+CMD [\\"npm\\", \\"run\\", \\"start\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -363,8 +381,10 @@ RUN yarn run build
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD npm run start",
+CMD [\\"npm\\", \\"run\\", \\"start\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -402,8 +422,10 @@ RUN yarn run build
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD node build/index.js",
+CMD [\\"node\\", \\"build/index.js\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -444,8 +466,10 @@ RUN yarn run build
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD npm run start",
+CMD [\\"npm\\", \\"run\\", \\"start\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -483,8 +507,10 @@ RUN npm run build
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD node build/index.js",
+CMD [\\"node\\", \\"build/index.js\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -522,8 +548,10 @@ RUN npm run build
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD npm run start",
+CMD [\\"npm\\", \\"run\\", \\"start\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -548,7 +576,7 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # 安装 pnpm
-RUN npm install -g pnpm@7.1.0
+RUN npm install -g pnpm@7.1.1
 
 # 将这些文件拷贝到容器中
 COPY package.json pnpm-lock.yaml ./
@@ -567,8 +595,10 @@ RUN pnpm run build
 
 ENV NODE_ENV=production
 
+ENV HOST=0.0.0.0
+
 # 运行项目
-CMD npm run start",
+CMD [\\"npm\\", \\"run\\", \\"start\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore

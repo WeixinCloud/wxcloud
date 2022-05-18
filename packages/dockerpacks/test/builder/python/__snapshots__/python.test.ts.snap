@@ -21,7 +21,7 @@ RUN python3 -m pip install -r requirements.txt
 COPY . .
 
 # 启动 flask
-CMD python3 -m flask run --host=0.0.0.0",
+CMD [\\"python3\\", \\"-m\\", \\"flask\\", \\"run\\", \\"--host=0.0.0.0\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -54,7 +54,7 @@ RUN python3 -m pip install -r requirements.txt
 COPY . .
 
 # 启动 django
-CMD python3 manage.py 0.0.0.0",
+CMD [\\"python3\\", \\"manage.py\\", \\"0.0.0.0\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore

@@ -18,7 +18,7 @@ COPY . .
 RUN mvn clean package --batch-mode -DskipTests -Dhttp.keepAlive=false --quiet
 
 # 运行项目
-CMD java -jar target/test.jar",
+CMD [\\"java\\", \\"-jar\\", \\"target/test.jar\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -48,7 +48,7 @@ COPY . .
 RUN mvn -s settings.xml clean package --batch-mode -DskipTests -Dhttp.keepAlive=false --quiet
 
 # 运行项目
-CMD java -jar dist/app.jar",
+CMD [\\"java\\", \\"-jar\\", \\"dist/app.jar\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -78,7 +78,7 @@ COPY . .
 RUN gradle clean assemble -x test --quiet
 
 # 运行项目
-CMD java -jar dist/app.jar",
+CMD [\\"java\\", \\"-jar\\", \\"dist/app.jar\\"]",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
