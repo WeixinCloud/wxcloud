@@ -10,6 +10,7 @@ const commandDocs = readdirSync(path.join(__dirname, '..'))
   .sort();
 
 export default defineUserConfig({
+  base: '/cli/',
   lang: 'zh-CN',
   title: '@wxcloud/cli',
   description: '微信云服务 CLI 工具使用文档',
@@ -66,7 +67,6 @@ export default defineUserConfig({
         ]
       }
     ],
-    base: '/cli/',
   }),
   plugins: [nprogressPlugin(), backToTopPlugin(), searchPlugin()]
 });
