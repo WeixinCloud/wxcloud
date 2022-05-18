@@ -11,6 +11,10 @@ FROM python:3-alpine
 # 设置容器内的当前目录
 WORKDIR /app
 
+# 使用速度更快的国内镜像
+RUN python3 -m pip config set global.trusted-host mirrors.cloud.tencent.com&& \\\\
+    python3 -m pip config set global.index-url http://mirrors.cloud.tencent.com/pypi/simple
+
 # 将 requirements.txt 复制到容器中
 COPY requirements.txt requirements.txt
 
@@ -43,6 +47,10 @@ FROM python:3-alpine
 
 # 设置容器内的当前目录
 WORKDIR /app
+
+# 使用速度更快的国内镜像
+RUN python3 -m pip config set global.trusted-host mirrors.cloud.tencent.com&& \\\\
+    python3 -m pip config set global.index-url http://mirrors.cloud.tencent.com/pypi/simple
 
 # 将 requirements.txt 复制到容器中
 COPY requirements.txt requirements.txt
