@@ -50,7 +50,9 @@ export default class DeployCommand extends Command {
 
   static flags = {
     envId: flags.string({ char: 'e', description: '环境ID' }),
-    serviceName: flags.string({ char: 's', description: '服务名' })
+    serviceName: flags.string({ char: 's', description: '服务名' }),
+    port: flags.integer({ char: 'p', default: 3000, description: '端口号' }),
+    dryRun: flags.boolean({ default: false, description: '不执行实际部署指令' })
   };
 
   async run() {
@@ -123,7 +125,7 @@ export default class DeployCommand extends Command {
       }
     });
     logger.debug(chalk.yellow.bold('CloudKit'), res);
-    if (res.runTarget) {
+    if (res.runTarget && !flags.dryRun) {
       const { uploadUrl, packageName, packageVersion } = await tcbDescribeCloudBaseBuildService({
         envId,
         serviceName: serviceName
@@ -145,16 +147,19 @@ export default class DeployCommand extends Command {
         wxAppId: (await readLoginState()).appid,
         packageName,
         packageVersion,
-        port: 3000,
+        port: flags.port,
         versionRemark: 'cloudkit'
       });
       console.log(chalk.green('云托管'), '版本创建成功');
     }
-    if (res.staticTarget) {
+    if (res.staticTarget && !flags.dryRun) {
       console.log(chalk.green('静态资源'), '准备上传中');
       for (const [local, remote] of Object.entries(res.staticTarget)) {
         await beginUpload(local, target.staticStorages[0], remote, 5);
       }
+    }
+    if (flags.dryRun) {
+      return;
     }
     switch (cloudConfig.type) {
       case 'universal':
@@ -170,11 +175,10 @@ export default class DeployCommand extends Command {
           envId,
           serviceName
         });
+        console.log('\n\n');
         ora().succeed(`部署完成
-
-      服务 ${serviceName} 访问地址: 
-      > ${domain.defaultPublicDomain} `);
-
+  服务 ${serviceName} 访问地址: 
+  > ${domain.defaultPublicDomain} `);
         break;
       case 'static':
         ora().succeed(`静态资源部署完成 \n\n 访问地址：${staticDomain}`);
