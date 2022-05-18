@@ -74,7 +74,8 @@ export default class DeployCommand extends Command {
         const tcbAttr = await CloudAPI.cdnTcbCheckResource({
           domains: [domainWithoutPrefix]
         });
-        if (!tcbAttr.domains[0].domainConfig.rspHeader?.switch) {
+        logger.debug(tcbAttr);
+        if (tcbAttr.domains[0].domainConfig.rspHeader?.switch !== 'on') {
           const answer = (
             await inquirer.prompt([
               {
