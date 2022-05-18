@@ -176,9 +176,9 @@ export class CopyCommand extends Command<CopyCommandArgs> {
   }
 }
 
-export type RunCommandArgs = ArgsItem | [ArgsItem];
+export type RunCommandArgs = ArgsItem | NonEmptyArray<ArgsItem>;
 
-function isMultipleArgs(args: RunCommandArgs): args is [ArgsItem] {
+function isMultipleArgs(args: RunCommandArgs): args is NonEmptyArray<ArgsItem> {
   return Array.isArray(args[0]);
 }
 
