@@ -1,5 +1,6 @@
 import { fetchUrl } from '@utils/fetch';
 import { ImageWrapper } from '@utils/image-wrapper';
+import { Response } from 'node-fetch';
 import { MatchedImage } from './image';
 
 export class ServerApi {
@@ -18,7 +19,7 @@ export class ServerApi {
     }
 
     if (!response.ok) {
-      throw new Error(`unexpected response: ${response.text}`);
+      return this.handleUnexpectedResponse(response);
     }
 
     const version = await response.text();
@@ -35,7 +36,7 @@ export class ServerApi {
     }
 
     if (!response.ok) {
-      throw new Error(`unexpected response: ${response.text}`);
+      return this.handleUnexpectedResponse(response);
     }
 
     const image = (await response.json()) as MatchedImage;
@@ -52,10 +53,16 @@ export class ServerApi {
     }
 
     if (!response.ok) {
-      throw new Error(`unexpected response: ${response.text}`);
+      return this.handleUnexpectedResponse(response);
     }
 
     const image = (await response.json()) as MatchedImage;
     return new ImageWrapper(image);
+  }
+
+  private handleUnexpectedResponse(response: Response): never {
+    throw new Error(
+      `无法处理的服务器响应: ${response.text}(${response.headers.get('X-Request-Id')})`
+    );
   }
 }
