@@ -65,7 +65,8 @@ export default defineUserConfig({
           }
         ]
       }
-    ]
+    ],
+    base: '/cli/',
   }),
   plugins: [nprogressPlugin(), backToTopPlugin(), searchPlugin()]
 });
