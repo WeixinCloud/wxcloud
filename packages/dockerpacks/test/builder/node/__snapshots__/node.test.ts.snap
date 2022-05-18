@@ -23,9 +23,8 @@ COPY . .
 # 运行编译
 RUN npm run build
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"npm\\", \\"run\\", \\"start:prod\\"]",
@@ -52,9 +51,8 @@ FROM node:lts-alpine
 # 设置容器内的当前目录
 WORKDIR /app
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"node\\", \\"test/index.js\\"]",
@@ -92,9 +90,8 @@ RUN npm ci
 # 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"node\\", \\"index.js\\"]",
@@ -133,9 +130,8 @@ RUN npm install
 # 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"node\\", \\"index.js\\"]",
@@ -171,9 +167,8 @@ RUN yarn install --non-interactive --prefer-offline
 # 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"node\\", \\"index.js\\"]",
@@ -212,9 +207,8 @@ RUN yarn install --immutable
 # 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"node\\", \\"index.js\\"]",
@@ -256,9 +250,8 @@ RUN pnpm install --prefer-offline
 # 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"node\\", \\"index.js\\"]",
@@ -297,9 +290,8 @@ COPY . .
 # 运行编译
 RUN npm run build
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"npm\\", \\"run\\", \\"start\\"]",
@@ -338,9 +330,8 @@ COPY . .
 # 运行编译
 RUN yarn run build
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"npm\\", \\"run\\", \\"start\\"]",
@@ -379,9 +370,8 @@ COPY . .
 # 运行编译
 RUN yarn run build
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"npm\\", \\"run\\", \\"start\\"]",
@@ -420,9 +410,8 @@ COPY . .
 # 运行编译
 RUN yarn run build
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"node\\", \\"build/index.js\\"]",
@@ -464,9 +453,8 @@ COPY . .
 # 运行编译
 RUN yarn run build
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"npm\\", \\"run\\", \\"start\\"]",
@@ -505,9 +493,8 @@ COPY . .
 # 运行编译
 RUN npm run build
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"node\\", \\"build/index.js\\"]",
@@ -546,9 +533,8 @@ COPY . .
 # 运行编译
 RUN npm run build
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"npm\\", \\"run\\", \\"start\\"]",
@@ -593,9 +579,8 @@ COPY . .
 # 运行编译
 RUN pnpm run build
 
-ENV NODE_ENV=production
-
-ENV HOST=0.0.0.0
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD [\\"npm\\", \\"run\\", \\"start\\"]",

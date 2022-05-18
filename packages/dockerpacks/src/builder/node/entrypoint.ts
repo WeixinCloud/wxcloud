@@ -20,8 +20,9 @@ export const nodeEntrypointBuilder: Builder = {
       }));
 
     return dockerfile => {
-      dockerfile.env('NODE_ENV', NODE_ENV_PRODUCTION);
-      dockerfile.env('HOST', '0.0.0.0');
+      dockerfile
+        .env(['NODE_ENV', NODE_ENV_PRODUCTION], ['HOST', '0.0.0.0'])
+        .comment('设置环境变量');
       dockerfile.cmd(...entrypoint).comment('运行项目');
     };
   }
