@@ -1,3 +1,5 @@
+export const TENCENT_NPM_REGISTRY = 'https://mirrors.cloud.tencent.com/npm';
+
 export const NODE_ENV_PRODUCTION = 'production';
 export const PACKAGE_JSON = 'package.json';
 export const NPM_SHRINKWRAP_JSON = 'npm-shrinkwrap.json';

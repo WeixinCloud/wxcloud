@@ -1,7 +1,7 @@
 import { Builder } from '@builder/builder';
 import { BuilderContext } from '@builder/context';
 import { parse } from 'yaml';
-import { PACKAGE_JSON, YARN_LOCK } from './constants';
+import { PACKAGE_JSON, TENCENT_NPM_REGISTRY, YARN_LOCK } from './constants';
 import { NODE_PACKAGE_MANAGER } from '@builder/env';
 import { NonEmptyArray } from '@utils/types';
 
@@ -21,9 +21,26 @@ export const yarnBuilder: Builder = {
     return (dockerfile, ignore) => {
       // node 镜像目前已经自带 yarn v1
       if (!yarnVersion.startsWith('1')) {
-        dockerfile.run('npm', 'install', '-g', `yarn@${yarnVersion}`).comment('安装 yarn');
+        dockerfile
+          .run(
+            'npm',
+            'install',
+            '-g',
+            `yarn@${yarnVersion}`,
+            `--registry="${TENCENT_NPM_REGISTRY}"`
+          )
+          .comment(`使用国内镜像源加速安装 yarn ${yarnVersion}`);
       }
 
+      dockerfile
+        .run(
+          'yarn',
+          'config',
+          'set',
+          yarnVersion.startsWith('1') ? 'registry' : 'npmRegistryServer',
+          TENCENT_NPM_REGISTRY
+        )
+        .comment('使用速度更快的国内镜像源');
       dockerfile.copy(PACKAGE_JSON, YARN_LOCK, './').comment('将这些文件拷贝到容器中');
       dockerfile.run(...installCmd).comment('安装依赖'); // TODO: prune
 

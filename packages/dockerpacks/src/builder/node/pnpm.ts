@@ -1,6 +1,6 @@
 import { Builder } from '@builder/builder';
 import { BuilderContext } from '@builder/context';
-import { PACKAGE_JSON, PNPM_LOCK_YAML, PNPM_LOCK_YML } from './constants';
+import { PACKAGE_JSON, PNPM_LOCK_YAML, PNPM_LOCK_YML, TENCENT_NPM_REGISTRY } from './constants';
 import { NODE_PACKAGE_MANAGER } from '@builder/env';
 
 export const pnpmBuilder: Builder = {
@@ -17,6 +17,9 @@ export const pnpmBuilder: Builder = {
     ctx.env.set(NODE_PACKAGE_MANAGER, 'pnpm');
 
     return (dockerfile, ignore) => {
+      dockerfile
+        .run('npm', 'config', 'set', 'registry', TENCENT_NPM_REGISTRY)
+        .comment('使用速度更快的国内镜像源');
       dockerfile.run('npm', 'install', '-g', `pnpm@${version}`).comment('安装 pnpm');
 
       dockerfile

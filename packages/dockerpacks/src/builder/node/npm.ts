@@ -3,7 +3,12 @@ import { BuilderContext } from '@builder/context';
 import { NODE_PACKAGE_MANAGER, NODE_VERSION } from '@builder/env';
 import { NonEmptyArray } from '@utils/types';
 import { lt } from 'semver';
-import { NPM_SHRINKWRAP_JSON, PACKAGE_JSON, PACKAGE_LOCK_JSON } from './constants';
+import {
+  NPM_SHRINKWRAP_JSON,
+  PACKAGE_JSON,
+  PACKAGE_LOCK_JSON,
+  TENCENT_NPM_REGISTRY
+} from './constants';
 
 export const npmBuilder: Builder = {
   async detect(ctx) {
@@ -19,6 +24,10 @@ export const npmBuilder: Builder = {
     ctx.env.set(NODE_PACKAGE_MANAGER, 'npm');
 
     return (dockerfile, ignore) => {
+      dockerfile
+        .run('npm', 'config', 'set', 'registry', TENCENT_NPM_REGISTRY)
+        .comment('使用速度更快的国内镜像源');
+
       if (!lockFileName) {
         dockerfile.copy(PACKAGE_JSON, '.').comment('将 package.json 拷贝到容器中');
       } else {
