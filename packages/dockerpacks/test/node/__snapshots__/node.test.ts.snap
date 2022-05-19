@@ -30,7 +30,10 @@ RUN npm run build
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"npm\\", \\"run\\", \\"start:prod\\"]",
+CMD [\\"npm\\", \\"run\\", \\"start:prod\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -73,7 +76,10 @@ RUN npm run build
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"npm\\", \\"run\\", \\"start\\"]",
+CMD [\\"npm\\", \\"run\\", \\"start\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -116,7 +122,10 @@ RUN npm run build
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"npm\\", \\"run\\", \\"start\\"]",
+CMD [\\"npm\\", \\"run\\", \\"start\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -165,7 +174,10 @@ RUN pnpm run build
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"npm\\", \\"run\\", \\"start\\"]",
+CMD [\\"npm\\", \\"run\\", \\"start\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -193,7 +205,10 @@ WORKDIR /app
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"node\\", \\"test/index.js\\"]",
+CMD [\\"node\\", \\"test/index.js\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -235,7 +250,10 @@ COPY . .
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"node\\", \\"index.js\\"]",
+CMD [\\"node\\", \\"index.js\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -278,7 +296,10 @@ COPY . .
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"node\\", \\"index.js\\"]",
+CMD [\\"node\\", \\"index.js\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -324,7 +345,10 @@ COPY . .
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"node\\", \\"index.js\\"]",
+CMD [\\"node\\", \\"index.js\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -367,7 +391,10 @@ RUN yarn run build
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"npm\\", \\"run\\", \\"start\\"]",
+CMD [\\"npm\\", \\"run\\", \\"start\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -413,7 +440,10 @@ RUN yarn run build
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"npm\\", \\"run\\", \\"start\\"]",
+CMD [\\"npm\\", \\"run\\", \\"start\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -456,7 +486,10 @@ RUN yarn run build
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"npm\\", \\"run\\", \\"start\\"]",
+CMD [\\"npm\\", \\"run\\", \\"start\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -499,7 +532,10 @@ RUN yarn run build
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"node\\", \\"build/index.js\\"]",
+CMD [\\"node\\", \\"build/index.js\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -542,7 +578,10 @@ RUN npm run build
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"node\\", \\"build/index.js\\"]",
+CMD [\\"node\\", \\"build/index.js\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -582,7 +621,10 @@ COPY . .
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"node\\", \\"index.js\\"]",
+CMD [\\"node\\", \\"index.js\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore
@@ -625,7 +667,10 @@ COPY . .
 ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
-CMD [\\"node\\", \\"index.js\\"]",
+CMD [\\"node\\", \\"index.js\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore

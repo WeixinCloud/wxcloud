@@ -22,3 +22,6 @@ COPY . .
 
 # 启动 flask
 CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0"]
+
+# 服务暴露的端口
+EXPOSE 3000

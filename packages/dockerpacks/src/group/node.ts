@@ -1,4 +1,5 @@
 import { commonEnvBuilder } from '@builder/common/env';
+import { commonExposeBuilder } from '@builder/common/expose';
 import { buildBuilder } from '@builder/node/build';
 import { nodeEntrypointBuilder } from '@builder/node/entrypoint';
 import { npmBuilder } from '@builder/node/npm';
@@ -18,7 +19,8 @@ export const NODE_GROUPS: BuilderGroup[] = [
       commonEnvBuilder,
       pnpmBuilder,
       buildBuilder,
-      nodeEntrypointBuilder
+      nodeEntrypointBuilder,
+      commonExposeBuilder
     ]
   },
   {
@@ -29,7 +31,8 @@ export const NODE_GROUPS: BuilderGroup[] = [
       [svelteKitStaticBuilder, true],
       commonEnvBuilder,
       pnpmBuilder,
-      nodeEntrypointBuilder
+      nodeEntrypointBuilder,
+      commonExposeBuilder
     ]
   },
   {
@@ -41,7 +44,8 @@ export const NODE_GROUPS: BuilderGroup[] = [
       commonEnvBuilder,
       yarnBuilder,
       buildBuilder,
-      nodeEntrypointBuilder
+      nodeEntrypointBuilder,
+      commonExposeBuilder
     ]
   },
   {
@@ -52,7 +56,8 @@ export const NODE_GROUPS: BuilderGroup[] = [
       [svelteKitStaticBuilder, true],
       commonEnvBuilder,
       yarnBuilder,
-      nodeEntrypointBuilder
+      nodeEntrypointBuilder,
+      commonExposeBuilder
     ]
   },
   {
@@ -64,7 +69,8 @@ export const NODE_GROUPS: BuilderGroup[] = [
       commonEnvBuilder,
       npmBuilder,
       buildBuilder,
-      nodeEntrypointBuilder
+      nodeEntrypointBuilder,
+      commonExposeBuilder
     ]
   },
   {
@@ -75,7 +81,8 @@ export const NODE_GROUPS: BuilderGroup[] = [
       [svelteKitStaticBuilder, true],
       commonEnvBuilder,
       npmBuilder,
-      nodeEntrypointBuilder
+      nodeEntrypointBuilder,
+      commonExposeBuilder
     ]
   },
   {
@@ -85,7 +92,8 @@ export const NODE_GROUPS: BuilderGroup[] = [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],
       commonEnvBuilder,
-      nodeEntrypointBuilder
+      nodeEntrypointBuilder,
+      commonExposeBuilder
     ]
   }
 ];

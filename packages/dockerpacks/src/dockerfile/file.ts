@@ -107,6 +107,16 @@ export class Dockerfile {
       }
     };
   }
+
+  expose(...args: ExposeCommandArgs): AppendCommandCallback {
+    const command = new ExposeCommand(args);
+    this.currentStage!.commands.push(command);
+    return {
+      comment: c => {
+        command.setComment(c);
+      }
+    };
+  }
 }
 
 export type ArgsItem = NonEmptyArray<string>;
@@ -140,9 +150,9 @@ abstract class Command<T extends string[] | string[][]> {
   protected abstract serializeArgs(): string;
 }
 
-export type FromCommandArgs = [image: string, version: string];
+type FromCommandArgs = [image: string, version: string];
 
-export class FromCommand extends Command<FromCommandArgs> {
+class FromCommand extends Command<FromCommandArgs> {
   constructor(args: FromCommandArgs) {
     super('from', args);
   }
@@ -152,9 +162,9 @@ export class FromCommand extends Command<FromCommandArgs> {
   }
 }
 
-export type AddCommandArgs = [...from: ArgsItem, to: string];
+type AddCommandArgs = [...from: ArgsItem, to: string];
 
-export class AddCommand extends Command<AddCommandArgs> {
+class AddCommand extends Command<AddCommandArgs> {
   constructor(args: AddCommandArgs) {
     super('add', args);
   }
@@ -164,9 +174,9 @@ export class AddCommand extends Command<AddCommandArgs> {
   }
 }
 
-export type CopyCommandArgs = [...from: ArgsItem, to: string];
+type CopyCommandArgs = [...from: ArgsItem, to: string];
 
-export class CopyCommand extends Command<CopyCommandArgs> {
+class CopyCommand extends Command<CopyCommandArgs> {
   constructor(args: CopyCommandArgs) {
     super('copy', args);
   }
@@ -176,13 +186,13 @@ export class CopyCommand extends Command<CopyCommandArgs> {
   }
 }
 
-export type RunCommandArgs = ArgsItem | NonEmptyArray<ArgsItem>;
+type RunCommandArgs = ArgsItem | NonEmptyArray<ArgsItem>;
 
 function isMultipleArgs(args: RunCommandArgs): args is NonEmptyArray<ArgsItem> {
   return Array.isArray(args[0]);
 }
 
-export class RunCommand extends Command<RunCommandArgs> {
+class RunCommand extends Command<RunCommandArgs> {
   constructor(args: RunCommandArgs) {
     super('run', args);
   }
@@ -195,9 +205,9 @@ export class RunCommand extends Command<RunCommandArgs> {
   }
 }
 
-export type CmdCommandArgs = ArgsItem;
+type CmdCommandArgs = ArgsItem;
 
-export class CmdCommand extends Command<CmdCommandArgs> {
+class CmdCommand extends Command<CmdCommandArgs> {
   constructor(args: CmdCommandArgs) {
     super('cmd', args);
   }
@@ -207,11 +217,9 @@ export class CmdCommand extends Command<CmdCommandArgs> {
   }
 }
 
-export type EnvCommandArgs =
-  | [key: string, value: string]
-  | NonEmptyArray<[key: string, value: string]>;
+type EnvCommandArgs = [key: string, value: string] | NonEmptyArray<[key: string, value: string]>;
 
-export class EnvCommand extends Command<EnvCommandArgs> {
+class EnvCommand extends Command<EnvCommandArgs> {
   constructor(args: EnvCommandArgs) {
     super('env', args);
   }
@@ -230,11 +238,23 @@ export class EnvCommand extends Command<EnvCommandArgs> {
   }
 }
 
-export type WorkdirCommandArgs = [dir: string];
+type WorkdirCommandArgs = [dir: string];
 
-export class WorkdirCommand extends Command<WorkdirCommandArgs> {
+class WorkdirCommand extends Command<WorkdirCommandArgs> {
   constructor(args: WorkdirCommandArgs) {
     super('workdir', args);
+  }
+
+  protected serializeArgs() {
+    return this.args[0];
+  }
+}
+
+type ExposeCommandArgs = [port: string];
+
+class ExposeCommand extends Command<ExposeCommandArgs> {
+  constructor(args: ExposeCommandArgs) {
+    super('expose', args);
   }
 
   protected serializeArgs() {

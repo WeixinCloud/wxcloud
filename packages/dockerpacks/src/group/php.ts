@@ -1,4 +1,5 @@
 import { commonEnvBuilder } from '@builder/common/env';
+import { commonExposeBuilder } from '@builder/common/expose';
 import { phpComposerBuilder } from '@builder/php/composer';
 import { phpEntrypointBuilder } from '@builder/php/entrypoint';
 import { phpExtensionsBuilder } from '@builder/php/extensions';
@@ -19,7 +20,8 @@ export const PHP_GROUPS: BuilderGroup[] = [
       nginxBuilder,
       [phpComposerBuilder, true],
       thinkPhpBuilder,
-      phpEntrypointBuilder
+      phpEntrypointBuilder,
+      commonExposeBuilder
     ]
   },
   {
@@ -32,7 +34,8 @@ export const PHP_GROUPS: BuilderGroup[] = [
       nginxBuilder,
       [phpComposerBuilder, true],
       laravelBuilder,
-      phpEntrypointBuilder
+      phpEntrypointBuilder,
+      commonExposeBuilder
     ]
   },
   {
@@ -44,7 +47,8 @@ export const PHP_GROUPS: BuilderGroup[] = [
       phpExtensionsBuilder,
       nginxBuilder,
       [phpComposerBuilder, true],
-      phpEntrypointBuilder
+      phpEntrypointBuilder,
+      commonExposeBuilder
     ]
   }
 ];

@@ -32,3 +32,6 @@ RUN chmod -R 777 ./storage
 
 # 后台启动 fpm，然后前台启动 nginx
 CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
+
+# 服务暴露的端口
+EXPOSE 80

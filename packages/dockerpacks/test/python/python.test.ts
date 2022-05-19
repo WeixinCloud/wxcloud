@@ -5,15 +5,11 @@ import { BuilderTestCase, runTest } from '@test/utils';
 const CASES: BuilderTestCase[] = [
   {
     id: 'flask',
-    promptAnswers: {
-      environments: []
-    }
+    promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'django',
-    promptAnswers: {
-      environments: []
-    }
+    promptAnswers: { expose: '3000', environments: [] }
   }
 ];
 

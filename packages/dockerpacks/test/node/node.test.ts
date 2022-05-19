@@ -5,104 +5,68 @@ import path from 'path';
 const CASES: BuilderTestCase[] = [
   {
     id: 'build',
-    promptAnswers: {
-      environments: []
-    }
+    promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'none',
-    promptAnswers: {
-      generalEntrypoint: 'node test/index.js',
-      environments: []
-    }
+    promptAnswers: { expose: '3000', generalEntrypoint: 'node test/index.js', environments: [] }
   },
   {
     id: 'package-lock',
-    promptAnswers: {
-      environments: []
-    }
+    promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'npm',
-    promptAnswers: {
-      environments: []
-    }
+    promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'yarn1',
-    promptAnswers: {
-      environments: []
-    }
+    promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'yarn2',
-    promptAnswers: {
-      environments: []
-    }
+    promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'pnpm',
-    promptAnswers: {
-      environments: []
-    }
+    promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'create-react-app',
-    promptAnswers: {
-      environments: []
-    }
+    promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'starters-nuxt',
-    promptAnswers: {
-      environments: []
-    }
+    promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'starters-expressjs',
-    promptAnswers: {
-      environments: []
-    }
+    promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'starters-sveltekit',
-    promptAnswers: {
-      generalEntrypoint: 'node build/index.js',
-      environments: []
-    }
+    promptAnswers: { expose: '3000', generalEntrypoint: 'node build/index.js', environments: [] }
   },
   {
     id: 'starters-nextjs-prisma',
-    promptAnswers: {
-      environments: ['DATABASE_URL=mongo://test']
-    }
+    promptAnswers: { expose: '3000', environments: ['DATABASE_URL=mongo://test'] }
   },
   {
     id: 'sveltekit-cli-node-adapter',
-    promptAnswers: {
-      environments: [],
-      generalEntrypoint: 'node build/index.js'
-    }
+    promptAnswers: { expose: '3000', environments: [], generalEntrypoint: 'node build/index.js' }
   },
   {
     id: 'sveltekit-cli-static-adapter',
     expectPanic: /adapter-static/i,
-    promptAnswers: {
-      environments: [],
-      generalEntrypoint: 'node build/index.js'
-    }
+    promptAnswers: { expose: '3000', environments: [], generalEntrypoint: 'node build/index.js' }
   },
   {
     id: 'nextjs-cli',
-    promptAnswers: {
-      environments: []
-    }
+    promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'nextjs-cli-pnpm',
-    promptAnswers: {
-      environments: []
-    }
+    promptAnswers: { expose: '3000', environments: [] }
   }
 ];
 

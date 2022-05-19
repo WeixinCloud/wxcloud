@@ -1,6 +1,6 @@
 import { Builder } from '@builder/builder';
 import { PROMPT_NON_EMPTY } from '@builder/context';
-import { NGINX_ENABLED } from '@builder/env';
+import { EXPOSE_PORT, NGINX_ENABLED } from '@builder/env';
 import { trim } from 'lodash';
 import { join } from 'path';
 import { phpNginxConf } from './conf/nginx.conf';
@@ -55,7 +55,7 @@ export const nginxBuilder: Builder = {
         )
         .comment('将 nginx 日志输出到标准输出流和标准错误流中，这是容器应用中推荐的实践');
 
-      // TODO: EXPOSE 80
+      ctx.env.set(EXPOSE_PORT, '80');
 
       dockerfile
         .copy(join('.', nginxConfPath), NGINX_CONF_PATH)

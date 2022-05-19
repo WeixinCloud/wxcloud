@@ -12,3 +12,6 @@ ENV NODE_ENV=production HOST=0.0.0.0
 
 # 运行项目
 CMD ["node", "test/index.js"]
+
+# 服务暴露的端口
+EXPOSE 3000

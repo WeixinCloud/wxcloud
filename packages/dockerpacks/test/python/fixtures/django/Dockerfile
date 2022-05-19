@@ -22,3 +22,6 @@ COPY . .
 
 # 启动 django
 CMD ["python3", "manage.py", "0.0.0.0"]
+
+# 服务暴露的端口
+EXPOSE 3000

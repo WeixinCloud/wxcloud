@@ -13,5 +13,8 @@ COPY . .
 # 编译项目
 RUN mvn clean package --batch-mode -DskipTests -Dhttp.keepAlive=false --quiet
 
+# 服务暴露的端口
+EXPOSE 3000
+
 # 运行项目
 CMD ["java", "-jar", "target/test.jar"]

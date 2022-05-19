@@ -6,6 +6,7 @@ const CASES: BuilderTestCase[] = [
   {
     id: 'no-version-constraint',
     promptAnswers: {
+      expose: '3000',
       environments: [],
       databaseExtensionSelection: '其它或不安装',
       databaseExtensionInput: 'pdo_mysql',
@@ -15,6 +16,7 @@ const CASES: BuilderTestCase[] = [
   {
     id: 'laravel',
     promptAnswers: {
+      expose: '3000',
       environments: [],
       databaseExtensionSelection: '其它或不安装',
       databaseExtensionInput: 'pdo_mysql',
@@ -24,6 +26,7 @@ const CASES: BuilderTestCase[] = [
   {
     id: 'thinkphp',
     promptAnswers: {
+      expose: '3000',
       environments: [],
       databaseExtensionSelection: '其它或不安装',
       databaseExtensionInput: 'pdo_mysql',

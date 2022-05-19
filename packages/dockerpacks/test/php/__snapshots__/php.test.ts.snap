@@ -35,7 +35,10 @@ COPY wxcloudrun-files/nginx.conf /etc/nginx/nginx.conf
 RUN chmod -R 777 ./storage
 
 # 后台启动 fpm，然后前台启动 nginx
-CMD [\\"sh\\", \\"-c\\", \\"php-fpm -D && nginx -g 'daemon off;'\\"]",
+CMD [\\"sh\\", \\"-c\\", \\"php-fpm -D && nginx -g 'daemon off;'\\"]
+
+# 服务暴露的端口
+EXPOSE 80",
   "files": Map {
     "wxcloudrun-files/nginx.conf" => "# 以下配置基于 nginx 默认配置修改
 user www-data;
@@ -147,7 +150,10 @@ RUN rm -rf vendor
 RUN composer install --no-dev --no-progress --no-interaction --optimize-autoloader
 
 # 后台启动 fpm，然后前台启动 nginx
-CMD [\\"sh\\", \\"-c\\", \\"php-fpm -D && nginx -g 'daemon off;'\\"]",
+CMD [\\"sh\\", \\"-c\\", \\"php-fpm -D && nginx -g 'daemon off;'\\"]
+
+# 服务暴露的端口
+EXPOSE 80",
   "files": Map {
     "wxcloudrun-files/nginx.conf" => "# 以下配置基于 nginx 默认配置修改
 user www-data;
@@ -261,7 +267,10 @@ RUN composer install --no-dev --no-progress --no-interaction --optimize-autoload
 RUN chmod -R 777 ./runtime
 
 # 后台启动 fpm，然后前台启动 nginx
-CMD [\\"sh\\", \\"-c\\", \\"php-fpm -D && nginx -g 'daemon off;'\\"]",
+CMD [\\"sh\\", \\"-c\\", \\"php-fpm -D && nginx -g 'daemon off;'\\"]
+
+# 服务暴露的端口
+EXPOSE 80",
   "files": Map {
     "wxcloudrun-files/nginx.conf" => "# 以下配置基于 nginx 默认配置修改
 user www-data;

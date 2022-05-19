@@ -8,7 +8,7 @@ export const thinkPhpBuilder: Builder = {
     const isLaravel = await checkIsThinkPhp(ctx);
     return { hit: exists && isLaravel };
   },
-  async build() {
+  async build(ctx) {
     return dockerfile => {
       // TODO: maybe unsafe
       dockerfile.run('chmod', '-R', '777', './runtime');

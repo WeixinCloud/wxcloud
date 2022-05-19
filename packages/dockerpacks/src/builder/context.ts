@@ -126,12 +126,11 @@ export class Files {
 
 export interface PromptBasicConfig {
   id: string;
-  // TODO: emoji
   caption: string;
 }
 
 export interface PromptInputConfig<T> extends PromptBasicConfig {
-  validate?: RegExp;
+  validate?: RegExp | ((input: string) => boolean);
   trim?: boolean;
   transform?: (input: string) => T;
 }
@@ -170,7 +169,12 @@ export class PromptHandler {
     while (true) {
       answer = await this.io.input(config.id, config.caption);
 
-      if (config.validate && !config.validate.test(answer)) {
+      if (
+        config.validate &&
+        !(typeof config.validate === 'function'
+          ? config.validate(answer)
+          : config.validate.test(answer))
+      ) {
         const message = `输入无效，需要满足：${config.validate}`;
         if (this.throwOnInvalidInput) {
           throw new Error(message);

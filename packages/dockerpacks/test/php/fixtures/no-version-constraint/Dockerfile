@@ -39,3 +39,6 @@ RUN composer install --no-dev --no-progress --no-interaction --optimize-autoload
 
 # 后台启动 fpm，然后前台启动 nginx
 CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
+
+# 服务暴露的端口
+EXPOSE 80
