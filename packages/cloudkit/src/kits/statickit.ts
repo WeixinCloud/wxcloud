@@ -11,7 +11,7 @@ export class StaticKit extends Kit {
   private _detectedScript = 'build';
   detect(ctx: IKitContext): boolean | Promise<boolean> {
     const packageJson = require(path.join(ctx.fullPath, 'package.json'));
-    logger.debug('nextkit::detect', packageJson);
+    logger.debug('statickit::detect', packageJson);
     // looking for react-scripts(cra), vue-cli(@vue/cli-service) and `generate` or `build` scripts.
     if (packageJson.dependencies?.['react-scripts']) {
       return true;

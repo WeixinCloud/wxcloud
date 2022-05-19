@@ -88,7 +88,6 @@ export class JSConfigASTHelper {
       if (propNode.length === 0) {
         const newNode = j.property('init', j.identifier(props[i]), j.objectExpression([]));
         currentNode.at(0).forEach(item => {
-          console.log(item.node);
           // item.type === 'ObjectExpression'
           if (item?.node?.properties) {
             item.node.properties.push(newNode);

@@ -30,7 +30,7 @@ export class NuxtKit extends Kit {
       writeFileSync(path.join(ctx.fullPath, 'nuxt.config.js.bak'), nuxtConfigSourceString);
       const helper = new JSConfigASTHelper(nuxtConfigSourceString);
       if (helper.getValue<string>('target') === 'static') {
-        throw Error(`please change wxcloud.config['type'] with static`);
+        throw Error(`[ERROR] please change wxcloud.config['type'] with static`);
       }
       const nuxtConfigString = helper.setValue('build.publicPath', ctx.staticDomain).toSource();
       writeFileSync(nuxtConfigPath, nuxtConfigString);
