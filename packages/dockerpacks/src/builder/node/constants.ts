@@ -1,4 +1,4 @@
-export const TENCENT_NPM_REGISTRY = 'https://mirrors.cloud.tencent.com/npm';
+export const NPM_REGISTRY = 'https://registry.npmmirror.com';
 
 export const NODE_ENV_PRODUCTION = 'production';
 export const PACKAGE_JSON = 'package.json';
