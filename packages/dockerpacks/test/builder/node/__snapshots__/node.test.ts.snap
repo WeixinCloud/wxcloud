@@ -12,7 +12,7 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # 使用速度更快的国内镜像源
-RUN npm config set registry https://mirrors.cloud.tencent.com/npm
+RUN npm config set registry https://registry.npmmirror.com
 
 # 将 package.json 拷贝到容器中
 COPY package.json .
@@ -85,7 +85,7 @@ RUN npm install -g npm@5.10.0
 WORKDIR /app
 
 # 使用速度更快的国内镜像源
-RUN npm config set registry https://mirrors.cloud.tencent.com/npm
+RUN npm config set registry https://registry.npmmirror.com
 
 # 将这些文件拷贝到容器中
 COPY package.json package-lock.json ./
@@ -128,7 +128,7 @@ RUN npm install -g npm@5.10.0
 WORKDIR /app
 
 # 使用速度更快的国内镜像源
-RUN npm config set registry https://mirrors.cloud.tencent.com/npm
+RUN npm config set registry https://registry.npmmirror.com
 
 # 将 package.json 拷贝到容器中
 COPY package.json .
@@ -168,7 +168,7 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # 使用速度更快的国内镜像源
-RUN yarn config set registry https://mirrors.cloud.tencent.com/npm
+RUN yarn config set registry https://registry.npmmirror.com
 
 # 将这些文件拷贝到容器中
 COPY package.json yarn.lock ./
@@ -208,10 +208,10 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # 使用国内镜像源加速安装 yarn 2.4.3
-RUN npm install -g yarn@2.4.3 --registry=\\"https://mirrors.cloud.tencent.com/npm\\"
+RUN npm install -g yarn@2.4.3 --registry=\\"https://registry.npmmirror.com\\"
 
 # 使用速度更快的国内镜像源
-RUN yarn config set npmRegistryServer https://mirrors.cloud.tencent.com/npm
+RUN yarn config set npmRegistryServer https://registry.npmmirror.com
 
 # 将这些文件拷贝到容器中
 COPY package.json yarn.lock ./
@@ -251,10 +251,10 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # 使用速度更快的国内镜像源
-RUN npm config set registry https://mirrors.cloud.tencent.com/npm
+RUN npm config set registry https://registry.npmmirror.com
 
 # 安装 pnpm
-RUN npm install -g pnpm@7.1.1
+RUN npm install -g pnpm@7.1.2
 
 # 将这些文件拷贝到容器中
 COPY package.json pnpm-lock.yml ./
@@ -297,7 +297,7 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # 使用速度更快的国内镜像源
-RUN npm config set registry https://mirrors.cloud.tencent.com/npm
+RUN npm config set registry https://registry.npmmirror.com
 
 # 将这些文件拷贝到容器中
 COPY package.json package-lock.json ./
@@ -340,7 +340,7 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # 使用速度更快的国内镜像源
-RUN yarn config set registry https://mirrors.cloud.tencent.com/npm
+RUN yarn config set registry https://registry.npmmirror.com
 
 # 将这些文件拷贝到容器中
 COPY package.json yarn.lock ./
@@ -383,7 +383,7 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # 使用速度更快的国内镜像源
-RUN yarn config set registry https://mirrors.cloud.tencent.com/npm
+RUN yarn config set registry https://registry.npmmirror.com
 
 # 将这些文件拷贝到容器中
 COPY package.json yarn.lock ./
@@ -426,7 +426,7 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # 使用速度更快的国内镜像源
-RUN yarn config set registry https://mirrors.cloud.tencent.com/npm
+RUN yarn config set registry https://registry.npmmirror.com
 
 # 将这些文件拷贝到容器中
 COPY package.json yarn.lock ./
@@ -472,7 +472,7 @@ WORKDIR /app
 ENV DATABASE_URL=mongo://test
 
 # 使用速度更快的国内镜像源
-RUN yarn config set registry https://mirrors.cloud.tencent.com/npm
+RUN yarn config set registry https://registry.npmmirror.com
 
 # 将这些文件拷贝到容器中
 COPY package.json yarn.lock ./
@@ -515,7 +515,7 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # 使用速度更快的国内镜像源
-RUN npm config set registry https://mirrors.cloud.tencent.com/npm
+RUN npm config set registry https://registry.npmmirror.com
 
 # 将 package.json 拷贝到容器中
 COPY package.json .
@@ -558,7 +558,7 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # 使用速度更快的国内镜像源
-RUN npm config set registry https://mirrors.cloud.tencent.com/npm
+RUN npm config set registry https://registry.npmmirror.com
 
 # 将 package.json 拷贝到容器中
 COPY package.json .
@@ -601,10 +601,10 @@ FROM node:lts-alpine
 WORKDIR /app
 
 # 使用速度更快的国内镜像源
-RUN npm config set registry https://mirrors.cloud.tencent.com/npm
+RUN npm config set registry https://registry.npmmirror.com
 
 # 安装 pnpm
-RUN npm install -g pnpm@7.1.1
+RUN npm install -g pnpm@7.1.0
 
 # 将这些文件拷贝到容器中
 COPY package.json pnpm-lock.yaml ./
