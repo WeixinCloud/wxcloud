@@ -1,10 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as inquirer from 'inquirer';
-import simpleGit from 'simple-git';
+import degit from 'degit';
 import { Listr } from 'listr2';
 import { Command, flags } from '@oclif/command';
 import { isDirectoryEmpty, isDirectoryExists } from '../../utils/file';
+import { writeFileLogged } from '../../functions/writeFileLogged';
+import { DEFAULT_CLOUD_CONFIG } from '@wxcloud/core';
 
 interface Template {
   name: string;
@@ -17,7 +19,7 @@ interface Template {
 const TEMPLATES: Template[] = [
   {
     name: 'wxcloudrun-springboot',
-    displayName: 'SprintBoot 模板',
+    displayName: 'Spring Boot 模板',
     url: 'https://github.com/WeixinCloud/wxcloudrun-springboot',
     repository: 'https://github.com/WeixinCloud/wxcloudrun-springboot.git'
   },
@@ -26,6 +28,60 @@ const TEMPLATES: Template[] = [
     displayName: 'Express 模板',
     url: 'https://github.com/WeixinCloud/wxcloudrun-express',
     repository: 'https://github.com/WeixinCloud/wxcloudrun-express.git'
+  },
+  {
+    name: 'wxcloudrun-django',
+    displayName: 'Django 模板',
+    url: 'https://github.com/WeixinCloud/wxcloudrun-django',
+    repository: 'https://github.com/WeixinCloud/wxcloudrun-django.git'
+  },
+  {
+    name: 'wxcloudrun-thinkphp-nginx',
+    displayName: 'ThinkPHP (Nginx) 模板',
+    url: 'https://github.com/WeixinCloud/wxcloudrun-thinkphp-nginx',
+    repository: 'https://github.com/WeixinCloud/wxcloudrun-thinkphp-nginx.git'
+  },
+  {
+    name: 'wxcloudrun-express',
+    displayName: 'Express 模板',
+    url: 'https://github.com/WeixinCloud/wxcloudrun-express',
+    repository: 'https://github.com/WeixinCloud/wxcloudrun-express.git'
+  },
+  {
+    name: 'wxcloudrun-golang',
+    displayName: 'Golang 模板',
+    url: 'https://github.com/WeixinCloud/wxcloudrun-golang',
+    repository: 'https://github.com/WeixinCloud/wxcloudrun-golang.git'
+  },
+  {
+    name: 'wxcloudrun-laravel',
+    displayName: 'Laravel 模板',
+    url: 'https://github.com/WeixinCloud/wxcloudrun-laravel',
+    repository: 'https://github.com/WeixinCloud/wxcloudrun-laravel.git'
+  },
+  {
+    name: 'wxcloudrun-dotnet',
+    displayName: '.NET Core 模板',
+    url: 'https://github.com/WeixinCloud/wxcloudrun-dotnet',
+    repository: 'https://github.com/WeixinCloud/wxcloudrun-dotnet.git'
+  },
+  {
+    name: 'wxcloudrun-thinkphp-apache',
+    displayName: 'ThinkPHP (Apache) 模板',
+    url: 'https://github.com/WeixinCloud/wxcloudrun-thinkphp-apache',
+    repository: 'https://github.com/WeixinCloud/wxcloudrun-thinkphp-apache.git'
+  },
+  {
+    name: 'wxcloudrun-flask',
+    displayName: 'Flask 模板',
+    url: 'https://github.com/WeixinCloud/wxcloudrun-flask',
+    repository: 'https://github.com/WeixinCloud/wxcloudrun-flask.git'
+  },
+  {
+    name: 'wxcloudrun-koa',
+    displayName: 'Koa 模板',
+    url: 'https://github.com/WeixinCloud/wxcloudrun-koa',
+    repository: 'https://github.com/WeixinCloud/wxcloudrun-koa.git'
   }
 ];
 
@@ -50,27 +106,23 @@ export class InitCommand extends Command {
     }
     const targetPath = args.path;
     const template = TEMPLATES.find(t => t.name === flags.template)!;
-
-    // TODO: check git
-
     const tasks = new Listr([
       {
         title: '克隆模板文件',
-        task: async () => {
-          await simpleGit().clone(template.repository, targetPath);
+        task: () => {
+          const emitter = degit(template.repository);
+          return emitter.clone(targetPath);
         }
       },
       {
-        title: '初始化 Git 仓库',
+        title: '初始化项目',
         task: async () => {
-          await fs.promises.rm(path.join(targetPath, '.git'), {
-            recursive: true,
-            force: true
-          });
-          await simpleGit(targetPath).init();
+          await writeFileLogged(
+            path.join(targetPath, 'wxcloud.config.json'),
+            JSON.stringify(DEFAULT_CLOUD_CONFIG, null, 2)
+          );
         }
       }
-      // TODO: run initCommands if any
     ]);
 
     await tasks.run();

@@ -17,6 +17,7 @@ import { serializeError } from '../../utils/errors';
 import { wrapDebug, wrapError, wrapInfo, wrapWarn } from '../../utils/colors';
 import { DEFAULT_CLOUD_CONFIG, DEFAULT_CLOUD_CONFIG_JS_CONTENT } from '@wxcloud/core';
 import ora from 'ora';
+import { writeFileLogged } from '../../functions/writeFileLogged';
 
 export class MigrateCommand extends Command {
   static description = '迁移项目到云托管';
@@ -115,11 +116,6 @@ export class MigrateCommand extends Command {
             const detectionResult: DockerpacksDetectionResult = ctx.detectionResult;
 
             try {
-              const writeFileLogged = async (fullPath: string, content: string) => {
-                await writeFile(fullPath, content);
-                messageHandler.pass(`写入 ${fullPath}`);
-              };
-
               const files = [...ctx.buildResult.files.entries()];
               await Promise.all([
                 writeFileLogged(path.join(appRoot, 'Dockerfile'), ctx.buildResult.dockerfile),
