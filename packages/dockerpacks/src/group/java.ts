@@ -7,12 +7,12 @@ import { BuilderGroup } from './group';
 export const JAVA_GROUPS: BuilderGroup[] = [
   {
     type: 'java',
-    label: 'Dockerpacks Java builder group for maven projects',
+    label: 'Java Maven 构造器',
     builders: [javaMavenBuilder, commonEnvBuilder, javaEntrypointBuilder]
   },
   {
     type: 'java',
-    label: 'Dockerpacks Java builder group for gradle projects',
+    label: 'Java Gradle 构造器',
     builders: [javaGradleBuilder, commonEnvBuilder, javaEntrypointBuilder]
   }
 ];

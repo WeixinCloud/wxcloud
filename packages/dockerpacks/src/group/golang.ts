@@ -7,7 +7,7 @@ import { BuilderGroup } from './group';
 export const GOLANG_GROUPS: BuilderGroup[] = [
   {
     type: 'golang',
-    label: 'Dockerpacks Golang builder group',
+    label: 'Golang 默认构造器',
     builders: [golangRuntimeBuilder, commonEnvBuilder, golangModuleBuilder, golangBuildBuilder]
   }
 ];

@@ -11,7 +11,7 @@ import { BuilderGroup } from './group';
 export const NODE_GROUPS: BuilderGroup[] = [
   {
     type: 'node',
-    label: 'Dockerpacks Node builder group for pnpm with build stage',
+    label: 'Node pnpm 构造器（含 build 阶段）',
     builders: [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],
@@ -23,7 +23,7 @@ export const NODE_GROUPS: BuilderGroup[] = [
   },
   {
     type: 'node',
-    label: 'Dockerpacks Node builder group for pnpm',
+    label: 'Node pnpm 构造器',
     builders: [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],
@@ -34,7 +34,7 @@ export const NODE_GROUPS: BuilderGroup[] = [
   },
   {
     type: 'node',
-    label: 'Dockerpacks Node builder group for Yarn with build stage',
+    label: 'Node yarn 构造器（含 build 阶段）',
     builders: [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],
@@ -46,7 +46,7 @@ export const NODE_GROUPS: BuilderGroup[] = [
   },
   {
     type: 'node',
-    label: 'Dockerpacks Node builder group for Yarn',
+    label: 'Node yarn 构造器',
     builders: [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],
@@ -57,7 +57,7 @@ export const NODE_GROUPS: BuilderGroup[] = [
   },
   {
     type: 'node',
-    label: 'Dockerpacks Node builder group for NPM with build stage',
+    label: 'Node npm 构造器（含 build 阶段）',
     builders: [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],
@@ -69,7 +69,7 @@ export const NODE_GROUPS: BuilderGroup[] = [
   },
   {
     type: 'node',
-    label: 'Dockerpacks Node builder group for NPM',
+    label: 'Node npm 构造器',
     builders: [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],
@@ -80,7 +80,7 @@ export const NODE_GROUPS: BuilderGroup[] = [
   },
   {
     type: 'node',
-    label: 'Dockerpacks Node builder group for general Node projects',
+    label: 'Node 通用构造器',
     builders: [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],

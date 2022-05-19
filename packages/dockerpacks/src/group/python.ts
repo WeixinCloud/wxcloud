@@ -9,17 +9,17 @@ import { BuilderGroup } from './group';
 export const PYTHON_GROUPS: BuilderGroup[] = [
   {
     type: 'python',
-    label: 'Dockerpacks Python builder group for flask apps',
+    label: 'Python Flask 构造器',
     builders: [pythonRuntimeBuilder, commonEnvBuilder, pipBuilder, flaskBuilder]
   },
   {
     type: 'python',
-    label: 'Dockerpacks Python builder group for django apps',
+    label: 'Python Django 构造器',
     builders: [pythonRuntimeBuilder, commonEnvBuilder, pipBuilder, djangoBuilder]
   },
   {
     type: 'python',
-    label: 'Dockerpacks Python builder group for common apps',
+    label: 'Python 通用构造器',
     builders: [pythonRuntimeBuilder, commonEnvBuilder, pipBuilder, pythonEntrypointBuilder]
   }
 ];

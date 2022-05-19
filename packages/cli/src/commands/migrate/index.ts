@@ -74,6 +74,7 @@ export class MigrateCommand extends Command {
               messageHandler.pass('您也可以检查指定的路径是否正确', 'fatal');
               throw new Error('分析失败');
             } else {
+              messageHandler.pass(`即将使用 ${result.hitGroup.label}`);
               ctx.detectionResult = result;
             }
           },

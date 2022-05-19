@@ -11,7 +11,7 @@ import { BuilderGroup } from './group';
 export const PHP_GROUPS: BuilderGroup[] = [
   {
     type: 'php',
-    label: 'Dockerpacks Python builder group for php thinkphp framework',
+    label: 'PHP ThinkPHP 构造器',
     builders: [
       phpFpmBuilder,
       commonEnvBuilder,
@@ -24,7 +24,7 @@ export const PHP_GROUPS: BuilderGroup[] = [
   },
   {
     type: 'php',
-    label: 'Dockerpacks Python builder group for php laravel framework',
+    label: 'PHP Laravel 构造器',
     builders: [
       phpFpmBuilder,
       commonEnvBuilder,
@@ -37,7 +37,7 @@ export const PHP_GROUPS: BuilderGroup[] = [
   },
   {
     type: 'php',
-    label: 'Dockerpacks Python builder group for general php frameworks',
+    label: 'PHP 通用构造器',
     builders: [
       phpFpmBuilder,
       commonEnvBuilder,
