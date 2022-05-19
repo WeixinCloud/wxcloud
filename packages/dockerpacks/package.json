@@ -29,8 +29,8 @@
   "scripts": {
     "test": "vitest --no-threads --config vitest.config.ts",
     "test:update": "vitest --no-threads --update --config vitest.config.ts",
-    "build": "rimraf dist && tsup",
-    "build:watch": "rimraf dist && tsup --watch"
+    "build": "tsup",
+    "build:watch": "tsup --watch"
   },
   "repository": {
     "type": "git",
@@ -41,7 +41,6 @@
     "@types/lodash": "^4.14.182",
     "@types/node-fetch": "^2.6.1",
     "@types/semver": "^7.3.9",
-    "rimraf": "^3.0.2",
     "tsconfig-paths": "^3.14.1",
     "tsup": "^5.12.6",
     "vite-tsconfig-paths": "^3.4.1",

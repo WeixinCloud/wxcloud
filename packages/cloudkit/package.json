@@ -16,8 +16,7 @@
     "/lib"
   ],
   "scripts": {
-    "build": "rimraf dist && tsup",
-    "clean": "rimraf dist",
+    "build": "tsup",
     "test": "ava",
     "test:coverage": "nyc ava && nyc report --reporter=html",
     "test:setup": "node -r ./esbuild-hook ./scripts/testSetup"

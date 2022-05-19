@@ -3,6 +3,7 @@ import packageJson from './package.json';
 
 export default defineConfig({
   entry: ['src/index.ts'],
+  clean: true,
   dts: true,
   minify: true,
   format: ['cjs', 'esm'],

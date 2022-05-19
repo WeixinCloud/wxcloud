@@ -3,6 +3,7 @@ import { version } from './package.json';
 
 export default defineConfig({
   entry: ['src/index.ts'],
+  clean: true,
   dts: true,
   format: ['cjs'],
   target: 'node16',
