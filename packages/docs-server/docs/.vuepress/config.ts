@@ -1,13 +1,17 @@
 import { defaultTheme, defineUserConfig } from 'vuepress';
 import { nprogressPlugin } from '@vuepress/plugin-nprogress';
 import { backToTopPlugin } from '@vuepress/plugin-back-to-top';
+import { rightAnchorPlugin } from 'vuepress-plugin-right-anchor';
 import { searchPlugin } from '@vuepress/plugin-search';
 import { readdirSync } from 'fs';
 import path from 'path';
 
-const commandDocs = readdirSync(path.join(__dirname, '..'))
-  .filter(item => !item.startsWith('.') && !item.startsWith('README') && item.endsWith('.md'))
-  .sort();
+const commandDocs = readdirSync(path.join(__dirname, '../commands'))
+  .filter(
+    item =>
+      item.endsWith('.md')
+  )
+  .sort().map(item => `/commands/${item}`);
 
 export default defineUserConfig({
   base: '/cli/',
@@ -41,6 +45,7 @@ export default defineUserConfig({
     ]
   ],
   theme: defaultTheme({
+    sidebarDepth: 0,
     logo: '/images/logo.svg',
     logoDark: '/images/logo-white.svg',
     lastUpdated: true,
@@ -61,12 +66,25 @@ export default defineUserConfig({
         text: '使用文档',
         children: [
           {
+            text: '概览',
+            link: '/guide.html',
+          },
+          {
             text: '命令',
             children: commandDocs
           }
         ]
       }
-    ],
+    ]
   }),
-  plugins: [nprogressPlugin(), backToTopPlugin(), searchPlugin()]
+  plugins: [
+    nprogressPlugin(),
+    backToTopPlugin(),
+    searchPlugin(),
+    rightAnchorPlugin({
+      name: 'toc',
+      showDepth: 2,
+      expand: { clickModeDefaultOpen: true, trigger: 'click' },
+    })
+  ]
 });

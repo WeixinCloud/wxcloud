@@ -273,6 +273,9 @@ importers:
       '@vuepress/plugin-search': 2.0.0-beta.45
       vue: ^3.2.33
       vuepress: next
+      vuepress-plugin-right-anchor: 2.1.0-rc.2
+    dependencies:
+      vuepress-plugin-right-anchor: 2.1.0-rc.2
     devDependencies:
       '@vuepress/client': 2.0.0-beta.45
       '@vuepress/plugin-back-to-top': 2.0.0-beta.45
@@ -11082,6 +11085,10 @@ packages:
       '@vue/server-renderer': 3.2.33_vue@3.2.33
       '@vue/shared': 3.2.33
     dev: true
+
+  /vuepress-plugin-right-anchor/2.1.0-rc.2:
+    resolution: {integrity: sha512-gQig9lm+/i0S/k3XyS/S/18huO9MDosrNeEQyZ5CJXPQ7DbbNKba6mADd2OOW1WLIDNmd0lzIiye0sPx2Hu+LQ==}
+    dev: false
 
   /vuepress-vite/2.0.0-beta.45_m7e4qhtla7zhdnzr6jkaiy7coy:
     resolution: {integrity: sha512-1yARk4FLwaQIAqp3trRb4rhAT5blkBfVUaNtTiYwC3/TwUyFWhBBaIP8sugxUMXhAalvkpMEHFxaLm4BkLfWhw==}

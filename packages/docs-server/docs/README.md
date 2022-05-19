@@ -1,6 +1,7 @@
 ---
 home: true
 heroImage: /images/logo.svg
+heroImageDark: /images/logo-white.svg
 heroText: '@wxcloud/cli'
 tagline: 微信云服务 CLI 工具使用文档
 actions:
