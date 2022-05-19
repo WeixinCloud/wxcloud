@@ -17,6 +17,8 @@ export const golangModuleBuilder: Builder = {
         return;
       }
 
+      dockerfile.env('GOPROXY', 'https://mirrors.tencent.com/go').comment('使用速度更快的国内镜像');
+
       if (!goSumExists) {
         // 自 golang 1.16 开始，必须要通过这条命令生成 go.sum 才能确保 golang 可以成功编译
         dockerfile.run('go', 'mod', 'tidy');

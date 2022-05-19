@@ -14,6 +14,9 @@ WORKDIR /app
 # 将包括源文件在内的所有文件拷贝到容器中
 COPY . .
 
+# 使用速度更快的国内镜像
+ENV GOPROXY=https://mirrors.tencent.com/go
+
 RUN go mod download
 
 RUN go build -o wxcloudrun-files/main
@@ -43,6 +46,9 @@ WORKDIR /app
 
 # 将包括源文件在内的所有文件拷贝到容器中
 COPY . .
+
+# 使用速度更快的国内镜像
+ENV GOPROXY=https://mirrors.tencent.com/go
 
 RUN go mod download
 
