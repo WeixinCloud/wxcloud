@@ -1,9 +1,9 @@
-import { cyan, yellow, red, lightGray, bold } from "kolorist";
+import { cyan, yellow, red, lightGray, bold } from 'kolorist';
 
-const DEBUG = lightGray(bold("调试"));
-const INFO = cyan(bold("信息"));
-const WARN = yellow(bold("警告"));
-const ERROR = red(bold("错误"));
+const DEBUG = lightGray(bold('调试'));
+const INFO = cyan(bold('信息'));
+const WARN = yellow(bold('警告'));
+const ERROR = red(bold('错误'));
 
 export function wrapDebug(message: string) {
   return `${DEBUG} ${lightGray(message)}`;

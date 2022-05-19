@@ -1,1 +1,1 @@
-export * from './cloudapiDirect'
+export * from './cloudapiDirect';

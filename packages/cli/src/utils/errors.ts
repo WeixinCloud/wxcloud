@@ -7,7 +7,7 @@ function serialize(error: Error) {
 
 export function serializeError(error: Error) {
   let message = serialize(error);
-  if ("cause" in error) {
+  if ('cause' in error) {
     message += `\n\n原因：${serialize((error as any).cause)}`;
   }
   return new Error(message);

@@ -1,7 +1,7 @@
-import { readLoginState } from "../utils/auth";
-import { logger } from "../utils/log";
-import { fetchApi } from "./base";
-import { getApiCommonParameters } from "./common";
+import { readLoginState } from '../utils/auth';
+import { logger } from '../utils/log';
+import { fetchApi } from './base';
+import { getApiCommonParameters } from './common';
 import {
   CloudBaseRunImageItem,
   CloudBaseRunServer,
@@ -9,8 +9,8 @@ import {
   EnvInfo,
   IServerManageTaskInfo,
   ServiceBaseConfig,
-  VersionInfo,
-} from "./interface";
+  VersionInfo
+} from './interface';
 
 export async function DescribeWxCloudBaseRunDBClusterDetail(data: {
   EnvId: string; // 环境 Id
@@ -38,14 +38,14 @@ export async function DescribeWxCloudBaseRunDBClusterDetail(data: {
   }; // 数据库信息
   DbClusterId: string; // db集群id
 }> {
-  return callCloudApi("DescribeWxCloudBaseRunDBClusterDetail", data);
+  return callCloudApi('DescribeWxCloudBaseRunDBClusterDetail', data);
 }
 
 export async function DescribeServiceBaseConfig(data: {
   EnvId: string; // 环境 Id
   ServerName: string; // 服务名
 }): Promise<{ ServiceBaseConfig: ServiceBaseConfig }> {
-  return callCloudApi("DescribeServiceBaseConfig", data);
+  return callCloudApi('DescribeServiceBaseConfig', data);
 }
 
 export async function EstablishCloudBaseRunServer(data: {
@@ -53,7 +53,7 @@ export async function EstablishCloudBaseRunServer(data: {
   ServiceName: string; // 服务名称
   IsPublic: boolean; // 是否开通外网访问
 }): Promise<{}> {
-  return callCloudApi("EstablishCloudBaseRunServer", data);
+  return callCloudApi('EstablishCloudBaseRunServer', data);
 }
 
 export async function EstablishCloudBaseRunServerWx(data: {
@@ -63,7 +63,7 @@ export async function EstablishCloudBaseRunServerWx(data: {
   PublicAccess?: number; // 0/1=允许公网访问;2=关闭公网访问
   OpenAccessTypes?: string[]; // OA PUBLIC MINIAPP VPC
 }): Promise<{}> {
-  return callCloudApi("EstablishCloudBaseRunServerWx", data);
+  return callCloudApi('EstablishCloudBaseRunServerWx', data);
 }
 
 export async function DescribeCloudBaseBuildService(data: {
@@ -79,7 +79,7 @@ export async function DescribeCloudBaseBuildService(data: {
   UploadHeaders: any[];
   UploadUrl: string;
 }> {
-  return callCloudApi("DescribeCloudBaseBuildService", data);
+  return callCloudApi('DescribeCloudBaseBuildService', data);
 }
 
 export async function DescribeCloudBaseRunServiceDomain(params: {
@@ -92,14 +92,14 @@ export async function DescribeCloudBaseRunServiceDomain(params: {
   RequestId: string; // 唯一请求 ID，每次请求都会返回。定位问题时需要提供该次请求的 RequestId。
 }> {
   const { appid } = await readLoginState();
-  return callCloudApi("DescribeCloudBaseRunServiceDomain", params);
+  return callCloudApi('DescribeCloudBaseRunServiceDomain', params);
 }
 
 export async function DescribeWxCloudBaseRunEnvs(): Promise<{
   EnvList: EnvInfo[];
 }> {
   const { appid } = await readLoginState();
-  return callCloudApi("DescribeWxCloudBaseRunEnvs", { WxAppId: appid });
+  return callCloudApi('DescribeWxCloudBaseRunEnvs', { WxAppId: appid });
 }
 
 export async function DescribeCloudBaseRunServerVersion(params: {
@@ -107,7 +107,7 @@ export async function DescribeCloudBaseRunServerVersion(params: {
   ServerName: string;
   VersionName: string;
 }): Promise<VersionInfo> {
-  return callCloudApi("DescribeCloudBaseRunServerVersion", params);
+  return callCloudApi('DescribeCloudBaseRunServerVersion', params);
 }
 
 export async function DescribeCloudBaseRunServer(params: {
@@ -117,7 +117,7 @@ export async function DescribeCloudBaseRunServer(params: {
   Offset: number;
   Limit: number;
 }): Promise<CloudBaseRunServer> {
-  return callCloudApi("DescribeCloudBaseRunServer", params);
+  return callCloudApi('DescribeCloudBaseRunServer', params);
 }
 
 export async function DescribeCloudBaseRunServers(params: {
@@ -128,7 +128,7 @@ export async function DescribeCloudBaseRunServers(params: {
 }): Promise<{
   CloudBaseRunServerSet: CloudBaseRunServer[];
 }> {
-  return callCloudApi("DescribeCloudBaseRunServers", params);
+  return callCloudApi('DescribeCloudBaseRunServers', params);
 }
 
 export async function SubmitServerRelease(params: {
@@ -149,7 +149,7 @@ export async function SubmitServerRelease(params: {
   RunId: string;
   VersionName: string;
 }> {
-  return callCloudApi("SubmitServerRelease", params);
+  return callCloudApi('SubmitServerRelease', params);
 }
 
 export async function CreateCloudBaseRunServerVersion(params: {
@@ -180,7 +180,7 @@ export async function CreateCloudBaseRunServerVersion(params: {
   RunId: string;
   VersionName: string;
 }> {
-  return callCloudApi("CreateCloudBaseRunServerVersion", params);
+  return callCloudApi('CreateCloudBaseRunServerVersion', params);
 }
 
 export async function SubmitServerRollback(params: {
@@ -193,7 +193,7 @@ export async function SubmitServerRollback(params: {
   RequestId: string;
 }> {
   const { appid } = await readLoginState();
-  return callCloudApi("SubmitServerRollback", { ...params, WxAppId: appid });
+  return callCloudApi('SubmitServerRollback', { ...params, WxAppId: appid });
 }
 
 export async function DescribeCloudBaseRunBuildLog(params: {
@@ -209,14 +209,14 @@ export async function DescribeCloudBaseRunBuildLog(params: {
   };
   RequestId: string;
 }> {
-  return callCloudApi("DescribeCloudBaseRunBuildLog", params);
+  return callCloudApi('DescribeCloudBaseRunBuildLog', params);
 }
 
 export async function DescribeCloudBaseRunProcessLog(params: {
   EnvId: string;
   RunId: string;
 }): Promise<{ Logs: string[]; RequestId: string }> {
-  return callCloudApi("DescribeCloudBaseRunProcessLog", params);
+  return callCloudApi('DescribeCloudBaseRunProcessLog', params);
 }
 
 export async function SearchClsLog(params: {
@@ -233,7 +233,7 @@ export async function SearchClsLog(params: {
   };
   RequestId: string;
 }> {
-  return callCloudApi("SearchClsLog", params);
+  return callCloudApi('SearchClsLog', params);
 }
 
 export async function DescribeServerManageTask(params: {
@@ -245,17 +245,14 @@ export async function DescribeServerManageTask(params: {
   IsExist: boolean;
   RequestId: string;
 }> {
-  return callCloudApi("DescribeServerManageTask", params);
+  return callCloudApi('DescribeServerManageTask', params);
 }
 
-export async function DescribeCustomDomains(params: {
-  EnvId?: string;
-  Domain?: string;
-}): Promise<{
+export async function DescribeCustomDomains(params: { EnvId?: string; Domain?: string }): Promise<{
   DomainList: DomainInfo[];
   RequestId: string;
 }> {
-  return callCloudApi("DescribeCustomDomains", params);
+  return callCloudApi('DescribeCustomDomains', params);
 }
 
 export async function UpdateServerBaseConfig(params: {
@@ -264,9 +261,9 @@ export async function UpdateServerBaseConfig(params: {
   Conf: ServiceBaseConfig;
 }): Promise<{}> {
   const { appid } = await readLoginState();
-  return callCloudApi("UpdateServerBaseConfig", {
+  return callCloudApi('UpdateServerBaseConfig', {
     ...params,
-    WxAppId: appid,
+    WxAppId: appid
   });
 }
 
@@ -277,16 +274,16 @@ export async function DescribeCloudBaseRunImages(params: {
   Images: CloudBaseRunImageItem[];
   TotalCount?: number;
 }> {
-  return callCloudApi("DescribeCloudBaseRunImages", params);
+  return callCloudApi('DescribeCloudBaseRunImages', params);
 }
 
 export async function callCloudApi(action: string, data: Object) {
-  const res = await fetchApi("wxa-dev-qbase/apihttpagent", {
+  const res = await fetchApi('wxa-dev-qbase/apihttpagent', {
     action,
     postdata: JSON.stringify(data),
-    region: getApiCommonParameters().region ?? "",
-    service: "tcb",
-    version: "2018-06-08",
+    region: getApiCommonParameters().region ?? '',
+    service: 'tcb',
+    version: '2018-06-08'
   });
   if (res?.base_resp?.ret === 0) {
     const response = JSON.parse(res.content);
@@ -298,7 +295,7 @@ export async function callCloudApi(action: string, data: Object) {
       console.log({
         code: error?.Code,
         errmsg: error?.Message,
-        data: null,
+        data: null
       });
       throw error;
     }
@@ -307,7 +304,7 @@ export async function callCloudApi(action: string, data: Object) {
     console.log({
       code: res?.base_resp?.ret,
       errmsg: res?.base_resp?.errmsg,
-      data: null,
+      data: null
     });
     throw res?.base_resp;
   }

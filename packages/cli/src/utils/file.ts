@@ -1,4 +1,4 @@
-import { lstatSync, readdirSync } from "fs";
+import { lstatSync, readdirSync } from 'fs';
 
 export function isDirectoryExistsAndEmpty(path: string) {
   return isDirectoryExists(path) && isDirectoryEmpty(path);

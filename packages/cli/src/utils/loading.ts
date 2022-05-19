@@ -1,11 +1,11 @@
-import ora from "ora";
+import ora from 'ora';
 
 class Loading {
   private spinner: ReturnType<typeof ora>;
 
   constructor() {
     this.spinner = ora({
-      discardStdin: false,
+      discardStdin: false
     });
   }
 
@@ -57,7 +57,7 @@ export const execWithLoading = async <T>(
   task: Task<T>,
   options: ILoadingOptions = {}
 ): Promise<T> => {
-  const { startTip = "", successTip = "", failTip = "" } = options;
+  const { startTip = '', successTip = '', failTip = '' } = options;
   const loading = loadingFactory();
 
   // 刷新 loading 提示

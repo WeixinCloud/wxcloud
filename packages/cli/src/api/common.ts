@@ -1,6 +1,6 @@
-import { merge } from "lodash";
+import { merge } from 'lodash';
 
-export type ApiRegion = "ap-shanghai" | "ap-guangzhou" | "ap-beijing";
+export type ApiRegion = 'ap-shanghai' | 'ap-guangzhou' | 'ap-beijing';
 
 export interface ApiCommonParameters {
   region: ApiRegion;

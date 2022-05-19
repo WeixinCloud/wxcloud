@@ -1,6 +1,6 @@
 import { checkLoginState, writeLoginState } from './utils/auth';
 import { fetchApi } from './api/base';
-import * as cloudapi from './api/cloudapiDirect'
+import * as cloudapi from './api/cloudapiDirect';
 export class WXCloud {
   async init(appid: string, privateKey: string) {
     // ensure appid and pk is entered when using node sdk
@@ -9,7 +9,7 @@ export class WXCloud {
     }
     const logined = await checkLoginState(appid, privateKey);
     if (!logined) {
-      throw new Error('login failed. please check your credientials.')
+      throw new Error('login failed. please check your credientials.');
     } else {
       writeLoginState(appid, privateKey);
     }

@@ -1,7 +1,7 @@
-import axios from "axios";
-import { readLoginState } from "../utils/auth";
-import { logger } from "../utils/log";
-export const BASE_URL = "https://servicewechat.com";
+import axios from 'axios';
+import { readLoginState } from '../utils/auth';
+import { logger } from '../utils/log';
+export const BASE_URL = 'https://servicewechat.com';
 
 export interface fetchApiOptions {
   skipSign?: boolean;
@@ -16,7 +16,7 @@ export interface fetchApiOptions {
 export async function getCloudRunCliRandStr(appid: string) {
   const config = {
     url: `${BASE_URL}/wxa-dev-qbase/getcloudrunclirandstr`,
-    params: { appid },
+    params: { appid }
   };
   //   console.log(config);
   const res = await axios.request(config);
@@ -24,30 +24,25 @@ export async function getCloudRunCliRandStr(appid: string) {
   return res.data?.randstr;
 }
 
-export async function fetchApi(
-  apiName: string,
-  data: any,
-  options: fetchApiOptions = {}
-) {
+export async function fetchApi(apiName: string, data: any, options: fetchApiOptions = {}) {
   // todo: read local
   const appid = options.wxCloudConfig?.appid || (await readLoginState()).appid;
-  const privateKey =
-    options.wxCloudConfig?.privateKey || (await readLoginState()).privateKey;
+  const privateKey = options.wxCloudConfig?.privateKey || (await readLoginState()).privateKey;
 
   const headers: any = {
-    "X-CloudRunCli-Robot": "1",
-    "X-CloudRunCli-Key": privateKey,
+    'X-CloudRunCli-Robot': '1',
+    'X-CloudRunCli-Key': privateKey
   };
   const config = {
     url: `${BASE_URL}/${apiName}`,
     data,
-    method: options.method || "POST",
+    method: options.method || 'POST',
     params: {
       autodev: 1,
       appid,
-      ...options.params,
+      ...options.params
     },
-    headers,
+    headers
   };
   logger.debug(config);
   try {

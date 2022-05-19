@@ -7,11 +7,9 @@ import { readdirSync } from 'fs';
 import path from 'path';
 
 const commandDocs = readdirSync(path.join(__dirname, '../commands'))
-  .filter(
-    item =>
-      item.endsWith('.md')
-  )
-  .sort().map(item => `/commands/${item}`);
+  .filter(item => item.endsWith('.md'))
+  .sort()
+  .map(item => `/commands/${item}`);
 
 export default defineUserConfig({
   base: '/cli/',
@@ -67,7 +65,7 @@ export default defineUserConfig({
         children: [
           {
             text: '概览',
-            link: '/guide.html',
+            link: '/guide.html'
           },
           {
             text: '命令',
@@ -84,7 +82,7 @@ export default defineUserConfig({
     rightAnchorPlugin({
       name: 'toc',
       showDepth: 2,
-      expand: { clickModeDefaultOpen: true, trigger: 'click' },
+      expand: { clickModeDefaultOpen: true, trigger: 'click' }
     })
   ]
 });
