@@ -5,11 +5,11 @@
 /lib
 packages/**/lib
 packages/**/dist
-package-lock.json
+/package-lock.json
 /tmp
 cloud-api-modified
 node_modules
 private.key
-yarn.lock
+/yarn.lock
 .turbo
 packages/cli/oclif.manifest.json
