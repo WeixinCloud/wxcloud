@@ -3,7 +3,7 @@ import { COMPOSER_JSON, VENDOR_PATH } from './constants';
 
 export const phpComposerBuilder: Builder = {
   async detect(ctx) {
-    const exists = ctx.files.exists(COMPOSER_JSON, `${VENDOR_PATH}/*`);
+    const exists = await ctx.files.exists(COMPOSER_JSON, `${VENDOR_PATH}/*`);
     return { hit: exists };
   },
   async build() {

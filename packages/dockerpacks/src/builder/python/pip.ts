@@ -3,7 +3,7 @@ import { REQUIREMENTS_TXT, TENCENT_INDEX_URL, TENCENT_MIRRORS_HOST } from './con
 
 export const pipBuilder: Builder = {
   async detect(ctx) {
-    const exists = ctx.files.exists(REQUIREMENTS_TXT);
+    const exists = await ctx.files.exists(REQUIREMENTS_TXT);
     return {
       hit: exists
     };

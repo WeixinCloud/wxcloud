@@ -7,13 +7,13 @@ import { NPM_SHRINKWRAP_JSON, PACKAGE_JSON, PACKAGE_LOCK_JSON, NPM_REGISTRY } fr
 
 export const npmBuilder: Builder = {
   async detect(ctx) {
-    const exists = ctx.files.exists(PACKAGE_JSON);
+    const exists = await ctx.files.exists(PACKAGE_JSON);
     return {
       hit: exists
     };
   },
   async build(ctx) {
-    const lockFileName = getLockFileName(ctx);
+    const lockFileName = await getLockFileName(ctx);
     const installCmd = getNpmInstallCmd(ctx, !!lockFileName);
 
     ctx.env.set(NODE_PACKAGE_MANAGER, 'npm');
@@ -47,11 +47,11 @@ function getNpmInstallCmd(ctx: BuilderContext, hasLockfile: boolean): NonEmptyAr
   }
 }
 
-function getLockFileName(ctx: BuilderContext): string | null {
-  if (ctx.files.exists(NPM_SHRINKWRAP_JSON)) {
+async function getLockFileName(ctx: BuilderContext): Promise<string | null> {
+  if (await ctx.files.exists(NPM_SHRINKWRAP_JSON)) {
     return NPM_SHRINKWRAP_JSON;
   }
-  if (ctx.files.exists(PACKAGE_LOCK_JSON)) {
+  if (await ctx.files.exists(PACKAGE_LOCK_JSON)) {
     return PACKAGE_LOCK_JSON;
   }
   return null;

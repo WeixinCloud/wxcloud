@@ -5,7 +5,7 @@ import { REQUIREMENTS_TXT } from './constants';
 export const flaskBuilder: Builder = {
   async detect(ctx) {
     return {
-      hit: checkIsFlask(ctx)
+      hit: await checkIsFlask(ctx)
     };
   },
   async build() {
@@ -18,10 +18,10 @@ export const flaskBuilder: Builder = {
 
 const REGEX = /^flask[^-]/im;
 
-function checkIsFlask(ctx: BuilderContext) {
-  if (!ctx.files.exists(REQUIREMENTS_TXT)) {
+async function checkIsFlask(ctx: BuilderContext) {
+  if (!(await ctx.files.exists(REQUIREMENTS_TXT))) {
     return false;
   }
-  const content = ctx.files.read(REQUIREMENTS_TXT);
+  const content = await ctx.files.read(REQUIREMENTS_TXT);
   return REGEX.test(content);
 }

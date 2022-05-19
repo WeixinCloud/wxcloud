@@ -3,12 +3,12 @@ import { GO_MOD, GO_SUM, VENDOR_DIR } from './constants';
 
 export const golangModuleBuilder: Builder = {
   async detect(ctx) {
-    const exists = ctx.files.exists(GO_MOD);
+    const exists = await ctx.files.exists(GO_MOD);
     return { hit: exists };
   },
   async build(ctx) {
-    const goSumExists = ctx.files.exists(GO_SUM);
-    const vendorExists = ctx.files.exists(`${VENDOR_DIR}/*`);
+    const goSumExists = await ctx.files.exists(GO_SUM);
+    const vendorExists = await ctx.files.exists(`${VENDOR_DIR}/*`);
 
     // 下面的行为假定当前的 golang 版本总是 1.16+
     // 如果 runtime builder 会提供其它版本的 golang，需要重新考虑下面的所有行为

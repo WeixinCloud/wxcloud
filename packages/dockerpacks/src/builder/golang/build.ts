@@ -3,7 +3,7 @@ import { WXCLOUDRUN_FILES_DIR } from '@builder/constants';
 
 export const golangBuildBuilder: Builder = {
   async detect(ctx) {
-    const exists = ctx.files.exists('./**/*.go');
+    const exists = await ctx.files.exists('./**/*.go');
     return { hit: exists };
   },
   async build() {

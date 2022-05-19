@@ -4,7 +4,7 @@ import { BUILD_GRADLE, BUILD_GRADLE_KTS } from './constants';
 
 export const javaGradleBuilder: Builder = {
   async detect(ctx) {
-    const exists = ctx.files.someExists(BUILD_GRADLE, BUILD_GRADLE_KTS);
+    const exists = await ctx.files.someExists(BUILD_GRADLE, BUILD_GRADLE_KTS);
     return { hit: exists };
   },
   async build(ctx) {

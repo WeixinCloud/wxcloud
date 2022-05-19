@@ -3,7 +3,7 @@ import { BuilderContext } from '@builder/context';
 
 export const pythonRuntimeBuilder: Builder = {
   async detect(ctx) {
-    const exists = ctx.files.exists('./**/*.py');
+    const exists = await ctx.files.exists('./**/*.py');
     return {
       hit: exists
     };

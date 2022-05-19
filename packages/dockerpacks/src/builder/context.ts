@@ -1,12 +1,12 @@
-import { readFileSync } from 'fs';
 import { join, normalize } from 'path';
-import { sync } from 'glob';
+import { trimStart } from 'lodash';
+import glob, { Options } from 'fast-glob';
+import { RequestInfo, RequestInit } from 'node-fetch';
 import { ServerApi } from '@api/server';
 import { NonEmptyArray } from '@utils/types';
-import { WXCLOUDRUN_FILES_DIR } from './constants';
 import { fetchUrl } from '@utils/fetch';
-import { RequestInfo, RequestInit } from 'node-fetch';
-import { trimStart } from 'lodash';
+import { WXCLOUDRUN_FILES_DIR } from './constants';
+import { readFile } from 'fs/promises';
 
 export class BuilderContext {
   readonly env: Environment;
@@ -57,53 +57,70 @@ export class Environment {
 }
 
 export class Files {
-  private readonly IGNORED_FILES = ['./**/node_modules/**/*'];
   private readonly cache = new Map<string, string>();
+
+  private readonly globOptions: Options;
 
   readonly writtenFiles = new Map<string, string>();
 
-  constructor(private readonly root: string) {}
+  constructor(private readonly root: string) {
+    this.globOptions = {
+      cwd: this.root,
+      onlyFiles: false,
+      followSymbolicLinks: false,
+      ignore: ['./**/node_modules/**/*'],
+      deep: 10
+    };
+  }
 
   toRelativePath(path: string) {
     return trimStart(path.replace(this.root, ''), '/');
   }
 
-  glob(pattern: string, relativePath = true) {
-    return sync(pattern, { cwd: this.root }).map(item =>
+  async glob(pattern: string, relativePath = true) {
+    return (await glob(pattern, this.globOptions)).map(item =>
       relativePath ? item : join(this.root, item)
     );
   }
 
-  read(path: string) {
+  async read(path: string) {
     const normalized = normalize(path);
     if (this.cache.has(normalized)) {
       return this.cache.get(normalized)!;
     }
-    const content = readFileSync(join(this.root, path), { encoding: 'utf8' });
+    const content = await readFile(join(this.root, path), { encoding: 'utf8' });
     this.cache.set(normalized, content);
     return content;
   }
 
-  write(path: string, content: string) {
+  async write(path: string, content: string) {
     const relativePath = join(WXCLOUDRUN_FILES_DIR, path);
     this.writtenFiles.set(relativePath, content);
     return relativePath;
   }
 
-  readJson(path: string): Record<string, any> | undefined {
-    return this.exists(path) ? JSON.parse(this.read(path)) : undefined;
+  async readJson(path: string): Promise<Record<string, any> | undefined> {
+    return (await this.exists(path)) ? JSON.parse(await this.read(path)) : undefined;
   }
 
-  exists(...files: NonEmptyArray<string>) {
-    return this.everyExists(...files);
+  async exists(...files: NonEmptyArray<string>) {
+    return await this.everyExists(...files);
   }
 
-  someExists(...files: NonEmptyArray<string>) {
-    return files.some(f => sync(f, { cwd: this.root, ignore: this.IGNORED_FILES }).length > 0);
+  async someExists(...files: NonEmptyArray<string>) {
+    for (const file of files) {
+      if ((await glob(file, this.globOptions)).length > 0) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  everyExists(...files: NonEmptyArray<string>) {
-    return files.every(f => sync(f, { cwd: this.root, ignore: this.IGNORED_FILES }).length > 0);
+  async everyExists(...files: NonEmptyArray<string>) {
+    const result = await Promise.all(
+      files.map(async file => (await glob(file, this.globOptions)).length > 0)
+    );
+    return result.every(x => x);
   }
 }
 

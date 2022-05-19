@@ -4,8 +4,8 @@ import { COMPOSER_JSON } from './constants';
 
 export const laravelBuilder: Builder = {
   async detect(ctx) {
-    const exists = ctx.files.exists('./**/*.php');
-    const isLaravel = checkIsLaravel(ctx);
+    const exists = await ctx.files.exists('./**/*.php');
+    const isLaravel = await checkIsLaravel(ctx);
     return { hit: exists && isLaravel };
   },
   async build() {
@@ -16,8 +16,8 @@ export const laravelBuilder: Builder = {
   }
 };
 
-function checkIsLaravel(ctx: BuilderContext) {
-  const json = ctx.files.readJson(COMPOSER_JSON);
+async function checkIsLaravel(ctx: BuilderContext) {
+  const json = await ctx.files.readJson(COMPOSER_JSON);
   if (json?.require && Object.keys(json.require).some(item => item.startsWith('laravel/'))) {
     return true;
   }

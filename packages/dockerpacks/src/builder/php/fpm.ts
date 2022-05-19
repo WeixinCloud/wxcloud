@@ -4,7 +4,7 @@ import { COMPOSER_JSON } from './constants';
 
 export const phpFpmBuilder: Builder = {
   async detect(ctx) {
-    const exists = ctx.files.exists('./**/*.php');
+    const exists = await ctx.files.exists('./**/*.php');
     return { hit: exists };
   },
   async build(ctx) {
@@ -34,12 +34,12 @@ export const phpFpmBuilder: Builder = {
 };
 
 async function inferRuntimeImage(ctx: BuilderContext) {
-  if (!ctx.files.exists(COMPOSER_JSON)) {
+  if (!(await ctx.files.exists(COMPOSER_JSON))) {
     ctx.message.pass('没有找到 composer.json，将使用推荐版本的 PHP 镜像');
     return await getRecommendedVersionTag(ctx);
   }
 
-  const composerJson = ctx.files.readJson(COMPOSER_JSON);
+  const composerJson = await ctx.files.readJson(COMPOSER_JSON);
   const versionConstraint = composerJson?.require?.php;
   if (!versionConstraint) {
     ctx.message.pass('没有在 composer.json 中找到 PHP 版本约束，将使用推荐版本的 PHP 镜像');

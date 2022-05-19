@@ -37,7 +37,6 @@
     "url": "git@git.woa.com:wx-cloudbase/dockerpacks.git"
   },
   "devDependencies": {
-    "@types/glob": "^7.2.0",
     "@types/lodash": "^4.14.182",
     "@types/node-fetch": "^2.6.1",
     "@types/semver": "^7.3.9",
@@ -47,7 +46,7 @@
     "vitest": "^0.10.2"
   },
   "dependencies": {
-    "glob": "^7.2.0",
+    "fast-glob": "^3.2.11",
     "jszip": "^3.9.1",
     "lodash": "^4.17.21",
     "node-fetch": "^2.6.7",

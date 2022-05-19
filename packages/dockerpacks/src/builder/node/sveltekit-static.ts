@@ -4,8 +4,8 @@ import { PACKAGE_JSON } from './constants';
 export const svelteKitStaticBuilder: Builder = {
   async detect(ctx) {
     let hit = false;
-    if (ctx.files.exists(PACKAGE_JSON)) {
-      const packageJson = ctx.files.readJson(PACKAGE_JSON)!;
+    if (await ctx.files.exists(PACKAGE_JSON)) {
+      const packageJson = (await ctx.files.readJson(PACKAGE_JSON))!;
       const dependencies = [
         ...Object.keys(packageJson.dependencies ?? []),
         ...Object.keys(packageJson.devDependencies ?? [])

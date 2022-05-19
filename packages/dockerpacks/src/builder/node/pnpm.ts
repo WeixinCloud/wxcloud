@@ -5,14 +5,14 @@ import { NODE_PACKAGE_MANAGER } from '@builder/env';
 
 export const pnpmBuilder: Builder = {
   async detect(ctx) {
-    const packageJsonExists = ctx.files.exists(PACKAGE_JSON);
-    const lockExists = ctx.files.someExists(PNPM_LOCK_YML, PNPM_LOCK_YAML);
+    const packageJsonExists = await ctx.files.exists(PACKAGE_JSON);
+    const lockExists = await ctx.files.someExists(PNPM_LOCK_YML, PNPM_LOCK_YAML);
     return { hit: packageJsonExists && lockExists };
   },
   async build(ctx) {
     const version = await inferPnpmVersion(ctx);
 
-    const isYaml = ctx.files.exists(PNPM_LOCK_YAML);
+    const isYaml = await ctx.files.exists(PNPM_LOCK_YAML);
 
     ctx.env.set(NODE_PACKAGE_MANAGER, 'pnpm');
 
@@ -37,7 +37,7 @@ export const pnpmBuilder: Builder = {
 };
 
 async function inferPnpmVersion(ctx: BuilderContext) {
-  const packageJson = ctx.files.readJson(PACKAGE_JSON);
+  const packageJson = await ctx.files.readJson(PACKAGE_JSON);
   const constraint = packageJson?.engines?.pnpm;
 
   let version: string | null = null;

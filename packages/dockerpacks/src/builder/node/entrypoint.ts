@@ -11,7 +11,7 @@ export const nodeEntrypointBuilder: Builder = {
   },
   async build(ctx) {
     const entrypoint =
-      getEntrypoint(ctx) ??
+      (await getEntrypoint(ctx)) ??
       (await ctx.prompt.input({
         id: 'generalEntrypoint',
         caption: '请输入您的项目的启动命令（例如: node dist/index.js）',
@@ -28,8 +28,8 @@ export const nodeEntrypointBuilder: Builder = {
   }
 };
 
-function getEntrypoint(ctx: BuilderContext): NonEmptyArray<string> | null {
-  const packageJson = ctx.files.readJson(PACKAGE_JSON);
+async function getEntrypoint(ctx: BuilderContext): Promise<NonEmptyArray<string> | null> {
+  const packageJson = await ctx.files.readJson(PACKAGE_JSON);
   const startScript = getStartScript(packageJson);
   if (startScript) {
     return ['npm', 'run', startScript];
@@ -54,9 +54,9 @@ export function getStartScript(packageJson?: Record<string, any>): string | null
     return null;
   }
 
-  for (const s of START_SCRIPTS) {
-    if (scripts[s]) {
-      return s;
+  for (const script of START_SCRIPTS) {
+    if (scripts[script]) {
+      return script;
     }
   }
 

@@ -3,7 +3,7 @@ import { BuilderContext } from '@builder/context';
 
 export const golangRuntimeBuilder: Builder = {
   async detect(ctx) {
-    const exists = ctx.files.exists('./**/*.go');
+    const exists = await ctx.files.exists('./**/*.go');
     return { hit: exists };
   },
   async build(ctx) {

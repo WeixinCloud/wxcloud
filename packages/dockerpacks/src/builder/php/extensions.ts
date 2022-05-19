@@ -2,7 +2,7 @@ import { Builder } from '@builder/builder';
 
 export const phpExtensionsBuilder: Builder = {
   async detect(ctx) {
-    const exists = ctx.files.exists('./**/*.php');
+    const exists = await ctx.files.exists('./**/*.php');
     return { hit: exists };
   },
   async build(ctx) {

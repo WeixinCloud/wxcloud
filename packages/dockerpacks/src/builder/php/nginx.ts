@@ -13,19 +13,17 @@ export const nginxBuilder: Builder = {
   async build(ctx) {
     ctx.env.set(NGINX_ENABLED);
 
-    const rootPath = trim(
-      await ctx.prompt.input({
-        id: 'staticDirectory',
-        caption: '请输入静态文件夹路径（例如 public）',
-        validate: PROMPT_NON_EMPTY,
-        transform: input => trim(input, '/ ')
-      })
-    );
-    if (!rootPath || !ctx.files.exists(rootPath)) {
+    const rootPath = await ctx.prompt.input({
+      id: 'staticDirectory',
+      caption: '请输入静态文件夹路径（例如 public）',
+      validate: PROMPT_NON_EMPTY,
+      transform: input => trim(input, '/ ')
+    });
+    if (!rootPath || !(await ctx.files.exists(rootPath))) {
       ctx.panic('输入的目录不存在');
     }
 
-    const nginxConfPath = ctx.files.write('nginx.conf', phpNginxConf(rootPath));
+    const nginxConfPath = await ctx.files.write('nginx.conf', phpNginxConf(rootPath));
 
     return dockerfile => {
       dockerfile

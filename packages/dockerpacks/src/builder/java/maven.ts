@@ -5,7 +5,7 @@ import { MVN_EXTENSIONS_XML, POM_XML, SETTINGS_XML } from './constants';
 
 export const javaMavenBuilder: Builder = {
   async detect(ctx) {
-    const exists = ctx.files.someExists(POM_XML, MVN_EXTENSIONS_XML);
+    const exists = await ctx.files.someExists(POM_XML, MVN_EXTENSIONS_XML);
     return { hit: exists };
   },
   async build(ctx) {
@@ -13,7 +13,7 @@ export const javaMavenBuilder: Builder = {
     const targetTag = image.getMostGeneralTag();
     ctx.message.pass(`将使用镜像 ${targetTag.raw} (${image.getFullVersionTag()})`);
 
-    const hasSettingsXml = ctx.files.exists(SETTINGS_XML);
+    const hasSettingsXml = await ctx.files.exists(SETTINGS_XML);
 
     return dockerfile => {
       dockerfile.from('maven', targetTag.raw).comment(`使用 Maven 官方镜像`);

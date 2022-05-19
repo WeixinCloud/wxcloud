@@ -5,7 +5,7 @@ import { PACKAGE_JSON } from './constants';
 
 export const nodeRuntimeBuilder: Builder = {
   async detect(ctx) {
-    const exists = ctx.files.someExists(PACKAGE_JSON, './**/*.{js,jsx,ts,tsx}');
+    const exists = await ctx.files.someExists(PACKAGE_JSON, './**/*.{js,jsx,ts,tsx}');
     return { hit: exists };
   },
   async build(ctx) {
@@ -30,7 +30,7 @@ export const nodeRuntimeBuilder: Builder = {
 };
 
 async function inferNodeImage(ctx: BuilderContext) {
-  const packageJson = ctx.files.readJson(PACKAGE_JSON);
+  const packageJson = await ctx.files.readJson(PACKAGE_JSON);
   const constraint = packageJson?.engines?.node;
   if (!constraint) {
     ctx.message.pass('没有在 package.json 中找到 Node 版本约束，将使用推荐版本的 Node 镜像');
@@ -58,7 +58,7 @@ async function getRecommendedNodeImage(ctx: BuilderContext) {
 }
 
 async function inferNpmVersion(ctx: BuilderContext): Promise<string | null> {
-  const packageJson = ctx.files.readJson(PACKAGE_JSON);
+  const packageJson = await ctx.files.readJson(PACKAGE_JSON);
   const constraint = packageJson?.engines?.npm;
   if (!constraint) {
     return null;

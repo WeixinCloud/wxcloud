@@ -6,12 +6,12 @@ import { PACKAGE_JSON } from './constants';
 export const buildBuilder: Builder = {
   async detect(ctx) {
     return {
-      hit: !!getBuildScript(ctx)
+      hit: !!(await getBuildScript(ctx))
     };
   },
   async build(ctx) {
     const packageManager = ctx.env.mustGet(NODE_PACKAGE_MANAGER);
-    const buildScript = getBuildScript(ctx)!;
+    const buildScript = (await getBuildScript(ctx))!;
 
     return dockerfile => {
       dockerfile.run(packageManager, 'run', buildScript).comment('运行编译');
@@ -21,16 +21,16 @@ export const buildBuilder: Builder = {
 
 const BUILD_SCRIPTS = ['build:production', 'build:prod', 'build'];
 
-function getBuildScript(ctx: BuilderContext) {
-  const exists = ctx.files.exists(PACKAGE_JSON);
+async function getBuildScript(ctx: BuilderContext) {
+  const exists = await ctx.files.exists(PACKAGE_JSON);
   if (!exists) {
     return null;
   }
-  const json = ctx.files.readJson(PACKAGE_JSON);
+  const json = await ctx.files.readJson(PACKAGE_JSON);
 
-  for (const s of BUILD_SCRIPTS) {
-    if (json?.scripts?.[s]) {
-      return s;
+  for (const script of BUILD_SCRIPTS) {
+    if (json?.scripts?.[script]) {
+      return script;
     }
   }
 

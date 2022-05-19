@@ -5,7 +5,7 @@ import { MANAGE_PY, REQUIREMENTS_TXT } from './constants';
 export const djangoBuilder: Builder = {
   async detect(ctx) {
     return {
-      hit: checkIsDjango(ctx)
+      hit: await checkIsDjango(ctx)
     };
   },
   async build() {
@@ -18,12 +18,12 @@ export const djangoBuilder: Builder = {
 
 const REGEX = /^django[^-]/im;
 
-function checkIsDjango(ctx: BuilderContext) {
-  if (!ctx.files.exists(REQUIREMENTS_TXT)) {
+async function checkIsDjango(ctx: BuilderContext) {
+  if (!(await ctx.files.exists(REQUIREMENTS_TXT))) {
     return false;
   }
-  const content = ctx.files.read(REQUIREMENTS_TXT);
+  const content = await ctx.files.read(REQUIREMENTS_TXT);
   const hasDjango = REGEX.test(content);
-  const hasManagePy = ctx.files.exists(MANAGE_PY);
+  const hasManagePy = await ctx.files.exists(MANAGE_PY);
   return hasDjango && hasManagePy;
 }

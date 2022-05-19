@@ -7,7 +7,7 @@ import { NonEmptyArray } from '@utils/types';
 
 export const yarnBuilder: Builder = {
   async detect(ctx) {
-    const exists = ctx.files.everyExists(PACKAGE_JSON, YARN_LOCK);
+    const exists = await ctx.files.everyExists(PACKAGE_JSON, YARN_LOCK);
     return {
       hit: exists
     };
@@ -47,8 +47,8 @@ export const yarnBuilder: Builder = {
 };
 
 async function inferYarnVersion(ctx: BuilderContext) {
-  const packageJson = ctx.files.readJson(PACKAGE_JSON);
-  const constraint = packageJson?.engines?.yarn || (isYarn2(ctx) ? '2' : '1');
+  const packageJson = await ctx.files.readJson(PACKAGE_JSON);
+  const constraint = packageJson?.engines?.yarn || ((await isYarn2(ctx)) ? '2' : '1');
 
   const version = await ctx.api.queryNpmPackage('yarn', constraint);
   if (!version) {
@@ -58,8 +58,8 @@ async function inferYarnVersion(ctx: BuilderContext) {
   return version;
 }
 
-function isYarn2(ctx: BuilderContext) {
-  const content = ctx.files.read(YARN_LOCK);
+async function isYarn2(ctx: BuilderContext) {
+  const content = await ctx.files.read(YARN_LOCK);
   if (content.substring(0, 100).includes('yarn lockfile v1')) {
     return false;
   }

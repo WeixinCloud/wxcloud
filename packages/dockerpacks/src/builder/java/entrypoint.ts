@@ -30,7 +30,7 @@ export const javaEntrypointBuilder: Builder = {
 
 async function findExecutableJars(ctx: BuilderContext) {
   const result: string[] = [];
-  const jarFiles = ctx.files.glob('./**/*.jar', false);
+  const jarFiles = await ctx.files.glob('./**/*.jar', false);
   await Promise.all(
     jarFiles.map(async file => {
       if (await isExecutableJar(file)) {
