@@ -1,6 +1,111 @@
 // Vitest Snapshot v1
 
-exports[`builders test (php cases) > case 0 > should have correct outputs 1`] = `
+exports[`builders test (php cases) > case laravel > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用 php 官方提供的镜像，内置 fpm
+FROM php:7-fpm
+
+# 安装 install-php-extensions 工具，您可以使用它来安装自己需要的 php 扩展，请参考：https://github.com/mlocati/docker-php-extension-installer
+# 例如，使用 RUN install-php-extensions @composer 来安装 compuser
+ADD https://cdn.jsdelivr.net/gh/mlocati/docker-php-extension-installer@latest/install-php-extensions /usr/local/bin
+
+RUN chmod +x /usr/local/bin/install-php-extensions
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 将包括源文件在内的所有文件拷贝到容器中
+COPY . .
+
+# 安装数据库模块
+RUN install-php-extensions pdo_mysql
+
+# 安装 nginx
+RUN apt update -qq && apt install -qq -y --no-install-recommends nginx
+
+# 将 nginx 日志输出到标准输出流和标准错误流中，这是容器应用中推荐的实践
+RUN ln -sf /dev/stdout /var/log/nginx/access.log && ln -sf /dev/stderr /var/log/nginx/error.log
+
+# 用生成的 nginx.conf 替换掉默认配置，您可以随时修改生成的 nginx.conf 文件
+COPY wxcloudrun-files/nginx.conf /etc/nginx/nginx.conf
+
+RUN chmod -R 777 ./storage
+
+# 后台启动 fpm，然后前台启动 nginx
+CMD [\\"sh\\", \\"-c\\", \\"php-fpm -D && nginx -g 'daemon off;'\\"]",
+  "files": Map {
+    "wxcloudrun-files/nginx.conf" => "# 以下配置基于 nginx 默认配置修改
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+include /etc/nginx/modules-enabled/*.conf;
+
+events {
+  worker_connections 768;
+}
+
+http {
+  sendfile on;
+  tcp_nopush on;
+  types_hash_max_size 2048;
+
+  include /etc/nginx/mime.types;
+  default_type application/octet-stream;
+
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_prefer_server_ciphers on;
+
+  access_log /var/log/nginx/access.log;
+  error_log /var/log/nginx/error.log;
+
+  gzip on;
+
+  server {
+    listen       80;
+    server_name  _;
+    root         /app/public;
+    index        index.html index.htm index.php;
+
+    location / {
+      try_files $uri @rewrite;
+    }
+
+    location @rewrite {
+      set $static 0;
+      if ($uri ~ \\\\.(css|js|jpg|jpeg|png|gif|ico|woff|eot|svg|css\\\\.map|min\\\\.map)$) {
+        set $static 1;
+      }
+      if ($static = 0) {
+        rewrite ^/(.*)$ /index.php?s=/$1;
+      }
+    }
+
+    location ~ \\\\.php$ {
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+
+    location ~ /\\\\. {
+        deny all;
+    }
+  }
+}",
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md",
+  },
+}
+`;
+
+exports[`builders test (php cases) > case no-version-constraint > should have correct outputs 1`] = `
 {
   "dockerfile": "# 由 Dockerpacks 自动生成
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
@@ -112,112 +217,7 @@ LICENSE
 }
 `;
 
-exports[`builders test (php cases) > case 1 > should have correct outputs 1`] = `
-{
-  "dockerfile": "# 由 Dockerpacks 自动生成
-# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
-
-# 使用 php 官方提供的镜像，内置 fpm
-FROM php:7-fpm
-
-# 安装 install-php-extensions 工具，您可以使用它来安装自己需要的 php 扩展，请参考：https://github.com/mlocati/docker-php-extension-installer
-# 例如，使用 RUN install-php-extensions @composer 来安装 compuser
-ADD https://cdn.jsdelivr.net/gh/mlocati/docker-php-extension-installer@latest/install-php-extensions /usr/local/bin
-
-RUN chmod +x /usr/local/bin/install-php-extensions
-
-# 设置容器内的当前目录
-WORKDIR /app
-
-# 将包括源文件在内的所有文件拷贝到容器中
-COPY . .
-
-# 安装数据库模块
-RUN install-php-extensions pdo_mysql
-
-# 安装 nginx
-RUN apt update -qq && apt install -qq -y --no-install-recommends nginx
-
-# 将 nginx 日志输出到标准输出流和标准错误流中，这是容器应用中推荐的实践
-RUN ln -sf /dev/stdout /var/log/nginx/access.log && ln -sf /dev/stderr /var/log/nginx/error.log
-
-# 用生成的 nginx.conf 替换掉默认配置，您可以随时修改生成的 nginx.conf 文件
-COPY wxcloudrun-files/nginx.conf /etc/nginx/nginx.conf
-
-RUN chmod -R 777 ./storage
-
-# 后台启动 fpm，然后前台启动 nginx
-CMD [\\"sh\\", \\"-c\\", \\"php-fpm -D && nginx -g 'daemon off;'\\"]",
-  "files": Map {
-    "wxcloudrun-files/nginx.conf" => "# 以下配置基于 nginx 默认配置修改
-user www-data;
-worker_processes auto;
-pid /run/nginx.pid;
-include /etc/nginx/modules-enabled/*.conf;
-
-events {
-  worker_connections 768;
-}
-
-http {
-  sendfile on;
-  tcp_nopush on;
-  types_hash_max_size 2048;
-
-  include /etc/nginx/mime.types;
-  default_type application/octet-stream;
-
-  ssl_protocols TLSv1.2 TLSv1.3;
-  ssl_prefer_server_ciphers on;
-
-  access_log /var/log/nginx/access.log;
-  error_log /var/log/nginx/error.log;
-
-  gzip on;
-
-  server {
-    listen       80;
-    server_name  _;
-    root         /app/public;
-    index        index.html index.htm index.php;
-
-    location / {
-      try_files $uri @rewrite;
-    }
-
-    location @rewrite {
-      set $static 0;
-      if ($uri ~ \\\\.(css|js|jpg|jpeg|png|gif|ico|woff|eot|svg|css\\\\.map|min\\\\.map)$) {
-        set $static 1;
-      }
-      if ($static = 0) {
-        rewrite ^/(.*)$ /index.php?s=/$1;
-      }
-    }
-
-    location ~ \\\\.php$ {
-        fastcgi_pass   127.0.0.1:9000;
-        fastcgi_index  index.php;
-        fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include        fastcgi_params;
-    }
-
-    location ~ /\\\\. {
-        deny all;
-    }
-  }
-}",
-    ".dockerignore" => ".git
-.gitignore
-.dockerignore
-Dockerfile*
-LICENSE
-*.md",
-  },
-}
-`;
-
-exports[`builders test (php cases) > case 2 > should have correct outputs 1`] = `
+exports[`builders test (php cases) > case thinkphp > should have correct outputs 1`] = `
 {
   "dockerfile": "# 由 Dockerpacks 自动生成
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服

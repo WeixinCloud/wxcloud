@@ -1,6 +1,6 @@
 // Vitest Snapshot v1
 
-exports[`builders test (golang cases) > case 0 > should have correct outputs 1`] = `
+exports[`builders test (golang cases) > case starters-gin > should have correct outputs 1`] = `
 {
   "dockerfile": "# 由 Dockerpacks 自动生成
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
@@ -33,7 +33,7 @@ LICENSE
 }
 `;
 
-exports[`builders test (golang cases) > case 1 > should have correct outputs 1`] = `
+exports[`builders test (golang cases) > case wxcloudrun-golang > should have correct outputs 1`] = `
 {
   "dockerfile": "# 由 Dockerpacks 自动生成
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服

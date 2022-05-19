@@ -35,7 +35,7 @@ const CASES: BuilderTestCase[] = [
 const FIXTURES_PATH = path.join(__dirname, 'fixtures');
 
 describe('builders test (php cases)', () => {
-  describe.each(CASES)('case %#', testCase => {
+  describe.each(CASES)('case $id', testCase => {
     runTest(FIXTURES_PATH, testCase);
   });
 });
