@@ -17,3 +17,15 @@ wxcloud deploy
 ```bash:no-line-numbers
 wxcloud deploy -e <环境 ID> -s <服务名称>
 ```
+
+## 命令行参数
+
+支持的命令行参数如下：
+
+```text:no-line-numbers
+OPTIONS
+  -e, --envId=envId              环境ID
+  -p, --port=port                [default: 3000] 端口号
+  -s, --serviceName=serviceName  服务名
+  --dryRun                       不执行实际部署指令
+```

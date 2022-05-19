@@ -2,7 +2,7 @@
 
 ## 简介
 
-微信云服务 CLI 工具能够帮助您……
+微信云服务 CLI 工具能够帮助您新建云托管项目，或将已有项目快速迁移到云托管中。同时，它还能帮助您新建云托管服务，更新服务版本，上传文件，或查看服务的状态。
 
 ## 安装
 
@@ -12,29 +12,29 @@
 
 - [Node.js v16](https://nodejs.org/zh-cn/) 或更高版本
 
-### 安装命令
+### 安装和更新
 
-输入以下命令即可安装最新版的 CLI：
+输入以下命令即可安装最新版的 CLI，或将已有的版本更新到最新版：
 
 <CodeGroup>
   <CodeGroupItem title="npm" active>
 
 ```bash:no-line-numbers
-npm i -g @wxcloud/cli
+npm i -g @wxcloud/cli@next
 ```
 
   </CodeGroupItem>
   <CodeGroupItem title="yarn">
 
 ```bash:no-line-numbers
-yarn global add @wxcloud/cli
+yarn global add @wxcloud/cli@next
 ```
 
   </CodeGroupItem>
   <CodeGroupItem title="pnpm">
 
 ```bash:no-line-numbers
-pnpm i -g @wxcloud/cli
+pnpm i -g @wxcloud/cli@next
 ```
 
   </CodeGroupItem>

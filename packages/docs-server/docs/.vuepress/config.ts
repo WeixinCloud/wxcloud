@@ -11,6 +11,11 @@ const commandDocs = readdirSync(path.join(__dirname, '../commands'))
   .sort()
   .map(item => `/commands/${item}`);
 
+const featureDocs = readdirSync(path.join(__dirname, '../features'))
+  .filter(item => item.endsWith('.md'))
+  .sort()
+  .map(item => `/features/${item}`);
+
 export default defineUserConfig({
   base: '/cli/',
   lang: 'zh-CN',
@@ -66,6 +71,10 @@ export default defineUserConfig({
           {
             text: '概览',
             link: '/guide.html'
+          },
+          {
+            text: '功能介绍',
+            children: featureDocs,
           },
           {
             text: '命令',
