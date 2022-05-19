@@ -22,6 +22,9 @@ import { computedBuildLog, computedTaskLog } from '../../utils/run';
 import { REGION_COMMAND_FLAG } from '../../utils/flags';
 import { ApiRegion, setApiCommonParameters } from '../../api/common';
 import { getDeployResult } from '../../functions/getDeployResult';
+import chalk from 'chalk';
+import parse from 'gitignore-globs';
+
 export default class RunDeployCommand extends Command {
   static description = '创建版本';
 
@@ -250,7 +253,16 @@ export default class RunDeployCommand extends Command {
     const zipFile = `.cloudrun_${ServerName}_${Date.now()}.zip`;
     const srcPath = path.resolve(process.cwd(), args.path);
     const destPath = path.resolve(process.cwd(), zipFile);
-    await zipDir(srcPath, destPath);
+
+    const dockerIgnore = path.join(srcPath, '.dockerignore');
+    let fileToIgnore: string[] = [];
+    if (fs.existsSync(dockerIgnore)) {
+      console.log(chalk.blue(`读取到 .dockerignore, 将忽略其中的文件`));
+      fileToIgnore = parse(dockerIgnore);
+    }
+
+    await zipDir(srcPath, destPath, fileToIgnore);
+
     try {
       return await execWithLoading(
         async () => {

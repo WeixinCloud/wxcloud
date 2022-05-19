@@ -26,6 +26,7 @@
     "dotenv": "^10.0.0",
     "enquirer": "^2.3.6",
     "eventemitter3": "^4.0.7",
+    "gitignore-globs": "^0.1.1",
     "inquirer": "^8.2.0",
     "jszip": "^3.9.1",
     "kolorist": "^1.5.1",
