@@ -1,9 +1,10 @@
-import path from 'path';
+import path, { join } from 'path';
 import { expect, it } from 'vitest';
-import { BuildError, DockerpacksBase } from '@runner/runner';
+import { BuildError, DockerpacksBase, DockerpacksBuildResult } from '@runner/runner';
 import { ServerApi } from '@api/server';
 import { DEFAULT_BUILDER_GROUPS } from '@group/group';
 import { TestMessageHandler, TestPromptIO } from './context';
+import { writeFile } from 'fs/promises';
 
 export class TestDockerpacks extends DockerpacksBase {
   constructor() {
@@ -19,23 +20,35 @@ export interface BuilderTestCase {
 
 export function runTest(fixturesPath: string, testCase: BuilderTestCase) {
   it('should have correct outputs', async () => {
+    const appRoot = path.join(fixturesPath, testCase.id);
     const dockerpacks = new TestDockerpacks();
+    let buildResult: DockerpacksBuildResult = null!;
+
     try {
       const detectionResult = await dockerpacks.detectBuilders(
-        path.join(fixturesPath, testCase.id),
+        appRoot,
         new TestPromptIO(testCase.promptAnswers ?? {}),
         new TestMessageHandler()
       );
       expect(detectionResult).not.toBeNull();
-      const buildResult = await detectionResult!.build();
+
+      buildResult = await detectionResult!.build();
       expect(buildResult).toMatchSnapshot();
     } catch (e) {
       if (testCase.expectPanic !== undefined) {
         expect(e).toBeInstanceOf(BuildError);
         expect((e as BuildError).error.reason?.message).toMatch(testCase.expectPanic);
+        return;
       } else {
         throw e;
       }
     }
+
+    await Promise.all([
+      await writeFile(join(appRoot, 'Dockerfile'), buildResult.dockerfile),
+      [...buildResult.files.entries()].map(
+        async ([file, content]) => await writeFile(join(appRoot, file), content)
+      )
+    ]);
   });
 }
