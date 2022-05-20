@@ -6,15 +6,12 @@ import { searchPlugin } from '@vuepress/plugin-search';
 import { readdirSync } from 'fs';
 import path from 'path';
 
-const commandDocs = readdirSync(path.join(__dirname, '../commands'))
-  .filter(item => item.endsWith('.md'))
-  .sort()
-  .map(item => `/commands/${item}`);
-
-const featureDocs = readdirSync(path.join(__dirname, '../features'))
-  .filter(item => item.endsWith('.md'))
-  .sort()
-  .map(item => `/features/${item}`);
+const docs = ['commands', 'features', 'terminology'].map(category =>
+  readdirSync(path.join(__dirname, `../${category}`))
+    .filter(item => item.endsWith('.md'))
+    .sort()
+    .map(item => `/${category}/${item}`)
+);
 
 export default defineUserConfig({
   base: '/cli/',
@@ -73,13 +70,21 @@ export default defineUserConfig({
             link: '/guide.html'
           },
           {
+            text: '快速上手',
+            link: '/basics.html'
+          },
+          {
             text: '功能介绍',
-            children: featureDocs,
+            children: docs[1]
           },
           {
             text: '命令',
-            children: commandDocs
-          }
+            children: docs[0]
+          },
+          {
+            text: '原理',
+            children: docs[2]
+          },
         ]
       }
     ]

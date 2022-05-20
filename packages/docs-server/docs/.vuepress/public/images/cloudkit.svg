@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1286.126" height="658.329" viewBox="0 0 1286.126 658.329">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#28aeea"/>
+      <stop offset="1" stop-color="#64cece"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ff9c15"/>
+      <stop offset="1" stop-color="#d67f28"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-3" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#3edd81"/>
+      <stop offset="1" stop-color="#0cba3b"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_9" data-name="Group 9" transform="translate(-203.874 -259.335)">
+    <g id="icon" transform="translate(571 420)">
+      <rect id="Rectangle-664" width="280" height="280" fill="none"/>
+      <path id="Path_26" data-name="Path 26" d="M199.85,52.749,107.69,4.845a6.172,6.172,0,0,0-6.032,0L9.5,52.749A6.593,6.593,0,0,0,5.92,58.57v114.6A6.593,6.593,0,0,0,9.5,179l92.161,47.9a6.312,6.312,0,0,0,6.032,0l39.067-20.27-6.032-11.643-29.458,15.22V110.472l78.975-41.03v44.117h13.186V58.57A6.593,6.593,0,0,0,199.85,52.749ZM104.674,18.1,182.526,58.57,104.674,99.04,26.821,58.57ZM19.106,69.442l78.975,41.03v99.736l-78.975-41.03Z" transform="translate(35.601 24.403)"/>
+      <path id="Path_27" data-name="Path 27" d="M57.559,19.34,22.49,37.576v14.8L57.559,34.139Z" transform="translate(135.249 116.306)" fill="#07c160" opacity="0.5" style="isolation: isolate"/>
+      <path id="Path_28" data-name="Path 28" d="M103.129,39.5,70.374,22.454a7.014,7.014,0,0,0-6.453,0L31.167,39.5A7.014,7.014,0,0,0,27.38,45.74V86.42a7.014,7.014,0,0,0,3.787,6.242l32.754,17.043a7.014,7.014,0,0,0,6.453,0l32.754-17.043a7.014,7.014,0,0,0,3.787-6.242V45.74A7.014,7.014,0,0,0,103.129,39.5Z" transform="translate(164.657 130.306)" fill="#07c160" opacity="0.5" style="isolation: isolate"/>
+    </g>
+    <circle id="Ellipse_10" data-name="Ellipse 10" cx="100" cy="100" r="100" transform="translate(915.247 736.403) rotate(-25)" fill="url(#linear-gradient)"/>
+    <circle id="Ellipse_11" data-name="Ellipse 11" cx="91" cy="91" r="91" transform="matrix(0.998, -0.07, 0.07, 0.998, 203.874, 475.57)" fill="url(#linear-gradient-2)"/>
+    <circle id="Ellipse_12" data-name="Ellipse 12" cx="100" cy="100" r="100" transform="translate(915.247 343.859) rotate(-25)" fill="url(#linear-gradient-3)"/>
+    <text id="用户代码" transform="translate(241 571)" fill="#fff" font-size="30" font-family="PingFangSC-Regular, PingFang SC"><tspan x="0" y="0">用户代码</tspan></text>
+    <path id="Path_30" data-name="Path 30" d="M83.855,6.73H43.728V20.808H66.841l-59.7,59.7v19.95L76.854,30.821V53.934H90.932V13.054A7.077,7.077,0,0,0,83.855,6.73Z" transform="translate(843.86 443.541)" fill="#07c160"/>
+    <path id="Path_31" data-name="Path 31" d="M83.855,100.459H43.728V86.381H66.841L7.14,26.68V6.73L76.854,76.368V53.256H90.932v40.88A7.077,7.077,0,0,1,83.855,100.459Z" transform="translate(843.86 613.541)" fill="#82e0af"/>
+    <path id="Path_32" data-name="Path 32" d="M83.855,6.73H43.728V20.808H66.841l-59.7,59.7v19.95L76.854,30.821V53.934H90.932V13.054A7.077,7.077,0,0,0,83.855,6.73Z" transform="translate(843.86 443.541)" fill="#82e0af"/>
+    <path id="Path_33" data-name="Path 33" d="M83.855,6.73H43.728V20.808H66.841L-2.835,90.484l9.975,9.975L76.854,30.821V53.934H90.932V13.054A7.077,7.077,0,0,0,83.855,6.73Z" transform="translate(511.46 490.956) rotate(45)" fill="#82e0af"/>
+    <text id="容器化代码" transform="translate(973 403)" fill="#fff" font-size="30" font-family="PingFangSC-Regular, PingFang SC"><tspan x="0" y="0">容器化代码</tspan></text>
+    <text id="静态文件" transform="translate(988 796)" fill="#fff" font-size="30" font-family="PingFangSC-Regular, PingFang SC"><tspan x="0" y="0">静态文件</tspan></text>
+    <text id="构建镜像_使用_CLI_推送到云托管_完整的服务端能力" data-name="构建镜像
+使用 CLI 推送到云托管
+完整的服务端能力" transform="translate(1187 354)" fill="#7b7b7b" font-size="30" font-family="PingFangSC-Regular, PingFang SC"><tspan x="0" y="0">构建镜像</tspan><tspan y="0" font-family="HelveticaNeue, Helvetica Neue"></tspan><tspan x="0" y="43">使用</tspan><tspan y="43" xml:space="preserve" font-family="HelveticaNeue, Helvetica Neue"> CLI </tspan><tspan y="43">推送到云托管</tspan><tspan y="43" font-family="HelveticaNeue, Helvetica Neue"></tspan><tspan x="0" y="86">完整的服务端能力</tspan></text>
+    <text id="部署到静态托管_CDN_全球加速_更低的流量费用" data-name="部署到静态托管
+CDN 全球加速
+更低的流量费用" transform="translate(1181 746)" fill="#7b7b7b" font-size="30" font-family="PingFangSC-Regular, PingFang SC"><tspan x="0" y="0">部署到静态托管</tspan><tspan y="0" font-family="HelveticaNeue, Helvetica Neue"></tspan><tspan font-family="HelveticaNeue, Helvetica Neue"><tspan x="0" y="43">CDN </tspan><tspan y="43" font-family="PingFangSC-Regular, PingFang SC">全球加速</tspan><tspan y="43"></tspan></tspan><tspan x="0" y="86">更低的流量费用</tspan></text>
+    <text id="任意框架_任意语言" data-name="任意框架
+任意语言" transform="translate(301 711)" fill="#7b7b7b" font-size="30" font-family="PingFangSC-Regular, PingFang SC"><tspan x="-60" y="0">任意框架</tspan><tspan y="0" font-family="HelveticaNeue, Helvetica Neue"></tspan><tspan x="-60" y="43">任意语言</tspan></text>
+    <text id="wxcloud_deploy" data-name="wxcloud deploy" transform="translate(711 743)" fill="#7b7b7b" font-size="30" font-family="HelveticaNeue, Helvetica Neue"><tspan x="-105.825" y="0">wxcloud deploy</tspan></text>
+  </g>
+</svg>

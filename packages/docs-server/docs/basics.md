@@ -1,7 +1,15 @@
-# 基本用法
+# 快速上手
+
+## 从新项目开始
 
 ```bash:no-line-numbers
-wxcloud
+wxcloud init express
+wxcloud deploy
 ```
 
-在项目根目录中使用 `wxcloud` 命令。
+## 从已有项目迁移
+
+```bash:no-line-numbers
+wxcloud migrate
+wxcloud deploy
+```

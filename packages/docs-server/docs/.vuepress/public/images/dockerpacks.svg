@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1269.553" height="436" viewBox="0 0 1269.553 436">
+  <g id="Group_5" data-name="Group 5" transform="translate(-214.027 -313)">
+    <g id="Group_4" data-name="Group 4">
+      <g id="Group_3" data-name="Group 3">
+        <path id="Path_89" data-name="Path 89" d="M221.027,1857.2v262.562H448.911v-188.8l-73.76-73.76Z" transform="translate(0 -1526)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/>
+        <path id="Path_90" data-name="Path 90" d="M374.6,1860.5v71.558h74.31" transform="translate(-2 -1527)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="14"/>
+        <path id="Path_91" data-name="Path 91" d="M277.489,455.4l-28.019,28.019,28.019,28.019" transform="translate(23.178 -5.903)" fill="none" stroke="#07c160" stroke-linejoin="round" stroke-width="12" opacity="0.504"/>
+        <path id="Path_92" data-name="Path 92" d="M249.471,455.4l28.019,28.019L249.471,511.44" transform="translate(119.8 -5.903)" fill="none" stroke="#07c160" stroke-linejoin="round" stroke-width="12" opacity="0.504"/>
+        <path id="Path_93" data-name="Path 93" d="M347,455.4l-37.246,55.65" transform="translate(6.69 -5.903)" fill="none" stroke="#07c160" stroke-width="12" opacity="0.504"/>
+      </g>
+      <text id="源代码" transform="translate(287 669)" fill="#777" font-size="32" font-family="PingFangSC-Regular, PingFang SC"><tspan x="0" y="0">源代码</tspan></text>
+      <rect id="Rectangle_10" data-name="Rectangle 10" width="257" height="79" rx="8" transform="translate(610 315)" fill="rgba(198,198,198,0.36)"/>
+      <text id="源代码-2" data-name="源代码" transform="translate(287 669)" fill="#777" font-size="32" font-family="PingFangSC-Regular, PingFang SC"><tspan x="0" y="0">源代码</tspan></text>
+      <text id="Python" transform="translate(739 366)" font-size="32" font-family="Menlo-Regular, Menlo"><tspan x="0" y="0">Python</tspan></text>
+      <rect id="Rectangle_11" data-name="Rectangle 11" width="257" height="79" rx="8" transform="translate(610 407)" fill="#a5e9c5"/>
+      <text id="NodeJS" transform="translate(739 459)" font-size="32" font-family="Menlo-Regular, Menlo"><tspan x="0" y="0">NodeJS</tspan></text>
+      <rect id="Rectangle_13" data-name="Rectangle 13" width="257" height="79" rx="8" transform="translate(610 538)" fill="rgba(198,198,198,0.36)"/>
+      <text id="_._._." data-name=" . . ." transform="translate(809 518)" font-size="20" font-family="Menlo-Regular, Menlo" letter-spacing="-0.299em" opacity="0.458"><tspan x="0" y="0" xml:space="preserve"> . . .</tspan></text>
+      <text id="PHP" transform="translate(801 589)" font-size="32" font-family="Menlo-Regular, Menlo"><tspan x="0" y="0">PHP</tspan></text>
+      <text id="Dockerpacks_Detect_" data-name="Dockerpacks
+Detect
+" transform="translate(753 665)" fill="#777" font-size="32" font-family="Menlo-Regular, Menlo"><tspan x="-105.961" y="0">Dockerpacks</tspan><tspan x="-57.797" y="38">Detect</tspan><tspan x="0" y="76"></tspan></text>
+      <path id="Path_95" data-name="Path 95" d="M596.161,2011.912s-65.233-10.1-65.271-72.948S468,1886.779,468,1886.779H589.567" transform="translate(0 -1424.297)" fill="none" stroke="#e2e2e2" stroke-width="4"/>
+      <path id="Path_96" data-name="Path 96" d="M596.161,1886.094s-65.233,10.1-65.271,72.948S468,2011.227,468,2011.227" transform="translate(0 -1549.43)" fill="none" stroke="#e2e2e2" stroke-width="4"/>
+      <rect id="Rectangle_14" data-name="Rectangle 14" width="415" height="302" rx="8" transform="translate(1068.58 313)" fill="#a5e9c5"/>
+      <text id="Dockerfile" transform="translate(1102.58 366)" font-size="32" font-family="Menlo-Regular, Menlo"><tspan x="0" y="0">Dockerfile</tspan></text>
+      <text id="Dockerpacks_Build" data-name="Dockerpacks
+Build" transform="translate(1277.58 663)" fill="#777" font-size="32" font-family="Menlo-Regular, Menlo"><tspan x="-105.961" y="0">Dockerpacks</tspan><tspan x="-48.164" y="38">Build</tspan></text>
+      <rect id="Rectangle_15" data-name="Rectangle 15" width="349" height="200" rx="8" transform="translate(1102.58 392)" fill="#fff"/>
+      <text id="FROM_node:lts_WORKDIR_app_..." data-name="FROM node:lts
+
+WORKDIR /app
+
+..." transform="translate(1122.58 436)" fill="#797979" font-size="32" font-family="Menlo-Regular, Menlo"><tspan x="0" y="0">FROM node:lts</tspan><tspan x="0" y="24"></tspan><tspan x="0" y="48">WORKDIR /app</tspan><tspan x="0" y="72"></tspan><tspan x="0" y="96">...</tspan></text>
+      <path id="Path_97" data-name="Path 97" d="M83.855,6.73H43.728V20.808H66.841L-2.835,90.484l9.975,9.975L76.854,30.821V53.934H90.932V13.054A7.077,7.077,0,0,0,83.855,6.73Z" transform="translate(982.04 378.956) rotate(45)" fill="#82e0af"/>
+    </g>
+  </g>
+</svg>
