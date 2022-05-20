@@ -4,14 +4,14 @@ import { execSync } from 'child_process';
 import { existsSync, readFileSync } from 'fs';
 
 const concat = (strings, ...args) => {
-  let result = strings[0];
-  for (let i = 0; i < args.length; i++) {
-    result += `${args[i]}${strings[i + 1]}`;
+  let result = '';
+  for (let i = 0; i < Math.max(strings.length, args.length); i++) {
+    result += `${strings[i] ?? ''}${args[i] ?? ''}`;
   }
   return result;
 };
-const $ = (strings, ...args) => execSync(concat(strings, args), { stdio: 'inherit' });
-const log = (strings, ...args) => console.log(concat(strings, args));
+const $ = (strings, ...args) => execSync(concat(strings, ...args), { stdio: 'inherit' });
+const log = (strings, ...args) => console.log(concat(strings, ...args));
 
 const fixtures = glob.sync('./test/**/fixtures/*', {
   onlyFiles: false,
@@ -37,7 +37,7 @@ for (const fixturePath of fixtures) {
 
   try {
     log`building image ${imageName}`;
-    $`docker build .  -q -t ${imageName} > /dev/null`;
+    $`docker build .  -t ${imageName}`;
 
     if (existsSync('.__build__only__')) {
       log`skipped running stage, .__build__only__ presents`;
@@ -62,7 +62,7 @@ for (const fixturePath of fixtures) {
       'service failed to response',
       () =>
         $`curl --retry 20 --retry-all-errors --retry-delay 3 -s localhost:23333 > /dev/null 2>&1`,
-      () => $`docker rm --force '${containerName}'`
+      () => $`docker rm --force '${containerName}' > /dev/null`
     );
 
     log`=== PASSED ===\n\n`;
