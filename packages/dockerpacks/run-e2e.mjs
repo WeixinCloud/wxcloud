@@ -27,16 +27,16 @@ for (const fixturePath of fixtures) {
 
   log`=== CASE ${name} ===`;
   if (existsSync('.__skip__')) {
-    log`=== SKIPPED: .__skip__ presents ===`;
+    log`=== SKIPPED: .__skip__ presents ===\n\n`;
     continue;
   }
   if (!existsSync('Dockerfile')) {
-    log`=== SKIPPED: missing Dockerfile ===`;
+    log`=== SKIPPED: missing Dockerfile ===\n\n`;
     continue;
   }
 
   try {
-    log`building image ${imageName}`;
+    log`* Building image ${imageName}`;
     $`docker build .  -t ${imageName}`;
 
     if (existsSync('.__build__only__')) {
@@ -51,17 +51,16 @@ for (const fixturePath of fixtures) {
     }
 
     const containerName = `test-container-${Math.random().toString(36).slice(2)}`;
-    log`starting container ${containerName}`;
+    log`* Starting container ${containerName}`;
     attempt(
-      'failed to start container',
+      'Failed to start container',
       () => $`docker run -d -p 23333:${port} --name '${containerName}' '${imageName}' > /dev/null`
     );
 
-    log`checking readiness on port ${port}`;
+    log`* Checking readiness on port ${port}`;
     attempt(
-      'service failed to response',
-      () =>
-        $`curl --retry 20 --retry-connrefused --retry-delay 3 -s localhost:23333 > /dev/null 2>&1`,
+      'Service failed to response',
+      () => retry(() => $`curl localhost:23333`, 30, 3),
       () => $`docker rm --force '${containerName}' > /dev/null`
     );
 
@@ -81,5 +80,21 @@ function attempt(message, action, final) {
     try {
       final?.();
     } catch {}
+  }
+}
+
+async function retry(action, maxTimes, delay) {
+  let time = 0;
+  while (true) {
+    try {
+      action();
+      break;
+    } catch (e) {
+      if (time++ > maxTimes) {
+        throw e;
+      }
+
+      await new Promise(resolve => void setTimeout(resolve, delay));
+    }
   }
 }
