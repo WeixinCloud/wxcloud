@@ -26,7 +26,9 @@ export const pnpmBuilder: Builder = {
         .copy(PACKAGE_JSON, isYaml ? PNPM_LOCK_YAML : PNPM_LOCK_YML, './')
         .comment('将这些文件拷贝到容器中');
       dockerfile.env('CI', 'true').comment('为 pnpm 设置的环境变量');
-      dockerfile.run('pnpm', 'install', '--prefer-offline').comment('安装依赖'); // TODO: prune
+      dockerfile
+        .run('pnpm', 'install', '--prefer-offline', '--shamefully-hoist')
+        .comment('安装依赖'); // TODO: prune
 
       ignore.append('node_modules');
       dockerfile

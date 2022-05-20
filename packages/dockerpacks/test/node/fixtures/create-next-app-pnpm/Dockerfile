@@ -20,7 +20,7 @@ COPY package.json pnpm-lock.yaml ./
 ENV CI=true
 
 # 安装依赖
-RUN pnpm install --prefer-offline
+RUN pnpm install --prefer-offline --shamefully-hoist
 
 # 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .

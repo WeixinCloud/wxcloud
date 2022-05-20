@@ -4,7 +4,7 @@ import { BuildError, DockerpacksBase, DockerpacksBuildResult } from '@runner/run
 import { ServerApi } from '@api/server';
 import { DEFAULT_BUILDER_GROUPS } from '@group/group';
 import { TestMessageHandler, TestPromptIO } from './context';
-import { writeFile } from 'fs/promises';
+import { writeFile, mkdir } from 'fs/promises';
 
 export class TestDockerpacks extends DockerpacksBase {
   constructor() {
@@ -50,8 +50,8 @@ export function runTest(fixturesPath: string, testCase: BuilderTestCase) {
 
     await Promise.all([
       await writeFile(join(appRoot, 'Dockerfile'), buildResult.dockerfile),
-      [...buildResult.files.entries()].map(
-        async ([file, content]) => await writeFile(join(appRoot, file), content)
+      [...buildResult.files.entries()].map(([file, content]) =>
+        safeWriteFile(join(appRoot, file), content)
       )
     ]);
 
@@ -63,4 +63,10 @@ export function runTest(fixturesPath: string, testCase: BuilderTestCase) {
       await writeFile(join(appRoot, '.__build__only__'), '');
     }
   });
+}
+
+async function safeWriteFile(filePath: string, content: string) {
+  const directory = path.dirname(filePath);
+  await mkdir(directory, { recursive: true });
+  await writeFile(filePath, content);
 }
