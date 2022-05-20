@@ -15,6 +15,7 @@ import { getDeployResult } from '../../functions/getDeployResult';
 import ora from 'ora';
 import { logger } from '../../utils/log';
 import inquirer from 'inquirer';
+import { cli } from 'cli-ux';
 
 const oraStages: Record<string, ora.Ora> = {};
 const stageName = {
@@ -51,7 +52,7 @@ export default class DeployCommand extends Command {
   static flags = {
     envId: flags.string({ char: 'e', description: '环境ID' }),
     serviceName: flags.string({ char: 's', description: '服务名' }),
-    port: flags.integer({ char: 'p', default: 80, description: '端口号' }),
+    port: flags.integer({ char: 'p', description: '端口号' }),
     dryRun: flags.boolean({ default: false, description: '不执行实际部署指令' })
   };
 
@@ -62,6 +63,14 @@ export default class DeployCommand extends Command {
     const isStatic = cloudConfig.type === 'static';
     const envId = flags.envId || (await chooseEnvId());
     const serviceName = flags.serviceName || isStatic ? undefined : await chooseServiceId(envId);
+    const port =
+      flags.port ||
+      parseInt(
+        await cli.prompt('请输入端口号（大部分前端框架端口号为 3000，官方模板为 80）', {
+          required: false,
+          default: '3000'
+        })
+      );
     const env = await tcbDescribeWxCloudBaseRunEnvs({});
     const target = env.envList.find(env => env.envId === envId);
     if (!target) {
@@ -153,7 +162,7 @@ export default class DeployCommand extends Command {
         wxAppId: (await readLoginState()).appid,
         packageName,
         packageVersion,
-        port: flags.port,
+        port,
         versionRemark: 'cloudkit',
         ...userConfig
       });

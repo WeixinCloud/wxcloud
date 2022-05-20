@@ -53,7 +53,6 @@ export class NextKit extends Kit {
 COPY . /app
 WORKDIR /app
 RUN npm install --registry=https://registry.npmmirror.com
-ENV PORT 80
 ENTRYPOINT [ "npm", "start" ]`
       }
     });

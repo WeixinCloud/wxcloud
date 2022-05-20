@@ -62,7 +62,6 @@ COPY . /app
 WORKDIR /app
 RUN npm i --registry=https://registry.npmmirror.com
 ENV NUXT_HOST=0.0.0.0
-ENV NUXT_PORT=80
 ENTRYPOINT [ "npm", "start" ]`
       }
     });
