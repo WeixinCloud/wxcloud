@@ -7,6 +7,7 @@ import { Command, flags } from '@oclif/command';
 import { isDirectoryEmpty, isDirectoryExists } from '../../utils/file';
 import { writeFileLogged } from '../../functions/writeFileLogged';
 import { DEFAULT_CLOUD_CONFIG } from '@wxcloud/core';
+import ora from 'ora';
 
 interface Template {
   name: string;
@@ -126,6 +127,8 @@ export class InitCommand extends Command {
     ]);
 
     await tasks.run();
+
+    ora().warn('模板项目依赖 MySQL，请先执行 `wxcloud service:config` 写入数据库相关环境变量');
   }
 
   private checkTargetPath(path: string) {

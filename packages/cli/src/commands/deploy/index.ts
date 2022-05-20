@@ -51,7 +51,7 @@ export default class DeployCommand extends Command {
   static flags = {
     envId: flags.string({ char: 'e', description: '环境ID' }),
     serviceName: flags.string({ char: 's', description: '服务名' }),
-    port: flags.integer({ char: 'p', default: 3000, description: '端口号' }),
+    port: flags.integer({ char: 'p', default: 80, description: '端口号' }),
     dryRun: flags.boolean({ default: false, description: '不执行实际部署指令' })
   };
 
@@ -137,6 +137,12 @@ export default class DeployCommand extends Command {
       if (!process.env.KEEP_DEPLOY_TARGET) {
         rimraf.sync(res.runTarget);
       }
+      const userConfig =
+        typeof cloudConfig.server === 'string'
+          ? {
+              buildDir: cloudConfig.server
+            }
+          : cloudConfig.server;
       await tcbSubmitServerRelease({
         deployType: 'package',
         envId,
@@ -148,7 +154,8 @@ export default class DeployCommand extends Command {
         packageName,
         packageVersion,
         port: flags.port,
-        versionRemark: 'cloudkit'
+        versionRemark: 'cloudkit',
+        ...userConfig
       });
       console.log(chalk.green('云托管'), '版本创建成功');
     }
