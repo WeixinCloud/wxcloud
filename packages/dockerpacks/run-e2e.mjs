@@ -60,7 +60,7 @@ for (const fixturePath of fixtures) {
     log`* Checking readiness on port ${port}`;
     attempt(
       'Service failed to response',
-      () => retry(() => $`curl localhost:23333`, 30, 3),
+      () => retry(() => $`curl -s --show-error localhost:23333 -o /dev/null`, 30, 3),
       () => $`docker rm --force '${containerName}' > /dev/null`
     );
 
