@@ -2,10 +2,16 @@ import path from 'path';
 import glob from 'fast-glob';
 import { execSync } from 'child_process';
 import { existsSync, readFileSync } from 'fs';
-import { bgLightGreen, bgLightBlue, bgLightGray, bgRed } from 'kolorist';
 
-const $ = command => execSync(command, { stdio: 'inherit' });
-const _ = message => console.log(message);
+const concat = (strings, ...args) => {
+  let result = strings[0];
+  for (let i = 0; i < args.length; i++) {
+    result += `${args[i]}${strings[i + 1]}`;
+  }
+  return result;
+};
+const $ = (strings, ...args) => execSync(concat(strings, args), { stdio: 'inherit' });
+const log = (strings, ...args) => console.log(concat(strings, args));
 
 const fixtures = glob.sync('./test/**/fixtures/*', {
   onlyFiles: false,
@@ -19,22 +25,22 @@ for (const fixturePath of fixtures) {
   const name = path.basename(fixturePath);
   const imageName = `dockerpacks-test-${name}`;
 
-  _`${bgLightBlue(' CASE ')} ${name}`;
+  log`=== CASE ${name} ===`;
   if (existsSync('.__skip__')) {
-    _`${bgLightGray(' SKIPPED ')} .__skip__ presents`;
+    log`=== SKIPPED: .__skip__ presents ===`;
     continue;
   }
   if (!existsSync('Dockerfile')) {
-    _`${bgLightGray(' SKIPPED ')} missing Dockerfile`;
+    log`=== SKIPPED: missing Dockerfile ===`;
     continue;
   }
 
   try {
-    _`building image ${imageName}`;
+    log`building image ${imageName}`;
     $`docker build .  -q -t ${imageName} > /dev/null`;
 
     if (existsSync('.__build__only__')) {
-      _`skipped running stage, .__build__only__ presents`;
+      log`skipped running stage, .__build__only__ presents`;
       continue;
     }
 
@@ -45,13 +51,13 @@ for (const fixturePath of fixtures) {
     }
 
     const containerName = `test-container-${Math.random().toString(36).slice(2)}`;
-    _`starting container ${containerName}`;
+    log`starting container ${containerName}`;
     attempt(
       'failed to start container',
       () => $`docker run -d -p 23333:${port} --name '${containerName}' '${imageName}' > /dev/null`
     );
 
-    _`checking readiness on port ${port}`;
+    log`checking readiness on port ${port}`;
     attempt(
       'service failed to response',
       () =>
@@ -59,9 +65,9 @@ for (const fixturePath of fixtures) {
       () => $`docker rm --force '${containerName}'`
     );
 
-    _`${bgLightGreen(' PASSED ')}\n\n`;
+    log`=== PASSED ===\n\n`;
   } catch (e) {
-    _`${bgRed(' FAILED ')}`;
+    log`=== FAILED ===`;
     throw e;
   }
 }
