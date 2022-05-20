@@ -61,7 +61,7 @@ for (const fixturePath of fixtures) {
     attempt(
       'service failed to response',
       () =>
-        $`curl --retry 20 --retry-all-errors --retry-delay 3 -s localhost:23333 > /dev/null 2>&1`,
+        $`curl --retry 20 --retry-connrefused --retry-delay 3 -s localhost:23333 > /dev/null 2>&1`,
       () => $`docker rm --force '${containerName}' > /dev/null`
     );
 
