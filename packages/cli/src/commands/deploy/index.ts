@@ -44,6 +44,17 @@ function extractCloudConfig(): CloudConfig {
   // no config file, should prompt user to run `wxcloud migrate` first.
   throw new Error('没有配置文件，请先执行 `wxcloud migrate` 将项目迁移到云托管');
 }
+
+function renderDeployMode(config: CloudConfig) {
+  switch (config.type) {
+    case 'run':
+      return chalk.green('云托管');
+    case 'static':
+      return chalk.yellow('静态托管');
+    case 'universal':
+      return chalk.cyan('云托管（混合渲染）');
+  }
+}
 export default class DeployCommand extends Command {
   static description = '部署项目';
 
@@ -60,11 +71,19 @@ export default class DeployCommand extends Command {
     const { flags } = this.parse(DeployCommand);
 
     const cloudConfig = extractCloudConfig();
+    const userConfig =
+      typeof cloudConfig.server === 'string'
+        ? {
+            buildDir: cloudConfig.server
+          }
+        : cloudConfig.server;
+
     const isStatic = cloudConfig.type === 'static';
     const envId = flags.envId || (await chooseEnvId());
     const serviceName = flags.serviceName || isStatic ? undefined : await chooseServiceId(envId);
     const port =
       flags.port ||
+      userConfig.port ||
       parseInt(
         await cli.prompt('请输入端口号（大部分前端框架端口号为 3000，官方模板为 80）', {
           required: false,
@@ -77,6 +96,7 @@ export default class DeployCommand extends Command {
       throw new Error(`环境 ${envId} 不存在`);
     }
     let staticDomain: string | undefined;
+    ora().info(`部署模式 ${renderDeployMode(cloudConfig)}`);
     if (cloudConfig.type === 'universal' || cloudConfig.type === 'static') {
       if (target.staticStorages[0]?.staticDomain) {
         const domainWithoutPrefix = target.staticStorages[0]?.staticDomain;
@@ -120,20 +140,26 @@ export default class DeployCommand extends Command {
       }
     }
 
-    const res = await CloudKit.execAllKits({
-      fullPath: process.cwd(),
-      config: cloudConfig,
-      staticDomain,
-      lifecycleHooks: {
-        enterStage(stage) {
-          oraStages[stage] = ora(stageName[stage]).start();
-        },
-        leaveStage(stage) {
-          oraStages[stage].succeed();
-        }
-      }
-    });
+    const res =
+      cloudConfig.type === 'custom'
+        ? cloudConfig.custom
+        : await CloudKit.execAllKits({
+            fullPath: process.cwd(),
+            config: cloudConfig,
+            staticDomain,
+            lifecycleHooks: {
+              enterStage(stage) {
+                oraStages[stage] = ora(stageName[stage]).start();
+              },
+              leaveStage(stage) {
+                oraStages[stage].succeed();
+              }
+            }
+          });
     logger.debug(chalk.yellow.bold('CloudKit'), res);
+    if (!res) {
+      throw new Error('缺少部署目标，已终止。');
+    }
     if (res.runTarget && !flags.dryRun) {
       const { uploadUrl, packageName, packageVersion } = await tcbDescribeCloudBaseBuildService({
         envId,
@@ -146,12 +172,6 @@ export default class DeployCommand extends Command {
       if (!process.env.KEEP_DEPLOY_TARGET) {
         rimraf.sync(res.runTarget);
       }
-      const userConfig =
-        typeof cloudConfig.server === 'string'
-          ? {
-              buildDir: cloudConfig.server
-            }
-          : cloudConfig.server;
       await tcbSubmitServerRelease({
         deployType: 'package',
         envId,

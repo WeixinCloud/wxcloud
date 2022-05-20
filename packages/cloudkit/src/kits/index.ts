@@ -5,7 +5,7 @@ import { NuxtKit } from './nuxtkit';
 import { RunKit } from './runkit';
 import { StaticKit } from './statickit';
 
-export const CloudKits: Record<CloudKitType, Kit[]> = {
+export const CloudKits: Record<Exclude<CloudKitType, 'custom'>, Kit[]> = {
   run: [new RunKit()],
   static: [new StaticKit()],
   universal: [new NextKit(), new NuxtKit()]
