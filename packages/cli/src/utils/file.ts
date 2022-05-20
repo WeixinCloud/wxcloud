@@ -1,4 +1,6 @@
 import { lstatSync, readdirSync } from 'fs';
+import { mkdir, writeFile } from 'fs/promises';
+import path from 'path';
 
 export function isDirectoryExistsAndEmpty(path: string) {
   return isDirectoryExists(path) && isDirectoryEmpty(path);
@@ -16,4 +18,12 @@ export function isDirectoryExists(path: string) {
 
 export function isDirectoryEmpty(path: string) {
   return readdirSync(path).length <= 0;
+}
+
+export async function safeWriteFile(filePath: string, content: string) {
+  const directory = path.dirname(filePath);
+  if (!isDirectoryExists(directory)) {
+    await mkdir(directory, { recursive: true });
+  }
+  await writeFile(filePath, content);
 }
