@@ -13,3 +13,4 @@ private.key
 /yarn.lock
 .turbo
 packages/cli/oclif.manifest.json
+.DS_Store
