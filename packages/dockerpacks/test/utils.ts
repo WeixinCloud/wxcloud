@@ -8,7 +8,10 @@ import { writeFile, mkdir } from 'fs/promises';
 
 export class TestDockerpacks extends DockerpacksBase {
   constructor() {
-    super(new ServerApi('http://localhost:8080'), DEFAULT_BUILDER_GROUPS);
+    super(
+      process.env.CI === 'true' ? ServerApi.TCB_SHANGHAI : new ServerApi('http://localhost:8080'),
+      DEFAULT_BUILDER_GROUPS
+    );
   }
 }
 

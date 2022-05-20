@@ -28,6 +28,7 @@
   "sideEffects": false,
   "scripts": {
     "test": "vitest --no-threads --config vitest.config.ts",
+    "test:ci": "CI=true vitest run --silent --no-threads --config vitest.config.ts",
     "test:update": "vitest --no-threads --update --config vitest.config.ts",
     "build": "tsup",
     "build:watch": "tsup --watch"
