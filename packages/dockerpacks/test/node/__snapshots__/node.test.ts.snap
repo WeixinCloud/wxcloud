@@ -46,7 +46,105 @@ node_modules",
 }
 `;
 
-exports[`builders test (node cases) > case create-react-app > should have correct outputs 1`] = `
+exports[`builders test (node cases) > case create-next-app-pnpm > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 使用速度更快的国内镜像源
+RUN npm config set registry https://registry.npmmirror.com
+
+# 安装 pnpm
+RUN npm install -g pnpm@7.1.2
+
+# 将这些文件拷贝到容器中
+COPY package.json pnpm-lock.yaml ./
+
+# 为 pnpm 设置的环境变量
+ENV CI=true
+
+# 安装依赖
+RUN pnpm install --prefer-offline
+
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
+COPY . .
+
+# 运行编译
+RUN pnpm run build
+
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
+
+# 运行项目
+CMD [\\"npm\\", \\"run\\", \\"start\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
+}
+`;
+
+exports[`builders test (node cases) > case create-next-app-yarn > should have correct outputs 1`] = `
+{
+  "dockerfile": "# 由 Dockerpacks 自动生成
+# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
+
+# 使用基于 alpine 的 node 官方镜像
+FROM node:lts-alpine
+
+# 设置容器内的当前目录
+WORKDIR /app
+
+# 使用速度更快的国内镜像源
+RUN yarn config set registry https://registry.npmmirror.com
+
+# 将这些文件拷贝到容器中
+COPY package.json yarn.lock ./
+
+# 安装依赖
+RUN yarn install --non-interactive --prefer-offline
+
+# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
+COPY . .
+
+# 运行编译
+RUN yarn run build
+
+# 设置环境变量
+ENV NODE_ENV=production HOST=0.0.0.0
+
+# 运行项目
+CMD [\\"npm\\", \\"run\\", \\"start\\"]
+
+# 服务暴露的端口
+EXPOSE 3000",
+  "files": Map {
+    ".dockerignore" => ".git
+.gitignore
+.dockerignore
+Dockerfile*
+LICENSE
+*.md
+node_modules",
+  },
+}
+`;
+
+exports[`builders test (node cases) > case create-nuxt-app > should have correct outputs 1`] = `
 {
   "dockerfile": "# 由 Dockerpacks 自动生成
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
@@ -92,7 +190,7 @@ node_modules",
 }
 `;
 
-exports[`builders test (node cases) > case nextjs-cli > should have correct outputs 1`] = `
+exports[`builders test (node cases) > case create-react-app > should have correct outputs 1`] = `
 {
   "dockerfile": "# 由 Dockerpacks 自动生成
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
@@ -106,69 +204,17 @@ WORKDIR /app
 # 使用速度更快的国内镜像源
 RUN npm config set registry https://registry.npmmirror.com
 
-# 将 package.json 拷贝到容器中
-COPY package.json .
+# 将这些文件拷贝到容器中
+COPY package.json package-lock.json ./
 
 # 安装依赖
-RUN npm install
+RUN npm ci
 
 # 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
 # 运行编译
 RUN npm run build
-
-# 设置环境变量
-ENV NODE_ENV=production HOST=0.0.0.0
-
-# 运行项目
-CMD [\\"npm\\", \\"run\\", \\"start\\"]
-
-# 服务暴露的端口
-EXPOSE 3000",
-  "files": Map {
-    ".dockerignore" => ".git
-.gitignore
-.dockerignore
-Dockerfile*
-LICENSE
-*.md
-node_modules",
-  },
-}
-`;
-
-exports[`builders test (node cases) > case nextjs-cli-pnpm > should have correct outputs 1`] = `
-{
-  "dockerfile": "# 由 Dockerpacks 自动生成
-# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
-
-# 使用基于 alpine 的 node 官方镜像
-FROM node:lts-alpine
-
-# 设置容器内的当前目录
-WORKDIR /app
-
-# 使用速度更快的国内镜像源
-RUN npm config set registry https://registry.npmmirror.com
-
-# 安装 pnpm
-RUN npm install -g pnpm@7.1.0
-
-# 将这些文件拷贝到容器中
-COPY package.json pnpm-lock.yaml ./
-
-# 为 pnpm 设置的环境变量
-ENV CI=true
-
-# 安装依赖
-RUN pnpm install --prefer-offline
-
-# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
-COPY . .
-
-# 运行编译
-RUN pnpm run build
 
 # 设置环境变量
 ENV NODE_ENV=production HOST=0.0.0.0
@@ -394,148 +440,7 @@ ENV NODE_ENV=production HOST=0.0.0.0
 CMD [\\"npm\\", \\"run\\", \\"start\\"]
 
 # 服务暴露的端口
-EXPOSE 3000",
-  "files": Map {
-    ".dockerignore" => ".git
-.gitignore
-.dockerignore
-Dockerfile*
-LICENSE
-*.md
-node_modules",
-  },
-}
-`;
-
-exports[`builders test (node cases) > case starters-nextjs-prisma > should have correct outputs 1`] = `
-{
-  "dockerfile": "# 由 Dockerpacks 自动生成
-# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
-
-# 使用基于 alpine 的 node 官方镜像
-FROM node:lts-alpine
-
-# 设置容器内的当前目录
-WORKDIR /app
-
-# 用户设置的环境变量
-ENV DATABASE_URL=mongo://test
-
-# 使用速度更快的国内镜像源
-RUN yarn config set registry https://registry.npmmirror.com
-
-# 将这些文件拷贝到容器中
-COPY package.json yarn.lock ./
-
-# 安装依赖
-RUN yarn install --non-interactive --prefer-offline
-
-# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
-COPY . .
-
-# 运行编译
-RUN yarn run build
-
-# 设置环境变量
-ENV NODE_ENV=production HOST=0.0.0.0
-
-# 运行项目
-CMD [\\"npm\\", \\"run\\", \\"start\\"]
-
-# 服务暴露的端口
-EXPOSE 3000",
-  "files": Map {
-    ".dockerignore" => ".git
-.gitignore
-.dockerignore
-Dockerfile*
-LICENSE
-*.md
-node_modules",
-  },
-}
-`;
-
-exports[`builders test (node cases) > case starters-nuxt > should have correct outputs 1`] = `
-{
-  "dockerfile": "# 由 Dockerpacks 自动生成
-# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
-
-# 使用基于 alpine 的 node 官方镜像
-FROM node:lts-alpine
-
-# 设置容器内的当前目录
-WORKDIR /app
-
-# 使用速度更快的国内镜像源
-RUN yarn config set registry https://registry.npmmirror.com
-
-# 将这些文件拷贝到容器中
-COPY package.json yarn.lock ./
-
-# 安装依赖
-RUN yarn install --non-interactive --prefer-offline
-
-# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
-COPY . .
-
-# 运行编译
-RUN yarn run build
-
-# 设置环境变量
-ENV NODE_ENV=production HOST=0.0.0.0
-
-# 运行项目
-CMD [\\"npm\\", \\"run\\", \\"start\\"]
-
-# 服务暴露的端口
-EXPOSE 3000",
-  "files": Map {
-    ".dockerignore" => ".git
-.gitignore
-.dockerignore
-Dockerfile*
-LICENSE
-*.md
-node_modules",
-  },
-}
-`;
-
-exports[`builders test (node cases) > case starters-sveltekit > should have correct outputs 1`] = `
-{
-  "dockerfile": "# 由 Dockerpacks 自动生成
-# 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
-
-# 使用基于 alpine 的 node 官方镜像
-FROM node:lts-alpine
-
-# 设置容器内的当前目录
-WORKDIR /app
-
-# 使用速度更快的国内镜像源
-RUN yarn config set registry https://registry.npmmirror.com
-
-# 将这些文件拷贝到容器中
-COPY package.json yarn.lock ./
-
-# 安装依赖
-RUN yarn install --non-interactive --prefer-offline
-
-# 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
-COPY . .
-
-# 运行编译
-RUN yarn run build
-
-# 设置环境变量
-ENV NODE_ENV=production HOST=0.0.0.0
-
-# 运行项目
-CMD [\\"node\\", \\"build/index.js\\"]
-
-# 服务暴露的端口
-EXPOSE 3000",
+EXPOSE 3333",
   "files": Map {
     ".dockerignore" => ".git
 .gitignore

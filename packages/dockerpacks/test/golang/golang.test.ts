@@ -6,14 +6,7 @@ const CASES: BuilderTestCase[] = [
   {
     id: 'starters-gin',
     promptAnswers: {
-      expose: '3000',
-      environments: []
-    }
-  },
-  {
-    id: 'wxcloudrun-golang',
-    promptAnswers: {
-      expose: '3000',
+      expose: '8080',
       environments: []
     }
   }

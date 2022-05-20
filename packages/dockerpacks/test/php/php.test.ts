@@ -5,6 +5,7 @@ import { BuilderTestCase, runTest } from '@test/utils';
 const CASES: BuilderTestCase[] = [
   {
     id: 'no-version-constraint',
+    e2e: { skip: true },
     promptAnswers: {
       expose: '3000',
       environments: [],
@@ -15,6 +16,7 @@ const CASES: BuilderTestCase[] = [
   },
   {
     id: 'laravel',
+    e2e: { skip: true },
     promptAnswers: {
       expose: '3000',
       environments: [],
@@ -25,6 +27,7 @@ const CASES: BuilderTestCase[] = [
   },
   {
     id: 'thinkphp',
+    e2e: { skip: true },
     promptAnswers: {
       expose: '3000',
       environments: [],

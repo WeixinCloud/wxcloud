@@ -16,6 +16,10 @@ export interface BuilderTestCase {
   id: string;
   expectPanic?: string | RegExp;
   promptAnswers?: Record<string, any>;
+  e2e?: {
+    skip?: boolean;
+    buildOnly?: boolean;
+  };
 }
 
 export function runTest(fixturesPath: string, testCase: BuilderTestCase) {
@@ -50,5 +54,13 @@ export function runTest(fixturesPath: string, testCase: BuilderTestCase) {
         async ([file, content]) => await writeFile(join(appRoot, file), content)
       )
     ]);
+
+    if (testCase.e2e?.skip) {
+      await writeFile(join(appRoot, '.__skip__'), '');
+    }
+
+    if (testCase.e2e?.buildOnly) {
+      await writeFile(join(appRoot, '.__build__only__'), '');
+    }
   });
 }

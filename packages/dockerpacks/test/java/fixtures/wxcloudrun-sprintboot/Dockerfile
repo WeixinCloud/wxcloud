@@ -14,7 +14,7 @@ COPY . .
 RUN mvn -s settings.xml clean package --batch-mode -DskipTests -Dhttp.keepAlive=false --quiet
 
 # 服务暴露的端口
-EXPOSE 3000
+EXPOSE 80
 
 # 运行项目
-CMD ["java", "-jar", "dist/app.jar"]
+CMD ["java", "-jar", "springboot-wxcloudrun-1.0.jar"]

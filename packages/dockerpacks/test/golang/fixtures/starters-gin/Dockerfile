@@ -20,4 +20,4 @@ RUN go build -o wxcloudrun-files/main
 CMD ["wxcloudrun-files/main"]
 
 # 服务暴露的端口
-EXPOSE 3000
+EXPOSE 8080

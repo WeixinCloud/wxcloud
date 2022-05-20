@@ -5,30 +5,37 @@ import path from 'path';
 const CASES: BuilderTestCase[] = [
   {
     id: 'build',
+    e2e: { skip: true },
     promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'none',
+    e2e: { skip: true },
     promptAnswers: { expose: '3000', generalEntrypoint: 'node test/index.js', environments: [] }
   },
   {
     id: 'package-lock',
+    e2e: { skip: true },
     promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'npm',
+    e2e: { skip: true },
     promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'yarn1',
+    e2e: { skip: true },
     promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'yarn2',
+    e2e: { skip: true },
     promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'pnpm',
+    e2e: { skip: true },
     promptAnswers: { expose: '3000', environments: [] }
   },
   {
@@ -36,20 +43,16 @@ const CASES: BuilderTestCase[] = [
     promptAnswers: { expose: '3000', environments: [] }
   },
   {
-    id: 'starters-nuxt',
+    id: 'create-nuxt-app',
     promptAnswers: { expose: '3000', environments: [] }
   },
   {
-    id: 'starters-expressjs',
+    id: 'create-next-app-yarn',
     promptAnswers: { expose: '3000', environments: [] }
   },
   {
-    id: 'starters-sveltekit',
-    promptAnswers: { expose: '3000', generalEntrypoint: 'node build/index.js', environments: [] }
-  },
-  {
-    id: 'starters-nextjs-prisma',
-    promptAnswers: { expose: '3000', environments: ['DATABASE_URL=mongo://test'] }
+    id: 'create-next-app-pnpm',
+    promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'sveltekit-cli-node-adapter',
@@ -57,16 +60,13 @@ const CASES: BuilderTestCase[] = [
   },
   {
     id: 'sveltekit-cli-static-adapter',
+    e2e: { skip: true },
     expectPanic: /adapter-static/i,
     promptAnswers: { expose: '3000', environments: [], generalEntrypoint: 'node build/index.js' }
   },
   {
-    id: 'nextjs-cli',
-    promptAnswers: { expose: '3000', environments: [] }
-  },
-  {
-    id: 'nextjs-cli-pnpm',
-    promptAnswers: { expose: '3000', environments: [] }
+    id: 'starters-expressjs',
+    promptAnswers: { expose: '3333', environments: [] }
   }
 ];
 

@@ -40,6 +40,7 @@
     "@types/lodash": "^4.14.182",
     "@types/node-fetch": "^2.6.1",
     "@types/semver": "^7.3.9",
+    "kolorist": "^1.5.1",
     "tsconfig-paths": "^3.14.1",
     "tsup": "^5.12.6",
     "vite-tsconfig-paths": "^3.4.1",

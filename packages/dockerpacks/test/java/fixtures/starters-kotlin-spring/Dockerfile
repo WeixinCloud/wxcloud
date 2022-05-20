@@ -14,7 +14,7 @@ COPY . .
 RUN gradle clean assemble -x test --quiet
 
 # 服务暴露的端口
-EXPOSE 3000
+EXPOSE 8080
 
 # 运行项目
-CMD ["java", "-jar", "dist/app.jar"]
+CMD ["java", "-jar", "build/libs/demo-0.0.1-SNAPSHOT.jar"]

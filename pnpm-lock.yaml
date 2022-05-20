@@ -204,6 +204,7 @@ importers:
       '@types/semver': ^7.3.9
       fast-glob: ^3.2.11
       jszip: ^3.9.1
+      kolorist: ^1.5.1
       lodash: ^4.17.21
       node-fetch: ^2.6.7
       semver: ^7.3.5
@@ -225,6 +226,7 @@ importers:
       '@types/lodash': 4.14.182
       '@types/node-fetch': 2.6.1
       '@types/semver': 7.3.9
+      kolorist: 1.5.1
       tsconfig-paths: 3.14.1
       tsup: 5.12.7
       vite-tsconfig-paths: 3.4.1
@@ -7564,7 +7566,6 @@ packages:
 
   /kolorist/1.5.1:
     resolution: {integrity: sha512-lxpCM3HTvquGxKGzHeknB/sUjuVoUElLlfYnXZT73K8geR9jQbroGlSCFBax9/0mpGoD3kzcMLnOlGQPJJNyqQ==}
-    dev: false
 
   /lazystream/1.0.1:
     resolution: {integrity: sha512-b94GiNHQNy6JNTrt5w6zNyffMrNkXZb3KTkCZJb2V1xaEGCk093vkZ2jk3tpaeP33/OiXC+WvK9AxUebnf5nbw==}

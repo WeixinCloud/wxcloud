@@ -5,15 +5,24 @@ import path from 'path';
 const CASES: BuilderTestCase[] = [
   {
     id: 'with-jar',
+    e2e: { skip: true },
     promptAnswers: { expose: '3000', environments: [] }
   },
   {
     id: 'wxcloudrun-sprintboot',
-    promptAnswers: { expose: '3000', environments: [], entrypointJar: 'dist/app.jar' }
+    promptAnswers: {
+      expose: '80',
+      environments: [],
+      entrypointJar: 'springboot-wxcloudrun-1.0.jar'
+    }
   },
   {
     id: 'starters-kotlin-spring',
-    promptAnswers: { expose: '3000', environments: [], entrypointJar: 'dist/app.jar' }
+    promptAnswers: {
+      expose: '8080',
+      environments: [],
+      entrypointJar: 'build/libs/demo-0.0.1-SNAPSHOT.jar'
+    }
   }
 ];
 
