@@ -200,7 +200,7 @@ class RunCommand extends Command<RunCommandArgs> {
   protected serializeArgs() {
     const args = !isMultipleArgs(this.args)
       ? serializeArgsItem(this.args)
-      : this.args.map(serializeArgsItem).join('&& \\\n    ');
+      : this.args.map(serializeArgsItem).join(' && \\\n    ');
     return args;
   }
 }
