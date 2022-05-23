@@ -15,7 +15,7 @@
       <rect id="Rectangle_11" data-name="Rectangle 11" width="257" height="79" rx="8" transform="translate(610 407)" fill="#a5e9c5"/>
       <text id="NodeJS" transform="translate(739 459)" font-size="32" font-family="Menlo-Regular, Menlo"><tspan x="0" y="0">NodeJS</tspan></text>
       <rect id="Rectangle_13" data-name="Rectangle 13" width="257" height="79" rx="8" transform="translate(610 538)" fill="rgba(198,198,198,0.36)"/>
-      <text id="_._._." data-name=" . . ." transform="translate(809 518)" font-size="20" font-family="Menlo-Regular, Menlo" letter-spacing="-0.299em" opacity="0.458"><tspan x="0" y="0" xml:space="preserve"> . . .</tspan></text>
+      <text id="_._._." data-name=" . . ." transform="translate(809 518)" fill="#646464" font-size="20" font-family="Menlo-Regular, Menlo" letter-spacing="-0.299em" opacity="0.458"><tspan x="0" y="0" xml:space="preserve"> . . .</tspan></text>
       <text id="PHP" transform="translate(801 589)" font-size="32" font-family="Menlo-Regular, Menlo"><tspan x="0" y="0">PHP</tspan></text>
       <text id="Dockerpacks_Detect_" data-name="Dockerpacks
 Detect
@@ -27,11 +27,11 @@ Detect
       <text id="Dockerpacks_Build" data-name="Dockerpacks
 Build" transform="translate(1277.58 663)" fill="#777" font-size="32" font-family="Menlo-Regular, Menlo"><tspan x="-105.961" y="0">Dockerpacks</tspan><tspan x="-48.164" y="38">Build</tspan></text>
       <rect id="Rectangle_15" data-name="Rectangle 15" width="349" height="200" rx="8" transform="translate(1102.58 392)" fill="#fff"/>
-      <text id="FROM_node:lts_WORKDIR_app_..." data-name="FROM node:lts
+      <text id="_FROM_node:lts_WORKDIR_app_..." data-name="+ FROM node:lts
 
-WORKDIR /app
++ WORKDIR /app
 
-..." transform="translate(1122.58 436)" fill="#797979" font-size="32" font-family="Menlo-Regular, Menlo"><tspan x="0" y="0">FROM node:lts</tspan><tspan x="0" y="24"></tspan><tspan x="0" y="48">WORKDIR /app</tspan><tspan x="0" y="72"></tspan><tspan x="0" y="96">...</tspan></text>
+..." transform="translate(1122.58 436)" fill="#009547" font-size="32" font-family="Menlo-Regular, Menlo"><tspan x="0" y="0">+ FROM node:lts</tspan><tspan x="0" y="24"></tspan><tspan x="0" y="48">+ WORKDIR /app</tspan><tspan fill="#797979"><tspan x="0" y="72"></tspan><tspan x="0" y="96">...</tspan></tspan></text>
       <path id="Path_97" data-name="Path 97" d="M83.855,6.73H43.728V20.808H66.841L-2.835,90.484l9.975,9.975L76.854,30.821V53.934H90.932V13.054A7.077,7.077,0,0,0,83.855,6.73Z" transform="translate(982.04 378.956) rotate(45)" fill="#82e0af"/>
     </g>
   </g>
