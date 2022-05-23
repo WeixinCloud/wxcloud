@@ -4,6 +4,49 @@ import { execSync } from 'child_process';
 import { existsSync, readFileSync } from 'fs';
 import { isPromise } from 'util/types';
 
+const concat = (strings, ...args) => {
+  let result = '';
+  for (let i = 0; i < Math.max(strings.length, args.length); i++) {
+    result += `${strings[i] ?? ''}${args[i] ?? ''}`;
+  }
+  return result;
+};
+
+const $ = (strings, ...args) => execSync(concat(strings, ...args), { stdio: 'inherit' });
+
+const log = (strings, ...args) => console.log(concat(strings, ...args));
+
+const attempt = async (message, action, final) => {
+  try {
+    let value = action();
+    if (isPromise(value)) {
+      await value;
+    }
+  } catch (e) {
+    throw new Error(`${message}: ${e.message}`);
+  } finally {
+    try {
+      final?.();
+    } catch {}
+  }
+};
+
+const retry = async (action, maxTimes, delay) => {
+  let time = 0;
+  while (true) {
+    try {
+      action();
+      break;
+    } catch (e) {
+      if (time++ > maxTimes) {
+        throw e;
+      }
+
+      await new Promise(resolve => void setTimeout(resolve, delay));
+    }
+  }
+};
+
 const FIXTURES = glob.sync('./test/**/fixtures/*', {
   onlyFiles: false,
   onlyDirectories: true,
@@ -65,42 +108,3 @@ async function main() {
     }
   }
 }
-
-const concat = (strings, ...args) => {
-  let result = '';
-  for (let i = 0; i < Math.max(strings.length, args.length); i++) {
-    result += `${strings[i] ?? ''}${args[i] ?? ''}`;
-  }
-  return result;
-};
-const $ = (strings, ...args) => execSync(concat(strings, ...args), { stdio: 'inherit' });
-const log = (strings, ...args) => console.log(concat(strings, ...args));
-const attempt = async (message, action, final) => {
-  try {
-    let value = action();
-    if (isPromise(value)) {
-      await value;
-    }
-  } catch (e) {
-    throw new Error(`${message}: ${e.message}`);
-  } finally {
-    try {
-      final?.();
-    } catch {}
-  }
-};
-const retry = async (action, maxTimes, delay) => {
-  let time = 0;
-  while (true) {
-    try {
-      action();
-      break;
-    } catch (e) {
-      if (time++ > maxTimes) {
-        throw e;
-      }
-
-      await new Promise(resolve => void setTimeout(resolve, delay));
-    }
-  }
-};
