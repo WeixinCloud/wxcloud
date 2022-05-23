@@ -99,7 +99,8 @@ export default class DeployCommand extends Command {
     ora().info(`部署模式 ${renderDeployMode(cloudConfig)}`);
     if (cloudConfig.type === 'universal' || cloudConfig.type === 'static') {
       if (target.staticStorages[0]?.staticDomain) {
-        const domainWithoutPrefix = target.staticStorages[0]?.staticDomain;
+        const domainWithoutPrefix =
+          cloudConfig.client?.customDomain || target.staticStorages[0]?.staticDomain;
         console.log(chalk.green.bold('静态资源'), domainWithoutPrefix);
         // check is cors enabled in static storage
         const tcbAttr = await CloudAPI.cdnTcbCheckResource({
