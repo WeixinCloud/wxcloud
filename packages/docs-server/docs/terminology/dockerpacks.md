@@ -2,44 +2,49 @@
 
 `@wxcloud/dockerpacks` 是 `@wxcloud/cli` 生成 `Dockerfile` 所使用的组件。
 
-## Dockerpacks 是什么？
+## Dockerpacks 是什么
 
-对于已有的服务端项目，需要在云托管运行之前，需要先编写 Dockerfile。然而，对于普通用户而言，需要学习 Dockerfile 的相关语法，并根据项目依赖，选择基础镜像，使用 `RUN`, `COPY` 和 `CMD` 等指令编写 Dockerfile，有一定的学习门槛。
+对于现有的服务端项目来说，要想迁移到云托管上运行，需要提供 [Dockerfile](https://docs.docker.com/engine/reference/builder/)。后者能够指导像 [Docker](https://www.docker.com/) 这样的容器工具对项目进行[容器化](https://www.redhat.com/zh/topics/cloud-native-apps/what-is-containerization)，方便云托管更好地运行、管理项目。
 
-受 Heroku Buildpacks/CNB Buildpacks 启发，我们开发了一套类似的自动检测项目的组件，通过内置的项目特征集，我们可以自动生成可用的 Dockerfile。
+对用户而言，这需要学习 Dockerfile 的相关语法，并根据项目的实际情况选择基础镜像，再使用 `RUN`, `COPY` 和 `CMD` 等指令编写镜像构建的步骤。我们希望尽可能地为用户免除这些烦恼。
 
-## Dockerpacks 是如何工作的？
+受 [Buildpacks](https://buildpacks.io/) 启发，我们开发了一个类似的工具——Dockerpacks。它可以借助内置的项目特征集，分析用户的项目并自动生成可用的 Dockerfile。
+
+## Dockerpacks 是如何工作的
 
 ![dockerpacks](/images/dockerpacks.svg)
 
-Dockerpacks 内置了大部分常用语言的特征集（Dockerpack）和对应的 `Dockerfile` 生成规则。
+Dockerpacks 内置了大部分常用语言或框架的特征集，及其对应的 Dockerfile 构建规则。这些规则以 Builders Group 的形式被组织（以下简称“Group”）。
 
-每一个 Dockerpack 都有两个阶段构成：检测阶段和构建阶段。
+Dockerfile 的构建由两个阶段构成：检测阶段和构建阶段。
 
 ### 检测阶段
 
-检测阶段（`detect`）会检测源代码是否应该被这个 Dockerpack 参与。一旦检测到适用的 Dockerpack，会执行它的 构建（`build`） 阶段。否则，`build` 阶段将会被跳过。
+检测阶段（detect phrase）会检测源代码是否应该被某个 Group 参与。一旦检测到适用的 Group，会执行它的构建阶段。
 
 ### 构建阶段
 
-构建阶段（`build`）会根据检测到的代码特征，使用语言/框架所对应的特征，转译成对应 `Dockerfile` 中的各条命令。
+在构建阶段（build phrase）中，Group 会根据检测到的代码特征，使用语言或框架对应的构建规则，构建 `Dockerfile` 中的各条命令。
 
 举例说明如下：
-- Node Dockerpack 检测到 `package.json` 后，会在 Dockerfile 中插入 `RUN npm install`。
-- Java Dockerpack 检测到 `settings.xml` 后，会在 Dockerfile 中插入 `RUN mvn package`。
+
+- Node Group 检测到 `package.json` 后，会在 Dockerfile 中插入 `RUN npm install`。
+- Java Group 检测到 `settings.xml` 后，会在 Dockerfile 中插入 `RUN mvn package`。
 
 ## 与 Buildpacks 的区别
 
-Cloud Native Buildpacks 也是一套通过识别代码，生成容器化应用的方案。在微信云托管中，使用「无 Dockerfile」部署时，使用的方案就是 Buildpacks。
+Buildpacks 也是一套通过识别代码生成容器化应用的方案。在微信云托管中，用户选择「无 Dockerfile」部署时，背后的方案就是 Buildpacks。
 
-但 Buildpacks 有其自身的局限性：
+Dockerpacks 和 Buildpacks 的本质区别在于：前者的产物是 Dockerfile，后者产物是容器镜像。可是生成 Dockerfile 就是为了构建容器镜像，为什么 Dockerpacks 不像 Buildpacks 那样一步到位呢？我们认为 Buildpacks 存在着一些局限性：
 
 - 生成的产物是打包好的镜像，无法进行二次修改
 - 识别和生成过程是黑盒的，无法自定义或被容易的扩展
 - 应用的能力依赖于提供的 Layers，基础镜像往往带有不需要的能力，影响启动速度
-- 各个平台之间（Heroku，CNB）提供的 Buildpacks 各不相同，表现不可预期
+- 各个平台之间（Heroku、CNB 等）提供的 Buildpacks 各不相同，表现不可预期
 
-相比于 Buildpacks，生成 `Dockerfile` 的方案则更加灵活和透明。用户可以按照自身需求，修改生成的 `Dockerfile` 文件，或者对其进行更多的定制。同时，由于产物仅为一个 `Dockerfile`，在任何平台中的表现均是相同的。
+相比于 Buildpacks，生成 `Dockerfile` 的方案则更加灵活和透明。用户可以按照自身需求，修改生成的 `Dockerfile` 文件，对其进行更多的定制（Dockerpacks 会自动生成丰富的注释，基本不需要用户掌握相关知识）。
+
+换句话说，Dockerpacks 的产物是一个「描述之后产生的镜像是什么样子」的文件，而 Buildpacks 的产物则是一个「被构建好了，处于完成式」的镜像。
 
 ## 对 Dockerfile 进行二次修改
 
@@ -50,4 +55,3 @@ Cloud Native Buildpacks 也是一套通过识别代码，生成容器化应用�
 - 基础镜像修改：使用更高/更低的版本，或者使用特定的版本号。通过 `FROM` 指令修改。
 - 依赖修改：安装运行时依赖，或语言的特定依赖，可以通过 `RUN` 指令修改。
 - 环境变量修改：如果是固定的环境变量，可以通过 `ENV` 指令注入。
-
