@@ -47,11 +47,18 @@ const retry = async (action, maxTimes, delay) => {
   }
 };
 
-const FIXTURES = glob.sync('./test/**/fixtures/*', {
-  onlyFiles: false,
-  onlyDirectories: true,
-  absolute: true
-});
+const FIXTURES = glob
+  .sync('./test/**/fixtures/*', {
+    onlyFiles: false,
+    onlyDirectories: true,
+    absolute: true
+  })
+  .filter(item => {
+    if (!process.argv[2]) {
+      return true;
+    }
+    return item.includes(argv[2]);
+  });
 
 async function main() {
   for (const fixturePath of FIXTURES) {

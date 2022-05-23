@@ -21,6 +21,8 @@ export const pipBuilder: Builder = {
         .copy(REQUIREMENTS_TXT, REQUIREMENTS_TXT)
         .comment(`将 ${REQUIREMENTS_TXT} 复制到容器中`);
       dockerfile.run('python3', '-m', 'pip', 'install', '-r', REQUIREMENTS_TXT).comment('安装依赖');
+
+      dockerfile.copy('.', '.').comment('将所有文件拷贝到容器中（在 .dockerignore 中的文件除外）');
     };
   }
 };

@@ -10,7 +10,7 @@ export const pythonEntrypointBuilder: Builder = {
   },
   async build(ctx) {
     const entrypoint = await ctx.prompt.input({
-      id: 'generalEntrypoint',
+      id: 'entrypoint',
       caption: '请输入您的项目的启动命令（例如: python3 main.py）',
       validate: PROMPT_NON_EMPTY,
       transform: input => split(input) as NonEmptyArray<string>

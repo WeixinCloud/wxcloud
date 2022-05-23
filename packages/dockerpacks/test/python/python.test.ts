@@ -5,13 +5,25 @@ import { BuilderTestCase, runTest } from '@test/utils';
 const CASES: BuilderTestCase[] = [
   {
     id: 'flask',
-    e2e: { skip: true },
-    promptAnswers: { expose: '3000', environments: [] }
+    e2e: {
+      buildOnly: true
+    },
+    promptAnswers: {
+      expose: '80',
+      environments: ['MYSQL_USERNAME=root', 'MYSQL_PASSWORD=', 'MYSQL_ADDRESS=172.18.123.123:3306'],
+      entrypoint: 'python3 run.py 0.0.0.0 80'
+    }
   },
   {
     id: 'django',
-    e2e: { skip: true },
-    promptAnswers: { expose: '3000', environments: [] }
+    e2e: {
+      buildOnly: true
+    },
+    promptAnswers: {
+      expose: '80',
+      environments: ['MYSQL_USERNAME=root', 'MYSQL_PASSWORD=', 'MYSQL_ADDRESS=172.18.123.123:3306'],
+      entrypoint: 'python3 manage.py runserver 0.0.0.0:80'
+    }
   }
 ];
 

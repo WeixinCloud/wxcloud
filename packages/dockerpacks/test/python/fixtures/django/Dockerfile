@@ -7,8 +7,11 @@ FROM python:3-alpine
 # 设置容器内的当前目录
 WORKDIR /app
 
+# 用户设置的环境变量
+ENV MYSQL_USERNAME=root MYSQL_PASSWORD= MYSQL_ADDRESS=172.18.123.123:3306
+
 # 使用速度更快的国内镜像
-RUN python3 -m pip config set global.trusted-host mirrors.cloud.tencent.com&& \
+RUN python3 -m pip config set global.trusted-host mirrors.cloud.tencent.com && \
     python3 -m pip config set global.index-url http://mirrors.cloud.tencent.com/pypi/simple
 
 # 将 requirements.txt 复制到容器中
@@ -17,11 +20,11 @@ COPY requirements.txt requirements.txt
 # 安装依赖
 RUN python3 -m pip install -r requirements.txt
 
-# 将所有文件拷贝到容器中
+# 将所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
-# 启动 django
-CMD ["python3", "manage.py", "0.0.0.0"]
+# 运行项目
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:80"]
 
 # 服务暴露的端口
-EXPOSE 3000
+EXPOSE 80
