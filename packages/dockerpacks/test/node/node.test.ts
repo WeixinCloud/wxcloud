@@ -65,8 +65,8 @@ const CASES: BuilderTestCase[] = [
     promptAnswers: { expose: '3000', environments: [], generalEntrypoint: 'node build/index.js' }
   },
   {
-    id: 'starters-expressjs',
-    promptAnswers: { expose: '3333', environments: [] }
+    id: 'expressjs',
+    promptAnswers: { expose: '3000', environments: [] }
   }
 ];
 

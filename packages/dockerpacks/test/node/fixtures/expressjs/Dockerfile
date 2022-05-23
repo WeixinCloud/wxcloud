@@ -19,9 +19,6 @@ RUN yarn install --non-interactive --prefer-offline
 # 将包括源文件在内的所有文件拷贝到容器中（在 .dockerignore 中的文件除外）
 COPY . .
 
-# 运行编译
-RUN yarn run build
-
 # 设置环境变量
 ENV NODE_ENV=production HOST=0.0.0.0
 
@@ -29,4 +26,4 @@ ENV NODE_ENV=production HOST=0.0.0.0
 CMD ["npm", "run", "start"]
 
 # 服务暴露的端口
-EXPOSE 3333
+EXPOSE 3000
