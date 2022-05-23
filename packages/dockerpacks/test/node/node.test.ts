@@ -56,13 +56,21 @@ const CASES: BuilderTestCase[] = [
   },
   {
     id: 'sveltekit-cli-node-adapter',
-    promptAnswers: { expose: '3000', environments: [], generalEntrypoint: 'node build/index.js' }
+    promptAnswers: {
+      expose: '3000',
+      environments: [],
+      generalEntrypoint: 'npm run preview -- --host'
+    }
   },
   {
     id: 'sveltekit-cli-static-adapter',
     e2e: { skip: true },
     expectPanic: /adapter-static/i,
-    promptAnswers: { expose: '3000', environments: [], generalEntrypoint: 'node build/index.js' }
+    promptAnswers: {
+      expose: '3000',
+      environments: [],
+      generalEntrypoint: 'npm run preview -- --host'
+    }
   },
   {
     id: 'expressjs',
