@@ -7,10 +7,9 @@ import { chooseEnvId, chooseServiceId } from '../../utils/ux';
 import { REGION_COMMAND_FLAG } from '../../utils/flags';
 import { CloudAPI } from '@wxcloud/core';
 import { Flags } from '@oclif/core';
-import { Definition } from '@oclif/parser/lib/flags';
 import { readLoginState } from '../../utils/auth';
 // @ts-ignore
-export const number: Definition<number | undefined> = Flags.build({
+export const number = Flags.build({
   // @ts-ignore
   parse: (input, ctx) => {
     return +input;
