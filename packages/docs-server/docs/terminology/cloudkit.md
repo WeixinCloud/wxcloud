@@ -39,7 +39,7 @@ const cloudConfig = {
       public: '',
       '.next/static': '_next/static/'
     },
-    // 云托管代码包目录，zip 格式
+    // 云托管代码包路径，zip 格式
     runTarget: 'package.zip',
   }
 }
