@@ -13,7 +13,7 @@ const CASES: BuilderTestCase[] = [
     promptAnswers: {
       expose: '80',
       environments: [],
-      entrypointJar: 'springboot-wxcloudrun-1.0.jar'
+      entrypointJar: 'target/springboot-wxcloudrun-1.0.jar'
     }
   },
   {

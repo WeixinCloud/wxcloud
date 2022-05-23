@@ -53,8 +53,6 @@ const FIXTURES = glob.sync('./test/**/fixtures/*', {
   absolute: true
 });
 
-main().catch(console.error);
-
 async function main() {
   for (const fixturePath of FIXTURES) {
     process.chdir(fixturePath);
@@ -97,7 +95,7 @@ async function main() {
       log`* Checking readiness on port ${port}`;
       await attempt(
         'Service failed to response',
-        () => retry(() => $`curl -s --show-error localhost:23333 -o /dev/null`, 30, 3),
+        () => retry(() => $`curl -s --show-error localhost:23333 -o /dev/null`, 30, 3000),
         () => $`docker rm --force '${containerName}' > /dev/null`
       );
 
@@ -108,3 +106,8 @@ async function main() {
     }
   }
 }
+
+main().catch(err => {
+  console.error(err);
+  process.exit(1);
+});

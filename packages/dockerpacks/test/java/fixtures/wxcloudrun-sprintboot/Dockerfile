@@ -17,4 +17,4 @@ RUN mvn -s settings.xml clean package --batch-mode -DskipTests -Dhttp.keepAlive=
 EXPOSE 80
 
 # 运行项目
-CMD ["java", "-jar", "springboot-wxcloudrun-1.0.jar"]
+CMD ["java", "-jar", "target/springboot-wxcloudrun-1.0.jar"]
