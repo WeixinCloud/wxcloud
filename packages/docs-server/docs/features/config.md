@@ -20,8 +20,7 @@ module.exports = {
     type: "universal", // 项目目标，全栈渲染 universal，前端 static，后台 run 
     server: ".", // Dockerfile 的相对路径
     client: {
-        target: ".next/static", // 上传到 CDN 的路径，支持多个 (string | string[]) 
-        domain: "cdn.example.com", // CDN 自定义域名（如果有）
+        customDomain: "cdn.example.com", // CDN 自定义域名（如果有）
     },
 }
 ```
