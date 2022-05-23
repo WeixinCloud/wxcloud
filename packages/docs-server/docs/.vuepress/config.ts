@@ -23,7 +23,7 @@ export default defineUserConfig({
       'link',
       {
         rel: 'icon',
-        href: '/images/logo.svg',
+        href: '/cli/images/logo.svg',
         media: '(prefers-color-scheme:no-preference)'
       }
     ],
@@ -31,7 +31,7 @@ export default defineUserConfig({
       'link',
       {
         rel: 'icon',
-        href: '/images/logo-white.svg',
+        href: '/cli/images/logo-white.svg',
         media: '(prefers-color-scheme:dark)'
       }
     ],
@@ -39,7 +39,7 @@ export default defineUserConfig({
       'link',
       {
         rel: 'icon',
-        href: '/images/logo.svg',
+        href: '/cli/images/logo.svg',
         media: '(prefers-color-scheme:light)'
       }
     ]
