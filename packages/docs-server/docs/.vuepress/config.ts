@@ -50,6 +50,7 @@ export default defineUserConfig({
     logoDark: '/images/logo-white.svg',
     lastUpdated: true,
     lastUpdatedText: '最近修改于',
+    contributors: false,
     navbar: [
       {
         text: '使用文档',
