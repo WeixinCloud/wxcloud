@@ -6,6 +6,6 @@ export default defineConfig({
   outDir: 'dist',
   dts: true,
   format: ['cjs'],
-  target: 'node16',
+  target: 'node10',
   tsconfig: 'tsconfig.json'
 });
