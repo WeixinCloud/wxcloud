@@ -4,6 +4,7 @@ import path from 'node:path';
 import { IKitContext, IKitDeployTarget, Kit, KitType } from '../common/kit';
 import { logger } from '../utils/debug';
 import { RunKit } from './runkit';
+import { safeGetDepsFromPkgJSON } from '../utils/utils';
 
 export class NextKit extends Kit {
   static description = 'CloudKit for Next.js';
@@ -11,7 +12,7 @@ export class NextKit extends Kit {
   detect(ctx: IKitContext): boolean | Promise<boolean> {
     const packageJson = require(path.join(ctx.fullPath, 'package.json'));
     logger.debug('nextkit::detect', packageJson);
-    return !!packageJson.dependencies.next;
+    return !!safeGetDepsFromPkgJSON(packageJson, 'next');
   }
   async run(ctx: IKitContext): Promise<IKitDeployTarget> {
     // patch next.config.js

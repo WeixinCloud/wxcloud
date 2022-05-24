@@ -5,14 +5,18 @@ import { IKitContext, IKitDeployTarget, Kit, KitType } from '../common/kit';
 import { logger } from '../utils/debug';
 import { RunKit } from './runkit';
 import { JSConfigASTHelper } from '../utils/astHelper/jsConfig';
-export class NuxtKit extends Kit {
+import { isMatchMajorVersion, safeGetDepsFromPkgJSON } from '../utils/utils';
+export class Nuxt2Kit extends Kit {
   static description = 'CloudKit for Nuxt.js';
   static type = KitType.UNIVERSAL;
   detect(ctx: IKitContext): boolean | Promise<boolean> {
     try {
       const packageJson = require(path.join(ctx.fullPath, 'package.json'));
-      logger.debug('nuxtkit::detect', packageJson);
-      return !!packageJson.dependencies.nuxt;
+      logger.debug('nuxt2kit::detect', packageJson);
+      return (
+        !!safeGetDepsFromPkgJSON(packageJson, 'nuxt') &&
+        isMatchMajorVersion(safeGetDepsFromPkgJSON(packageJson, 'nuxt'), '2')
+      );
     } catch (e) {
       return false;
     }

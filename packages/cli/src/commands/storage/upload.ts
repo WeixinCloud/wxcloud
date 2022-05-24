@@ -9,6 +9,7 @@ import { REGION_COMMAND_FLAG } from '../../utils/flags';
 import { ApiRegion, setApiCommonParameters } from '../../api/common';
 import ora from 'ora';
 import { cli } from 'cli-ux';
+import { logger } from '../../utils/log';
 
 const { tcbGetEnvironments, tcbDescribeWxCloudBaseRunEnvs } = CloudAPI;
 const { readdir, readFile } = promises;
@@ -79,18 +80,24 @@ export async function beginUpload(
   path: string,
   storage: IGenericStorage,
   normalizedRemotePath: string,
-  concurrency: number
+  concurrency: number,
+  uploadedFileSet: Set<string> = new Set()
 ) {
-  const files = await getFiles(path);
-  const relativePaths = files.map(p => relative(path, p));
+  // filter uploaded files
+  // do not upload uploaded-file twice
+  const files = (await getFiles(path)).filter(item => !uploadedFileSet.has(item));
+  files.forEach(rp => uploadedFileSet.add(rp));
+  const relativePaths: string[] = files.map(p => relative(path, p));
   const log = console;
   const res = await putObjectToCos(
-    relativePaths.map((rp, i) => ({
-      Bucket: storage.bucket,
-      Region: storage.region,
-      Key: normalizedRemotePath + rp,
-      Body: files[i]
-    })),
+    relativePaths.map((rp, i) => {
+      return {
+        Bucket: storage.bucket,
+        Region: storage.region,
+        Key: normalizedRemotePath + rp,
+        Body: files[i]
+      };
+    }),
     storage,
     concurrency,
     path
@@ -98,15 +105,20 @@ export async function beginUpload(
   ora().succeed('上传文件成功');
 }
 
-async function getFiles(dir: string) {
-  const dirents = await readdir(dir, { withFileTypes: true });
-  const files = await Promise.all(
-    dirents.map((dirent: any) => {
-      const res = resolve(dir, dirent.name);
-      return dirent.isDirectory() ? getFiles(res) : res;
-    })
-  );
-  return Array.prototype.concat(...files);
+async function getFiles(dir: string): Promise<string[]> {
+  try {
+    const dirents = await readdir(dir, { withFileTypes: true });
+    const files = await Promise.all(
+      dirents.map((dirent: any) => {
+        const res = resolve(dir, dirent.name);
+        return dirent.isDirectory() ? getFiles(res) : res;
+      })
+    );
+    return Array.prototype.concat(...files);
+  } catch (e) {
+    logger.debug(e);
+    return [];
+  }
 }
 interface IGenericStorage {
   bucket: string;

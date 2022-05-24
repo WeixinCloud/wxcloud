@@ -191,8 +191,9 @@ export default class DeployCommand extends Command {
     }
     if (res.staticTarget && !flags.dryRun) {
       console.log(chalk.green('静态资源'), '准备上传中');
+      const uploadedFileSet: Set<string> = new Set();
       for (const [local, remote] of Object.entries(res.staticTarget)) {
-        await beginUpload(local, target.staticStorages[0], remote, 5);
+        await beginUpload(local, target.staticStorages[0], remote, 5, uploadedFileSet);
       }
     }
     if (flags.dryRun) {

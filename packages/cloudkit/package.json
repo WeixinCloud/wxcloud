@@ -17,6 +17,7 @@
   ],
   "scripts": {
     "build": "tsup",
+    "dev": "tsup --watch",
     "test": "ava",
     "test:coverage": "nyc ava && nyc report --reporter=html",
     "test:setup": "node -r ./esbuild-hook ./scripts/testSetup"
