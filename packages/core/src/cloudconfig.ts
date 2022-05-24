@@ -24,7 +24,7 @@ export const DEFAULT_CLOUD_CONFIG: CloudConfig = {
 };
 
 const convertToInlineObject = (input: Record<string, any>) =>
-  JSON.stringify(input, null, 2).replaceAll(/^(\s*)"([^"]+)":/gim, '$1$2:');
+  JSON.stringify(input, null, 2).replace(/^(\s*)"([^"]+)":/gim, '$1$2:');
 
 export const DEFAULT_CLOUD_CONFIG_JS_CONTENT = `/** @type {import("@wxcloud/core").CloudConfig} */
 const cloudConfig = ${convertToInlineObject(DEFAULT_CLOUD_CONFIG)}

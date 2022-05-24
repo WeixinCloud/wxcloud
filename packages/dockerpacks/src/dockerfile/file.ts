@@ -234,7 +234,7 @@ class EnvCommand extends Command<EnvCommandArgs> {
   }
 
   private handleValue(value: string) {
-    return value.includes(' ') ? `"${value.replaceAll('"', '\\"')}"` : value;
+    return value.includes(' ') ? `"${value.replace(/"/g, '\\"')}"` : value;
   }
 }
 
