@@ -1,6 +1,8 @@
-.right-anchor-button {
-  display: none;
-}
-.page {
-  padding-left: 0;
+@media screen and (min-width: 1440px) {
+  .page {
+    padding-left: 0;
+  }
+  .right-anchor-button {
+    display: none;
+  }
 }
