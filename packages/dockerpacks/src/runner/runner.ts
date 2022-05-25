@@ -17,13 +17,13 @@ interface SelectionResult {
 }
 
 export abstract class DockerpacksBase {
-  constructor(private readonly serverApi: ServerApi, private readonly groups: BuilderGroup[]) {}
+  constructor(protected readonly serverApi: ServerApi, protected readonly groups: BuilderGroup[]) {}
 
-  async detectBuilders(
+  async detect(
     appRoot: string,
     promptIo: PromptIO,
     messageHandler: MessageHandler
-  ): Promise<DockerpacksDetectionResult | null> {
+  ): Promise<DockerpacksBuilder | null> {
     const ctx = new BuilderContext(
       appRoot,
       this.serverApi,
@@ -31,91 +31,113 @@ export abstract class DockerpacksBase {
       messageHandler
     );
 
-    const result = await this.select(ctx);
+    let result: SelectionResult | null = null;
+    for (const group of this.groups) {
+      result = await this.detectImpl(ctx, group);
+      if (result) {
+        break;
+      }
+    }
+
     if (!result) {
       return null;
     }
 
-    return new DockerpacksDetectionResult(result.group, result.hitBuilders, ctx);
+    return new DockerpacksBuilder(result.group, result.hitBuilders, ctx);
   }
 
-  private async select(ctx: BuilderContext): Promise<SelectionResult | null> {
-    for (const group of this.groups) {
-      const tasks = group.builders.map(async builder =>
-        isBuilderWithOptionalProp(builder)
-          ? ([await builder[0].detect(ctx), builder[1]] as const)
-          : ([await builder.detect(ctx), false] as const)
-      );
-      const results = await Promise.allSettled(tasks);
+  async detectWithGroup(
+    appRoot: string,
+    promptIo: PromptIO,
+    messageHandler: MessageHandler,
+    group: BuilderGroup
+  ): Promise<DockerpacksBuilder | null> {
+    const ctx = new BuilderContext(
+      appRoot,
+      this.serverApi,
+      new PromptHandler(promptIo, messageHandler),
+      messageHandler
+    );
 
-      const failed = results.some(item => item.status === 'rejected');
-      if (failed) {
-        const errors: BuilderError[] = range(0, results.length)
-          .filter(i => results[i].status === 'rejected')
-          .map(i => ({
-            builder: extractBuilder(group.builders[i]),
-            reason: (results[i] as PromiseRejectedResult).reason
-          }));
-        throw new DetectionError(group, errors, '检测过程中出错');
-      }
-
-      const detectionResults: [DetectionResult, boolean][] = results.map(
-        result => (result as PromiseFulfilledResult<any>).value
-      );
-      const hit = detectionResults.every(
-        ([result, isOptional]) => result.hit || (!result.hit && isOptional)
-      );
-
-      if (hit) {
-        const hitBuilders = detectionResults
-          .map(([result], index) => (result.hit ? index : null))
-          .filter(item => item !== null) as number[];
-        return {
-          group,
-          hitBuilders: hitBuilders
-        };
-      }
+    const result = await this.detectImpl(ctx, group);
+    if (!result) {
+      return null;
     }
 
-    // TODO: should we have a catch-all group?
-    return null;
+    return new DockerpacksBuilder(result.group, result.hitBuilders, ctx);
+  }
+
+  protected async detectImpl(
+    ctx: BuilderContext,
+    group: BuilderGroup
+  ): Promise<SelectionResult | null> {
+    const tasks = group.builders.map(async builder =>
+      isBuilderWithOptionalProp(builder)
+        ? ([await builder[0].detect(ctx), builder[1]] as const)
+        : ([await builder.detect(ctx), false] as const)
+    );
+
+    const results = await Promise.allSettled(tasks);
+    const failed = results.some(item => item.status === 'rejected');
+    if (failed) {
+      const errors: BuilderError[] = range(0, results.length)
+        .filter(i => results[i].status === 'rejected')
+        .map(i => ({
+          builder: extractBuilder(group.builders[i]),
+          reason: (results[i] as PromiseRejectedResult).reason
+        }));
+      throw new DetectionError(group, errors, '检测过程中出错');
+    }
+
+    const detectionResults: [DetectionResult, boolean][] = results.map(
+      result => (result as PromiseFulfilledResult<any>).value
+    );
+    const hit = detectionResults.every(
+      ([result, isOptional]) => result.hit || (!result.hit && isOptional)
+    );
+
+    if (!hit) {
+      return null;
+    }
+
+    const hitBuilders = detectionResults
+      .map(([result], index) => (result.hit ? index : null))
+      .filter(item => item !== null) as number[];
+    return {
+      group,
+      hitBuilders: hitBuilders
+    };
   }
 }
 
-export class Dockerpacks extends DockerpacksBase {
-  constructor() {
-    super(ServerApi.TCB_SHANGHAI, DEFAULT_BUILDER_GROUPS);
-  }
-}
-
-export class DockerpacksDetectionResult {
+export class DockerpacksBuilder {
   private disposed = false;
 
   constructor(
-    readonly hitGroup: BuilderGroup,
-    readonly hitBuilders: number[],
+    readonly group: BuilderGroup,
+    readonly enabledBuilders: number[],
     private readonly ctx: BuilderContext
   ) {}
 
   async build(): Promise<DockerpacksBuildResult> {
     if (this.disposed) {
-      throw new Error('此 DetectionResult 已被消费，不能再被执行');
+      throw new Error('the instance is already consumed and cannot be called again');
     }
 
     const dockerIgnore = new DockerIgnore();
     dockerIgnore.append('.git', '.gitignore', '.dockerignore', 'Dockerfile*', 'LICENSE', '*.md');
 
     const factory = new DockerfileFactory();
-    for (const index of this.hitBuilders) {
-      const builder = extractBuilder(this.hitGroup.builders[index]);
+    for (const index of this.enabledBuilders) {
+      const builder = extractBuilder(this.group.builders[index]);
       try {
         const fn = await builder.build(this.ctx);
         fn(factory.getDockerfile(), dockerIgnore);
       } catch (e: any) {
         if (e instanceof Error) {
-          throw new BuildError(this.hitGroup, { builder, reason: e }, '构建过程中出错', e);
+          throw new BuildError(this.group, { builder, reason: e }, '构建过程中出错', e);
         } else {
-          throw new BuildError(this.hitGroup, { builder, reason: e }, '构建过程中出错');
+          throw new BuildError(this.group, { builder, reason: e }, '构建过程中出错');
         }
       }
     }
@@ -127,6 +149,12 @@ export class DockerpacksDetectionResult {
     this.disposed = true;
 
     return { dockerfile, files };
+  }
+}
+
+export class Dockerpacks extends DockerpacksBase {
+  constructor() {
+    super(ServerApi.TCB_SHANGHAI, DEFAULT_BUILDER_GROUPS);
   }
 }
 

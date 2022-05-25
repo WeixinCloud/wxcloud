@@ -3,8 +3,9 @@ import { expect, it } from 'vitest';
 import { BuildError, DockerpacksBase, DockerpacksBuildResult } from '@runner/runner';
 import { ServerApi } from '@api/server';
 import { DEFAULT_BUILDER_GROUPS } from '@group/group';
-import { TestMessageHandler, TestPromptIO } from './context';
+import { TestMessageHandler } from './context';
 import { writeFile, mkdir } from 'fs/promises';
+import { HardCodedPromptIO } from '@builder/context';
 
 export class TestDockerpacks extends DockerpacksBase {
   constructor() {
@@ -32,9 +33,9 @@ export function runTest(fixturesPath: string, testCase: BuilderTestCase) {
     let buildResult: DockerpacksBuildResult = null!;
 
     try {
-      const detectionResult = await dockerpacks.detectBuilders(
+      const detectionResult = await dockerpacks.detect(
         appRoot,
-        new TestPromptIO(testCase.promptAnswers ?? {}),
+        new HardCodedPromptIO(testCase.promptAnswers ?? {}),
         new TestMessageHandler()
       );
       expect(detectionResult).not.toBeNull();

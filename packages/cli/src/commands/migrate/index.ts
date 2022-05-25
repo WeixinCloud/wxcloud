@@ -1,13 +1,12 @@
 import path from 'path';
 import * as inquirer from 'inquirer';
-import { writeFile } from 'fs/promises';
 import {
   Dockerpacks,
   MessageHandler,
   PromptIO,
   MessageLevel,
   DockerpacksBuildResult,
-  DockerpacksDetectionResult
+  DockerpacksBuilder
 } from '@wxcloud/dockerpacks';
 import { Command, flags } from '@oclif/command';
 import { existsSync } from 'fs';
@@ -66,8 +65,8 @@ export class MigrateCommand extends Command {
             messageHandler.setOutput(task.stdout());
             promptIo.setPrompt(async (...args) => await task.prompt(...args));
 
-            const result = await dockerpacks.detectBuilders(appRoot, promptIo, messageHandler);
-            if (!result) {
+            const builder = await dockerpacks.detect(appRoot, promptIo, messageHandler);
+            if (!builder) {
               messageHandler.pass(
                 '没有找到合适的构造器，当前项目的语言或框架可能暂未被我们支持',
                 'fatal'
@@ -75,8 +74,8 @@ export class MigrateCommand extends Command {
               messageHandler.pass('您也可以检查指定的路径是否正确', 'fatal');
               throw new Error('分析失败');
             } else {
-              messageHandler.pass(`即将使用 ${result.hitGroup.label}`);
-              ctx.detectionResult = result;
+              messageHandler.pass(`即将使用 ${builder.group.label}`);
+              ctx.builder = builder;
             }
           },
           options: {
@@ -90,11 +89,11 @@ export class MigrateCommand extends Command {
           task: async (ctx, task) => {
             messageHandler.setOutput(task.stdout());
             promptIo.setPrompt(async (...args) => await task.prompt(...args));
-            const detectionResult: DockerpacksDetectionResult = ctx.detectionResult;
+            const builder: DockerpacksBuilder = ctx.builder;
 
             let result: DockerpacksBuildResult | null = null;
             try {
-              result = await detectionResult.build();
+              result = await builder.build();
             } catch (e) {
               throw serializeError(e);
             }
@@ -113,7 +112,7 @@ export class MigrateCommand extends Command {
             messageHandler.setOutput(task.stdout());
             promptIo.setPrompt(async (...args) => await task.prompt(...args));
 
-            const detectionResult: DockerpacksDetectionResult = ctx.detectionResult;
+            const builder: DockerpacksBuilder = ctx.builder;
 
             try {
               const files = [...ctx.buildResult.files.entries()];
@@ -125,7 +124,7 @@ export class MigrateCommand extends Command {
               ]);
 
               if (!existsSync(path.join(appRoot, 'wxcloud.config.js'))) {
-                if (detectionResult.hitGroup.type === 'node') {
+                if (builder.group.type === 'node') {
                   await writeFileLogged(
                     path.join(appRoot, 'wxcloud.config.js'),
                     DEFAULT_CLOUD_CONFIG_JS_CONTENT

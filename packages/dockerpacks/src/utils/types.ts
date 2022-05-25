@@ -7,3 +7,11 @@ export function isGenericNonEmptyArray(input: any): input is NonEmptyArray<unkno
 export function isNonEmptyArray<T = unknown>(input: Array<T>): input is NonEmptyArray<T> {
   return input.length > 0;
 }
+
+export type DeepReadonly<T> = {
+  readonly [P in keyof T]: DeepReadonly<T[P]>;
+};
+
+export type DeepWriteable<T> = {
+  -readonly [P in keyof T]: DeepWriteable<T[P]>;
+};
