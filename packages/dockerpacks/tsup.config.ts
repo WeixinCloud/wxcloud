@@ -6,7 +6,7 @@ export default defineConfig({
   clean: true,
   dts: true,
   format: ['cjs'],
-  target: 'node16',
+  target: 'node10',
   define: {
     'process.env.DOCKERPACKS_VERSION': JSON.stringify(version)
   }

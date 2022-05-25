@@ -7,7 +7,7 @@ export default defineConfig({
   dts: true,
   minify: true,
   format: ['cjs', 'esm'],
-  target: 'node16',
+  target: 'node10',
   define: {
     'process.env.CLOUDKIT_VERSION': JSON.stringify(packageJson.version)
   },
