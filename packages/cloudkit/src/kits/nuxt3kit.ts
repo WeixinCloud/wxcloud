@@ -35,6 +35,9 @@ export class Nuxt3Kit extends Kit {
     if (!ctx.staticDomain) {
       throw new Error('static domain is required using nuxtKit.');
     }
+    if (!ctx.port) {
+      throw new Error('server port is required using nuxtKit.');
+    }
     await new Promise<void>((res, rej) => {
       const child = spawn('npm', ['run', 'build'], {
         cwd: ctx.fullPath,
@@ -54,7 +57,9 @@ COPY . /app
 WORKDIR /app
 RUN npm i --registry=https://registry.npmmirror.com
 ENV NUXT_APP_CDN_URL=${ctx.staticDomain}
-ENTRYPOINT [ "npm", "run", "preview" ]`
+ENV HOST=0.0.0.0
+ENV PORT=${ctx.port}
+ENTRYPOINT [ "node", ".output/server/index.mjs" ]`
       }
     });
     return {

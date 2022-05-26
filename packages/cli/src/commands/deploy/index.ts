@@ -81,7 +81,7 @@ export default class DeployCommand extends Command {
     const isStatic = cloudConfig.type === 'static';
     const envId = flags.envId || (await chooseEnvId());
     const serviceName = flags.serviceName || isStatic ? undefined : await chooseServiceId(envId);
-    const port =
+    const port: number =
       flags.port ||
       userConfig.port ||
       parseInt(
@@ -147,6 +147,7 @@ export default class DeployCommand extends Command {
         : await CloudKit.execAllKits({
             fullPath: process.cwd(),
             config: cloudConfig,
+            port,
             staticDomain,
             lifecycleHooks: {
               enterStage(stage) {

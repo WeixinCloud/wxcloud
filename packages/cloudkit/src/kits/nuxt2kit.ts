@@ -28,6 +28,9 @@ export class Nuxt2Kit extends Kit {
     if (!ctx.staticDomain) {
       throw new Error('static domain is required using nuxtKit.');
     }
+    if (!ctx.port) {
+      throw new Error('server port is required using nuxtKit.');
+    }
     if (existsSync(nuxtConfigPath)) {
       // backup old nuxt.config.js
       const nuxtConfigSourceString = readFileSync(nuxtConfigPath, 'utf8');
@@ -66,6 +69,7 @@ COPY . /app
 WORKDIR /app
 RUN npm i --registry=https://registry.npmmirror.com
 ENV NUXT_HOST=0.0.0.0
+ENV NUXT_PORT=${ctx.port}
 ENTRYPOINT [ "npm", "start" ]`
       }
     });

@@ -21,6 +21,9 @@ export class NextKit extends Kit {
     if (!ctx.staticDomain) {
       throw new Error('static domain is required using NextKit.');
     }
+    if (!ctx.port) {
+      throw new Error('server port is required using nuxtKit.');
+    }
     nextConfig.assetPrefix = ctx.staticDomain;
     if (existsSync(nextConfigPath)) {
       // backup old next.config.js
@@ -54,6 +57,7 @@ export class NextKit extends Kit {
 COPY . /app
 WORKDIR /app
 RUN npm install --registry=https://registry.npmmirror.com
+ENV PORT=${ctx.port}
 ENTRYPOINT [ "npm", "start" ]`
       }
     });

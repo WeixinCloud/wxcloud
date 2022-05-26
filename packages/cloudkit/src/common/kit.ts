@@ -9,6 +9,7 @@ export interface IKitContext {
   fullPath: string;
   config: CloudConfig;
   staticDomain?: string;
+  port?: number;
   lifecycleHooks?: {
     enterStage: (stageName: string, ...info: any) => void;
     leaveStage: (stageName: string, ...info: any) => void;
