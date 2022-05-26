@@ -1,6 +1,6 @@
 {
   "name": "docs-server",
-  "version": "2.0.1-beta.22",
+  "version": "2.0.1-beta.23",
   "description": "微信云 CLI 的官方文档",
   "private": true,
   "scripts": {

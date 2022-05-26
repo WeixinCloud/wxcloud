@@ -1,6 +1,6 @@
 {
   "name": "@wxcloud/cloudkit",
-  "version": "2.0.1-beta.22",
+  "version": "2.0.1-beta.23",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
