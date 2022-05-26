@@ -15,7 +15,7 @@
     "cheerio": "1.0.0-rc.11",
     "fast-glob": "^3.2.11",
     "vue": "^3.2.33",
-    "vuepress": "next"
+    "vuepress": "2.0.0-beta.45"
   },
   "dependencies": {
     "vuepress-plugin-right-anchor": "2.1.0-rc.2"
