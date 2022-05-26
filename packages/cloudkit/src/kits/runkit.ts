@@ -1,7 +1,7 @@
 import { Kit, KitType, IKitContext, IKitDeployTarget } from '../common/kit';
 import archiver from 'archiver';
-import { createWriteStream, existsSync } from 'node:fs';
-import path from 'node:path';
+import { createWriteStream, existsSync } from 'fs';
+import path from 'path';
 
 export interface IRunKitOptions {
   /**

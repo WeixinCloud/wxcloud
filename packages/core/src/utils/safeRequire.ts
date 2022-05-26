@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { logger } from './logger';
 export function safeRequire(filePath: string) {
   if (existsSync(filePath)) {

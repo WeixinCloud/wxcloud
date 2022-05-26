@@ -1,6 +1,6 @@
-import { spawn } from 'node:child_process';
-import { existsSync } from 'node:fs';
-import path from 'node:path';
+import { spawn } from 'child_process';
+import { existsSync } from 'fs';
+import path from 'path';
 import { IKitContext, IKitDeployTarget, Kit, KitType } from '../common/kit';
 import { logger } from '../utils/debug';
 
