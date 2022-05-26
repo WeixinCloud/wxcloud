@@ -4,9 +4,10 @@ import { BuildError, DockerpacksBase, DockerpacksBuildResult } from '@runner/run
 import { ServerApi } from '@api/server';
 import { DEFAULT_BUILDER_GROUPS } from '@group/group';
 import { TestMessageHandler } from './context';
-import { writeFile, mkdir } from 'fs/promises';
+import { promises } from 'fs';
 import { HardCodedPromptIO } from '@builder/context';
 
+const { writeFile, mkdir } = promises;
 export class TestDockerpacks extends DockerpacksBase {
   constructor() {
     super(

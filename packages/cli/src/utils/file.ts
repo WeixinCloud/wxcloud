@@ -1,5 +1,5 @@
-import { lstatSync, readdirSync } from 'fs';
-import { mkdir, writeFile } from 'fs/promises';
+import { lstatSync, readdirSync, promises } from 'fs';
+const { mkdir, writeFile } = promises;
 import path from 'path';
 
 export function isDirectoryExistsAndEmpty(path: string) {

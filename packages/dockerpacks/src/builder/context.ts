@@ -6,8 +6,8 @@ import { ServerApi } from '@api/server';
 import { NonEmptyArray } from '@utils/types';
 import { fetchUrl } from '@utils/fetch';
 import { WXCLOUDRUN_FILES_DIR } from './constants';
-import { readFile } from 'fs/promises';
-
+import { promises } from 'fs';
+const { readFile } = promises;
 export class BuilderContext {
   readonly env: Environment;
   readonly files: Files;
