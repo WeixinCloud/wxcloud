@@ -7,7 +7,7 @@ import { golangRuntimeBuilder } from '@builder/golang/runtime';
 import { javaEntrypointBuilder } from '@builder/java/entrypoint';
 import { javaGradleBuilder } from '@builder/java/gradle';
 import { javaMavenBuilder } from '@builder/java/maven';
-import { buildBuilder } from '@builder/node/build';
+import { nodeBuildBuilder } from '@builder/node/build';
 import { nodeEntrypointBuilder } from '@builder/node/entrypoint';
 import { npmBuilder } from '@builder/node/npm';
 import { pnpmBuilder } from '@builder/node/pnpm';
@@ -113,13 +113,13 @@ const BUILDER_GROUPS = [
   {
     type: 'node',
     id: 'node.pnpm_with_build',
-    label: 'Node pnpm 构造器（含 build 阶段）',
+    label: 'Node pnpm 构造器（执行 build）',
     builders: [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],
       commonEnvBuilder,
       pnpmBuilder,
-      buildBuilder,
+      nodeBuildBuilder,
       nodeEntrypointBuilder,
       commonExposeBuilder
     ]
@@ -127,7 +127,7 @@ const BUILDER_GROUPS = [
   {
     type: 'node',
     id: 'node.pnpm',
-    label: 'Node pnpm 构造器',
+    label: 'Node pnpm 构造器（不执行 build）',
     builders: [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],
@@ -140,13 +140,13 @@ const BUILDER_GROUPS = [
   {
     type: 'node',
     id: 'node.yarn_with_build',
-    label: 'Node yarn 构造器（含 build 阶段）',
+    label: 'Node yarn 构造器（执行 build）',
     builders: [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],
       commonEnvBuilder,
       yarnBuilder,
-      buildBuilder,
+      nodeBuildBuilder,
       nodeEntrypointBuilder,
       commonExposeBuilder
     ]
@@ -154,7 +154,7 @@ const BUILDER_GROUPS = [
   {
     type: 'node',
     id: 'node.yarn',
-    label: 'Node yarn 构造器',
+    label: 'Node yarn 构造器（不执行 build）',
     builders: [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],
@@ -167,13 +167,13 @@ const BUILDER_GROUPS = [
   {
     type: 'node',
     id: 'node.npm_with_build',
-    label: 'Node npm 构造器（含 build 阶段）',
+    label: 'Node npm 构造器（执行 build）',
     builders: [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],
       commonEnvBuilder,
       npmBuilder,
-      buildBuilder,
+      nodeBuildBuilder,
       nodeEntrypointBuilder,
       commonExposeBuilder
     ]
@@ -181,7 +181,7 @@ const BUILDER_GROUPS = [
   {
     type: 'node',
     id: 'node.npm',
-    label: 'Node npm 构造器',
+    label: 'Node npm 构造器（不执行 build）',
     builders: [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],
@@ -194,7 +194,7 @@ const BUILDER_GROUPS = [
   {
     type: 'node',
     id: 'node.universal',
-    label: 'Node 通用构造器',
+    label: 'Node 通用构造器（不执行 build）',
     builders: [
       nodeRuntimeBuilder,
       [svelteKitStaticBuilder, true],

@@ -3,7 +3,7 @@ import { BuilderContext } from '@builder/context';
 import { NODE_PACKAGE_MANAGER } from '@builder/env';
 import { PACKAGE_JSON } from './constants';
 
-export const buildBuilder: Builder = {
+export const nodeBuildBuilder: Builder = {
   async detect(ctx) {
     return {
       hit: !!(await getBuildScript(ctx))
