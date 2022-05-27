@@ -55,6 +55,8 @@ function renderDeployMode(config: CloudConfig) {
       return chalk.cyan('混合部署');
     case 'custom':
       return chalk.red('自定义部署');
+    default:
+      throw new Error('不支持的部署模式');
   }
 }
 export default class DeployCommand extends Command {
@@ -83,15 +85,18 @@ export default class DeployCommand extends Command {
     const isStatic = cloudConfig.type === 'static';
     const envId = flags.envId || (await chooseEnvId());
     const serviceName = flags.serviceName || isStatic ? undefined : await chooseServiceId(envId);
-    const port: number =
-      flags?.port ||
-      userConfig?.port ||
-      parseInt(
-        await cli.prompt('请输入端口号（大部分前端框架端口号为 3000，官方模板为 80）', {
-          required: false,
-          default: '3000'
-        })
-      );
+    let port = 3000;
+    if (cloudConfig.type !== 'static') {
+      port =
+        flags?.port ||
+        userConfig?.port ||
+        parseInt(
+          await cli.prompt('请输入端口号（大部分前端框架端口号为 3000，官方模板为 80）', {
+            required: false,
+            default: '3000'
+          })
+        );
+    }
     const env = await tcbDescribeWxCloudBaseRunEnvs({});
     const target = env.envList.find(env => env.envId === envId);
     if (!target) {
