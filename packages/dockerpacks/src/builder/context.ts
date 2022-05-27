@@ -197,7 +197,7 @@ export class PromptHandler<P extends string> {
           ? config.validate(answer)
           : config.validate.test(answer))
       ) {
-        const message = `输入无效，需要满足：${config.validate}`;
+        const message = `输入无效，请检查格式是否正确`;
         if (this.throwOnInvalidInput) {
           throw new Error(message);
         } else {
