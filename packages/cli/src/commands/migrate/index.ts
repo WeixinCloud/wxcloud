@@ -95,7 +95,6 @@ export class MigrateCommand extends Command {
                 ctx.builder = builder;
               }
             } catch (e) {
-              console.dir(e);
               throw serializeError(e);
             }
           },
