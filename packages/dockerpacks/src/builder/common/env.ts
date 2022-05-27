@@ -1,7 +1,7 @@
 import { Builder } from '@builder/builder';
 import { isNonEmptyArray } from '@utils/types';
 
-export const commonEnvBuilder: Builder = {
+export const commonEnvBuilder: Builder<'environments'> = {
   async detect() {
     return { hit: true };
   },

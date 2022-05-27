@@ -5,7 +5,7 @@ import { NODE_ENV_PRODUCTION, PACKAGE_JSON } from './constants';
 import { split } from 'split-cmd';
 import { NonEmptyArray } from '@utils/types';
 
-export const nodeEntrypointBuilder: Builder = {
+export const nodeEntrypointBuilder: Builder<'generalEntrypoint'> = {
   async detect(ctx) {
     return { hit: !ctx.env.has(ENTRYPOINT_DISABLED) };
   },

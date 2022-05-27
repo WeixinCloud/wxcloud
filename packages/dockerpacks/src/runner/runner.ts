@@ -3,7 +3,13 @@ import { ServerApi } from '@api/server';
 import { Builder, DetectionResult } from '@builder/builder';
 import { DockerfileFactory } from '@dockerfile/factory';
 import { DockerIgnore } from '@dockerfile/file';
-import { BuilderContext, MessageHandler, PromptHandler, PromptIO } from '@builder/context';
+import {
+  BuilderContext,
+  MessageHandler,
+  NullMessageHandler,
+  PromptHandler,
+  PromptIO
+} from '@builder/context';
 import {
   BuilderGroup,
   DEFAULT_BUILDER_GROUPS,
@@ -12,7 +18,7 @@ import {
 } from '@group/group';
 
 interface SelectionResult {
-  group: BuilderGroup;
+  group: BuilderGroup<string>;
   hitBuilders: number[];
 }
 
@@ -46,11 +52,11 @@ export abstract class DockerpacksBase {
     return new DockerpacksBuilder(result.group, result.hitBuilders, ctx);
   }
 
-  async detectWithGroup(
+  async detectWithGroup<P extends string>(
+    group: BuilderGroup<P>,
     appRoot: string,
-    promptIo: PromptIO,
-    messageHandler: MessageHandler,
-    group: BuilderGroup
+    promptIo: PromptIO<P>,
+    messageHandler: MessageHandler = new NullMessageHandler()
   ): Promise<DockerpacksBuilder | null> {
     const ctx = new BuilderContext(
       appRoot,

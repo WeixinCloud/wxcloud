@@ -4,7 +4,7 @@ import { PROMPT_NON_EMPTY } from '@builder/context';
 import { ENTRYPOINT_DISABLED } from '@builder/env';
 import { NonEmptyArray } from '@utils/types';
 
-export const pythonEntrypointBuilder: Builder = {
+export const pythonEntrypointBuilder: Builder<'entrypoint'> = {
   async detect(ctx) {
     return { hit: !ctx.env.has(ENTRYPOINT_DISABLED) };
   },

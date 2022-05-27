@@ -1,9 +1,9 @@
 import { Dockerfile, DockerIgnore } from '@dockerfile/file';
 import { BuilderContext } from './context';
 
-export interface Builder {
-  detect(ctx: BuilderContext): Promise<DetectionResult>;
-  build(ctx: BuilderContext): Promise<BuildResult>;
+export interface Builder<P extends string = never> {
+  detect(ctx: BuilderContext<P>): Promise<DetectionResult>;
+  build(ctx: BuilderContext<P>): Promise<BuildResult>;
 }
 
 export interface DetectionResult {

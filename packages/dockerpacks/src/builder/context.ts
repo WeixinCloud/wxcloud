@@ -8,14 +8,15 @@ import { fetchUrl } from '@utils/fetch';
 import { WXCLOUDRUN_FILES_DIR } from './constants';
 import { promises } from 'fs';
 const { readFile } = promises;
-export class BuilderContext {
+
+export class BuilderContext<P extends string = string> {
   readonly env: Environment;
   readonly files: Files;
 
   constructor(
     readonly appRoot: string,
     readonly api: ServerApi,
-    readonly prompt: PromptHandler,
+    readonly prompt: PromptHandler<P>,
     readonly message: MessageHandler
   ) {
     this.env = new Environment();
@@ -35,6 +36,10 @@ export type MessageLevel = 'debug' | 'info' | 'warn' | 'fatal';
 
 export interface MessageHandler {
   pass(message: string, level?: MessageLevel): void;
+}
+
+export class NullMessageHandler implements MessageHandler {
+  pass(message: string, level?: MessageLevel | undefined) {}
 }
 
 export class Environment {
@@ -124,46 +129,49 @@ export class Files {
   }
 }
 
-export interface PromptBasicConfig {
-  id: string;
+export interface PromptBasicConfig<P extends string> {
+  id: P;
   caption: string;
 }
 
-export interface PromptInputConfig<T> extends PromptBasicConfig {
+export interface PromptInputConfig<P extends string, T> extends PromptBasicConfig<P> {
   validate?: RegExp | ((input: string) => boolean);
   trim?: boolean;
   transform?: (input: string) => T;
 }
 
-export interface PromptSelectConfig<T> extends PromptBasicConfig {
+export interface PromptSelectConfig<P extends string, T> extends PromptBasicConfig<P> {
   options: NonEmptyArray<string | [string, T]>;
 }
 
 export const PROMPT_NON_EMPTY = /.+/;
 
-export interface PromptIO {
-  ok(id: string, caption: string): Promise<boolean>;
+export interface PromptIO<P extends string = string> {
+  ok(id: P, caption: string): Promise<boolean>;
 
-  input(id: string, caption: string): Promise<string>;
+  input(id: P, caption: string): Promise<string>;
 
-  select(id: string, caption: string, options: NonEmptyArray<string>): Promise<number>;
+  select(id: P, caption: string, options: NonEmptyArray<string>): Promise<number>;
 }
 
-export class PromptHandler {
+export class PromptHandler<P extends string> {
   private promptFailedCounts = new Map<string, number>();
 
+  // 这是为了一个约束：
+  private alreadyPromptedIds = new Set();
+
   constructor(
-    private readonly io: PromptIO,
+    private readonly io: PromptIO<P>,
     private readonly messageHandler: MessageHandler,
     private readonly throwOnInvalidInput = false
   ) {}
 
-  async ok(config: PromptBasicConfig): Promise<boolean> {
+  async ok(config: PromptBasicConfig<P>): Promise<boolean> {
     const answer = await this.io.ok(config.id, config.caption);
     return answer;
   }
 
-  async input<T = string>(config: PromptInputConfig<T>): Promise<T> {
+  async input<T = string>(config: PromptInputConfig<P, T>): Promise<T> {
     let answer: string | T;
 
     while (true) {
@@ -207,7 +215,7 @@ export class PromptHandler {
     return answer as any;
   }
 
-  async select<T = string>(config: PromptSelectConfig<T>): Promise<string | T> {
+  async select<T = string>(config: PromptSelectConfig<P, T>): Promise<string | T> {
     const flattenedOptions = config.options.map(item =>
       Array.isArray(item) ? item[0] : item
     ) as NonEmptyArray<string>;
@@ -217,10 +225,10 @@ export class PromptHandler {
   }
 }
 
-export class HardCodedPromptIO implements PromptIO {
+export class HardCodedPromptIO<P extends string> implements PromptIO<P> {
   private readonly answerStates = new Map<string, number>();
 
-  constructor(private readonly answers: Record<string, boolean | string | string[]>) {}
+  constructor(private readonly answers: Record<P, boolean | string | string[]>) {}
 
   async ok(id: string, caption: string) {
     if (!this.answers[id]) {

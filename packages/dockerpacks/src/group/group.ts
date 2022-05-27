@@ -28,29 +28,61 @@ import { DeepReadonly } from '@utils/types';
 
 export type BuilderGroupType = typeof BUILDER_GROUPS[number]['type'];
 export type BuilderGroupId = typeof BUILDER_GROUPS[number]['id'];
-export type BuilderWithOptionalProp = [builder: Builder, optional: boolean];
-export interface BuilderGroup {
+export type BuilderWithOptionalProp<P extends string> = [builder: Builder<P>, optional: boolean];
+
+type GetBuilderGroupType<
+  I extends BuilderGroupId,
+  A extends readonly { id: string; builders: readonly any[] }[] = typeof BUILDER_GROUPS
+> = I extends A[0]['id']
+  ? A[0]
+  : [...A] extends [infer _, ...infer Rest]
+  ? Rest extends readonly { id: string; builders: readonly any[] }[]
+    ? GetBuilderGroupType<I, Rest>
+    : never
+  : never;
+type GetPromptIdsType<A extends { builders: readonly any[] }> = A['builders'][0] extends
+  | Builder<infer S>
+  | readonly [Builder<infer S>, ...infer _]
+  ? [...A['builders']] extends [infer _, ...infer Rest]
+    ? GetPromptIdsImpl<Rest, S>
+    : S
+  : never;
+type GetPromptIdsImpl<A extends any[], P extends string> = A[0] extends
+  | Builder<infer S>
+  | readonly [Builder<infer S>, ...infer _]
+  ? A extends [infer _, ...infer Rest]
+    ? GetPromptIdsImpl<Rest, S | P>
+    : P
+  : P;
+
+export interface BuilderGroup<P extends string = string> {
   type: BuilderGroupType;
   id: BuilderGroupId;
   label: string;
-  builders: Array<Builder | BuilderWithOptionalProp>;
+  builders: Array<Builder<P> | BuilderWithOptionalProp<P>>;
 }
 
-export function extractBuilder(input: Builder | BuilderWithOptionalProp): Builder {
+export function extractBuilder<P extends string>(
+  input: Builder<P> | BuilderWithOptionalProp<P>
+): Builder {
   if (isBuilderWithOptionalProp(input)) {
     return input[0];
   }
   return input;
 }
 
-export function isBuilderWithOptionalProp(
-  input: Builder | BuilderWithOptionalProp
-): input is BuilderWithOptionalProp {
+export function isBuilderWithOptionalProp<P extends string>(
+  input: Builder<P> | BuilderWithOptionalProp<P>
+): input is BuilderWithOptionalProp<P> {
   return Array.isArray(input);
 }
 
-export function getBuilderGroup(id: BuilderGroupId): BuilderGroup | null {
-  return (BUILDER_GROUPS.find(group => group.id === id) as any) ?? null;
+export function getBuilderGroup<I extends BuilderGroupId>(id: I) {
+  const result = BUILDER_GROUPS.find(group => group.id === id);
+  if (!result) {
+    throw new Error('invalid group id');
+  }
+  return result as unknown as BuilderGroup<GetPromptIdsType<GetBuilderGroupType<I>>>;
 }
 
 const BUILDER_GROUPS = [
@@ -229,6 +261,6 @@ const BUILDER_GROUPS = [
   }
 ] as const;
 
-const __type__check__: DeepReadonly<BuilderGroup[]> = BUILDER_GROUPS;
+const __type__check__: DeepReadonly<BuilderGroup<any>[]> = BUILDER_GROUPS;
 
-export const DEFAULT_BUILDER_GROUPS: BuilderGroup[] = BUILDER_GROUPS as any;
+export const DEFAULT_BUILDER_GROUPS: BuilderGroup<any>[] = BUILDER_GROUPS as any;
