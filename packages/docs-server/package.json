@@ -5,7 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "vuepress dev docs",
-    "build": "vuepress build docs && node rewrite-cdn-urls.mjs 'https://static-index-4gtuqm3bfa95c963-1304825656.tcloudbaseapp.com'"
+    "build": "vuepress build docs",
+    "build-cdn": "vuepress build docs && node rewrite-cdn-urls.mjs 'https://static-index-4gtuqm3bfa95c963-1304825656.tcloudbaseapp.com'"
   },
   "devDependencies": {
     "@vuepress/client": "next",
