@@ -281,6 +281,7 @@ importers:
       '@vuepress/plugin-search': next
       cheerio: 1.0.0-rc.11
       fast-glob: ^3.2.11
+      vue: ^3
       vuepress: next
       vuepress-plugin-right-anchor: 2.1.0-rc.2
     dependencies:
@@ -292,7 +293,8 @@ importers:
       '@vuepress/plugin-search': 2.0.0-beta.46
       cheerio: 1.0.0-rc.11
       fast-glob: 3.2.11
-      vuepress: 2.0.0-beta.46_456qfxe2ftgshnnfvh7vxizrhy
+      vue: 3.2.36
+      vuepress: 2.0.0-beta.46_n4rffxklnidyxbcijdu3ibrqha
 
 packages:
 
@@ -11234,7 +11236,7 @@ packages:
     resolution: {integrity: sha512-gQig9lm+/i0S/k3XyS/S/18huO9MDosrNeEQyZ5CJXPQ7DbbNKba6mADd2OOW1WLIDNmd0lzIiye0sPx2Hu+LQ==}
     dev: false
 
-  /vuepress-vite/2.0.0-beta.46_456qfxe2ftgshnnfvh7vxizrhy:
+  /vuepress-vite/2.0.0-beta.46_n4rffxklnidyxbcijdu3ibrqha:
     resolution: {integrity: sha512-ewXbzX1zG9WR48E98v8nsTd07QypbLWkonzjTrLPO6Kqye4KRrSs77LN4xHRQ4lDs/NSqCH7nw6gUT+KJOwByw==}
     hasBin: true
     peerDependencies:
@@ -11246,6 +11248,7 @@ packages:
       '@vuepress/client': 2.0.0-beta.46
       '@vuepress/core': 2.0.0-beta.46
       '@vuepress/theme-default': 2.0.0-beta.46
+      vue: 3.2.36
     transitivePeerDependencies:
       - '@vue/composition-api'
       - less
@@ -11255,11 +11258,11 @@ packages:
       - supports-color
     dev: true
 
-  /vuepress/2.0.0-beta.46_456qfxe2ftgshnnfvh7vxizrhy:
+  /vuepress/2.0.0-beta.46_n4rffxklnidyxbcijdu3ibrqha:
     resolution: {integrity: sha512-5aDb1PiSjU4w/66YnQkaodcocAwkGEjtPv7Ux4dqEh8W+IjVqYcedg2syI5NuBrcAkNh9uq/6CTFibrZ6eyR2w==}
     hasBin: true
     dependencies:
-      vuepress-vite: 2.0.0-beta.46_456qfxe2ftgshnnfvh7vxizrhy
+      vuepress-vite: 2.0.0-beta.46_n4rffxklnidyxbcijdu3ibrqha
     transitivePeerDependencies:
       - '@vue/composition-api'
       - '@vuepress/client'
