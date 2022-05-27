@@ -52,7 +52,7 @@ function renderDeployMode(config: CloudConfig) {
     case 'static':
       return chalk.yellow('静态托管');
     case 'universal':
-      return chalk.cyan('云托管（混合渲染）');
+      return chalk.cyan('混合部署');
   }
 }
 export default class DeployCommand extends Command {
@@ -188,7 +188,7 @@ export default class DeployCommand extends Command {
         versionRemark: 'cloudkit',
         ...userConfig
       });
-      console.log(chalk.green('云托管'), '版本创建成功');
+      ora().succeed(`${chalk.green('云托管')} 版本创建成功`);
     }
     if (res.staticTarget && !flags.dryRun) {
       console.log(chalk.green('静态资源'), '准备上传中');
