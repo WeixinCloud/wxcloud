@@ -6,7 +6,9 @@ import {
   PromptIO,
   MessageLevel,
   DockerpacksBuildResult,
-  DockerpacksBuilder
+  DockerpacksBuilder,
+  BuildGroupSelectorFn,
+  BuildGroupForSelection
 } from '@wxcloud/dockerpacks';
 import { Command, flags } from '@oclif/command';
 import { existsSync } from 'fs';
@@ -65,17 +67,36 @@ export class MigrateCommand extends Command {
             messageHandler.setOutput(task.stdout());
             promptIo.setPrompt(async (...args) => await task.prompt(...args));
 
-            const builder = await dockerpacks.detect(appRoot, promptIo, messageHandler);
-            if (!builder) {
-              messageHandler.pass(
-                '没有找到合适的构造器，当前项目的语言或框架可能暂未被我们支持',
-                'fatal'
+            const selectorFn: BuildGroupSelectorFn = async (groups: BuildGroupForSelection[]) => {
+              const answer = await task.prompt({
+                type: 'Select',
+                message: '请选择需要使用的构造器',
+                choices: groups.map(item => item.label)
+              });
+              return groups.findIndex(group => group.label === answer);
+            };
+
+            try {
+              const builder = await dockerpacks.detect(
+                appRoot,
+                promptIo,
+                messageHandler,
+                selectorFn
               );
-              messageHandler.pass('您也可以检查指定的路径是否正确', 'fatal');
-              throw new Error('分析失败');
-            } else {
-              messageHandler.pass(`即将使用 ${builder.group.label}`);
-              ctx.builder = builder;
+              if (!builder) {
+                messageHandler.pass(
+                  '没有找到合适的构造器，当前项目的语言或框架可能暂未被我们支持',
+                  'fatal'
+                );
+                messageHandler.pass('您也可以检查指定的路径是否正确', 'fatal');
+                throw new Error('分析失败');
+              } else {
+                messageHandler.pass(`即将使用 ${builder.group.label}`);
+                ctx.builder = builder;
+              }
+            } catch (e) {
+              console.dir(e);
+              throw serializeError(e);
             }
           },
           options: {
@@ -85,7 +106,6 @@ export class MigrateCommand extends Command {
         },
         {
           title: '构建容器化文件',
-          skip: ctx => ctx.skip,
           task: async (ctx, task) => {
             messageHandler.setOutput(task.stdout());
             promptIo.setPrompt(async (...args) => await task.prompt(...args));
@@ -107,7 +127,6 @@ export class MigrateCommand extends Command {
         },
         {
           title: '写入相关文件',
-          skip: ctx => ctx.skip,
           task: async (ctx, task) => {
             messageHandler.setOutput(task.stdout());
             promptIo.setPrompt(async (...args) => await task.prompt(...args));
@@ -172,25 +191,23 @@ class CliPromptIO implements PromptIO {
 
   async ok(id: string, caption: string): Promise<boolean> {
     return await this.prompt({
-      type: 'confirm',
-      name: 'answer',
+      type: 'Confirm',
       message: caption
     });
   }
 
   async input(id: string, caption: string): Promise<string> {
     return await this.prompt({
-      type: 'input',
-      name: 'answer',
+      type: 'Input',
       message: caption
     });
   }
 
   async select(id: string, caption: string, options: [string, ...string[]]): Promise<number> {
     return await this.prompt({
+      type: 'Select',
       message: caption,
-      type: 'list',
-      choices: [options.map(item => ({ name: item }))]
+      choices: options
     });
   }
 }
