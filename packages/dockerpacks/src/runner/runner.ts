@@ -17,10 +17,17 @@ import {
   isBuilderWithOptionalProp
 } from '@group/group';
 
-interface SelectionResult {
+interface DetectionResultItem {
   group: BuilderGroup<string>;
   hitBuilders: number[];
 }
+
+export interface BuildGroupForSelection {
+  id: string;
+  label: string;
+}
+
+export type BuildGroupSelectorFn = (groups: BuildGroupForSelection[]) => number | Promise<number>;
 
 export abstract class DockerpacksBase {
   constructor(protected readonly serverApi: ServerApi, protected readonly groups: BuilderGroup[]) {}
@@ -28,7 +35,8 @@ export abstract class DockerpacksBase {
   async detect(
     appRoot: string,
     promptIo: PromptIO,
-    messageHandler: MessageHandler
+    messageHandler: MessageHandler,
+    selectorFn: BuildGroupSelectorFn = results => 0
   ): Promise<DockerpacksBuilder | null> {
     const ctx = new BuilderContext(
       appRoot,
@@ -37,18 +45,25 @@ export abstract class DockerpacksBase {
       messageHandler
     );
 
-    let result: SelectionResult | null = null;
+    const results: DetectionResultItem[] = [];
     for (const group of this.groups) {
-      result = await this.detectImpl(ctx, group);
+      const result = await this.detectImpl(ctx, group);
       if (result) {
-        break;
+        results.push(result);
       }
     }
 
-    if (!result) {
+    if (results.length <= 0) {
       return null;
     }
 
+    const selectedIndex = await selectorFn(
+      results.map(item => ({ id: item.group.id, label: item.group.label }))
+    );
+    if (selectedIndex < 0 || selectedIndex >= results.length) {
+      throw new Error('invalid index returned by selectorFn');
+    }
+    const result = results[selectedIndex];
     return new DockerpacksBuilder(result.group, result.hitBuilders, ctx);
   }
 
@@ -76,7 +91,7 @@ export abstract class DockerpacksBase {
   protected async detectImpl(
     ctx: BuilderContext,
     group: BuilderGroup
-  ): Promise<SelectionResult | null> {
+  ): Promise<DetectionResultItem | null> {
     const tasks = group.builders.map(async builder =>
       isBuilderWithOptionalProp(builder)
         ? ([await builder[0].detect(ctx), builder[1]] as const)
