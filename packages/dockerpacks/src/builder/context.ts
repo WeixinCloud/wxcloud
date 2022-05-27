@@ -105,7 +105,21 @@ export class Files {
   }
 
   async readJson(path: string): Promise<Record<string, any> | undefined> {
-    return (await this.exists(path)) ? JSON.parse(await this.read(path)) : undefined;
+    if (!(await this.exists(path))) {
+      return undefined;
+    }
+
+    const content = await this.read(path);
+    if (!content) {
+      return undefined;
+    }
+
+    try {
+      return JSON.parse(content);
+    } catch (e) {
+      // TODO: should we throw or log?
+      return undefined;
+    }
   }
 
   async exists(...files: NonEmptyArray<string>) {
