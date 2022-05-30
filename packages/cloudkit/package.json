@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@wxcloud/core": "workspace:*",
+    "@wxcloud/dockerpacks": "workspace:*",
     "archiver": "^5.3.0",
     "rimraf": "^3.0.2"
   }

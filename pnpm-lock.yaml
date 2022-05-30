@@ -139,6 +139,7 @@ importers:
       '@types/jscodeshift': ^0.11.5
       '@types/prompts': ^2.0.14
       '@wxcloud/core': workspace:*
+      '@wxcloud/dockerpacks': workspace:*
       archiver: ^5.3.0
       ast-types: ^0.14.1
       ava: ^4.2.0
@@ -154,6 +155,7 @@ importers:
       tsup: ^5.12.8
     dependencies:
       '@wxcloud/core': link:../core
+      '@wxcloud/dockerpacks': link:../dockerpacks
       archiver: 5.3.1
       rimraf: 3.0.2
     devDependencies:

@@ -1,10 +1,11 @@
-import { spawn } from 'child_process';
-import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import path from 'path';
+import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { IKitContext, IKitDeployTarget, Kit, KitType } from '../common/kit';
 import { logger } from '../utils/debug';
 import { RunKit } from './runkit';
 import { safeGetDepsFromPkgJSON } from '../utils/utils';
+import { spawn } from 'child_process';
+import { Dockerpacks, HardCodedPromptIO } from '@wxcloud/dockerpacks';
 
 export class NextKit extends Kit {
   static description = 'CloudKit for Next.js';
@@ -41,6 +42,7 @@ export class NextKit extends Kit {
       child.on('close', () => res());
       child.on('error', err => rej(err));
     });
+
     // restore user next.config.js
     if (existsSync(path.join(ctx.fullPath, 'next.config.js.bak'))) {
       writeFileSync(nextConfigPath, readFileSync(path.join(ctx.fullPath, 'next.config.js.bak')));
@@ -48,17 +50,30 @@ export class NextKit extends Kit {
     } else {
       unlinkSync(path.join(ctx.fullPath, 'next.config.js'));
     }
+
+    // build Dockerfile and related files
+    const dockerpacks = new Dockerpacks();
+    const detectionResult = await dockerpacks.detectWithGroup(
+      'node.npm',
+      ctx.fullPath,
+      new HardCodedPromptIO({
+        environments: [],
+        generalEntrypoint: 'npm start',
+        expose: `${ctx.port}`
+      })
+    );
+    if (!detectionResult) {
+      throw new Error('failed to detect project via Dockerpacks');
+    }
+    const buildResult = await detectionResult.build();
+
     // execute runkit directly without detection
     const runKit = new RunKit();
     const runKitResult = await runKit.run(ctx, {
       fileGlob: ['package*.json', '.next/**/*', 'public/**/*'],
       providedFile: {
-        Dockerfile: `FROM node:alpine
-COPY . /app
-WORKDIR /app
-RUN npm install --registry=https://registry.npmmirror.com
-ENV PORT=${ctx.port}
-ENTRYPOINT [ "npm", "start" ]`
+        Dockerfile: buildResult.dockerfile,
+        ...Object.fromEntries(buildResult.files.entries())
       }
     });
     return {
