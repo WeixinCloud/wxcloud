@@ -181,7 +181,7 @@ export class MigrateCommand extends Command {
   }
 }
 
-class CliPromptIO implements PromptIO {
+class CliPromptIO extends PromptIO {
   private prompt: (option: PromptOptions) => Promise<any> = null!;
 
   setPrompt(prompt: (option: PromptOptions) => Promise<any>) {
