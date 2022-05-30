@@ -1,7 +1,7 @@
 import { Builder } from '@builder/builder';
 import { DISABLE_HOST_WARNING, EXPOSE_PORT } from '@builder/env';
 
-export const commonExposeBuilder: Builder<'expose'> = {
+export const commonExposeBuilder: Builder<{ expose: string }> = {
   async detect() {
     return { hit: true };
   },

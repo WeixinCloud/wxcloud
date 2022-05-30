@@ -1,13 +1,15 @@
 import path, { join } from 'path';
-import { expect, it } from 'vitest';
 import { BuildError, DockerpacksBase, DockerpacksBuildResult } from '@runner/runner';
-import { ServerApi } from '@api/server';
 import { DEFAULT_BUILDER_GROUPS } from '@group/group';
-import { TestMessageHandler } from './context';
-import { promises } from 'fs';
+import { expect, it } from 'vitest';
 import { HardCodedPromptIO } from '@builder/context';
+import { promises } from 'fs';
+import { PromptRegistration } from '@builder/types';
+import { ServerApi } from '@api/server';
+import { TestMessageHandler } from './context';
 
 const { writeFile, mkdir } = promises;
+
 export class TestDockerpacks extends DockerpacksBase {
   constructor() {
     super(
@@ -20,7 +22,7 @@ export class TestDockerpacks extends DockerpacksBase {
 export interface BuilderTestCase {
   id: string;
   expectPanic?: string | RegExp;
-  promptAnswers?: Record<string, any>;
+  promptAnswers?: PromptRegistration;
   e2e?: {
     skip?: boolean;
     buildOnly?: boolean;
@@ -36,7 +38,7 @@ export function runTest(fixturesPath: string, testCase: BuilderTestCase) {
     try {
       const detectionResult = await dockerpacks.detect(
         appRoot,
-        new HardCodedPromptIO(testCase.promptAnswers ?? {}),
+        new HardCodedPromptIO(testCase.promptAnswers ?? {}) as any,
         new TestMessageHandler()
       );
       expect(detectionResult).not.toBeNull();

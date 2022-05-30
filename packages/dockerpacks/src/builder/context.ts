@@ -1,15 +1,17 @@
-import { join, normalize } from 'path';
-import { trimStart } from 'lodash';
 import glob, { Options } from 'fast-glob';
+import { fetchUrl } from '@utils/fetch';
+import { FilterPromptRegistrationItem, PromptRegistration } from './types';
+import { join, normalize } from 'path';
+import { NonEmptyArray } from '@utils/types';
+import { promises } from 'fs';
 import { RequestInfo, RequestInit } from 'node-fetch';
 import { ServerApi } from '@api/server';
-import { NonEmptyArray } from '@utils/types';
-import { fetchUrl } from '@utils/fetch';
+import { trimStart } from 'lodash';
 import { WXCLOUDRUN_FILES_DIR } from './constants';
-import { promises } from 'fs';
+
 const { readFile } = promises;
 
-export class BuilderContext<P extends string = string> {
+export class BuilderContext<P extends PromptRegistration = never> {
   readonly env: Environment;
   readonly files: Files;
 
@@ -143,36 +145,71 @@ export class Files {
   }
 }
 
-export interface PromptBasicConfig<P extends string> {
-  id: P;
+export interface PromptBasicConfig<P extends PromptRegistration, V> {
+  id: FilterPromptRegistrationItem<P, V>;
   caption: string;
 }
 
-export interface PromptInputConfig<P extends string, T> extends PromptBasicConfig<P> {
+export interface PromptInputConfig<P extends PromptRegistration, V, T>
+  extends PromptBasicConfig<P, V> {
   validate?: RegExp | ((input: string) => boolean);
   trim?: boolean;
   transform?: (input: string) => T;
 }
 
-export interface PromptSelectConfig<P extends string, T> extends PromptBasicConfig<P> {
+export interface PromptSelectConfig<P extends PromptRegistration, V, T>
+  extends PromptBasicConfig<P, V> {
   options: NonEmptyArray<string | [string, T]>;
 }
 
 export const PROMPT_NON_EMPTY = /.+/;
 
-export interface PromptIO<P extends string = string> {
-  ok(id: P, caption: string): Promise<boolean>;
+export abstract class PromptIO<P extends PromptRegistration = never> {
+  protected __type__check__!: P;
 
-  input(id: P, caption: string): Promise<string>;
+  abstract ok(id: FilterPromptRegistrationItem<P, boolean>, caption: string): Promise<boolean>;
 
-  select(id: P, caption: string, options: NonEmptyArray<string>): Promise<number>;
+  abstract input(
+    id: FilterPromptRegistrationItem<P, string | string[]>,
+    caption: string
+  ): Promise<string>;
+
+  abstract select(
+    id: FilterPromptRegistrationItem<P, string | string[]>,
+    caption: string,
+    options: NonEmptyArray<string>
+  ): Promise<number>;
 }
 
-export class PromptHandler<P extends string> {
-  private promptFailedCounts = new Map<string, number>();
+/*
+ * 让 tsc 不在 dts 中抹除 PromptIO.__type__check__ 的类型的 hack
+ */
+class __type__check__<P extends PromptRegistration = never> extends PromptIO<P> {
+  constructor() {
+    super();
+    void super.__type__check__;
+  }
 
-  // 这是为了一个约束：
-  private alreadyPromptedIds = new Set();
+  ok(id: FilterPromptRegistrationItem<P, boolean>, caption: string): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
+
+  input(id: FilterPromptRegistrationItem<P, string | string[]>, caption: string): Promise<string> {
+    throw new Error('Method not implemented.');
+  }
+
+  select(
+    id: FilterPromptRegistrationItem<P, string | string[]>,
+    caption: string,
+    options: NonEmptyArray<string>
+  ): Promise<number> {
+    throw new Error('Method not implemented.');
+  }
+}
+new __type__check__();
+
+export class PromptHandler<P extends PromptRegistration> {
+  private promptFailedCounts = new Map<string, number>();
 
   constructor(
     private readonly io: PromptIO<P>,
@@ -180,12 +217,12 @@ export class PromptHandler<P extends string> {
     private readonly throwOnInvalidInput = false
   ) {}
 
-  async ok(config: PromptBasicConfig<P>): Promise<boolean> {
+  async ok(config: PromptBasicConfig<P, boolean>): Promise<boolean> {
     const answer = await this.io.ok(config.id, config.caption);
     return answer;
   }
 
-  async input<T = string>(config: PromptInputConfig<P, T>): Promise<T> {
+  async input<T = string>(config: PromptInputConfig<P, string | string[], T>): Promise<T> {
     let answer: string | T;
 
     while (true) {
@@ -229,7 +266,9 @@ export class PromptHandler<P extends string> {
     return answer as any;
   }
 
-  async select<T = string>(config: PromptSelectConfig<P, T>): Promise<string | T> {
+  async select<T = string>(
+    config: PromptSelectConfig<P, string | string[], T>
+  ): Promise<string | T> {
     const flattenedOptions = config.options.map(item =>
       Array.isArray(item) ? item[0] : item
     ) as NonEmptyArray<string>;
@@ -239,10 +278,12 @@ export class PromptHandler<P extends string> {
   }
 }
 
-export class HardCodedPromptIO<P extends string> implements PromptIO<P> {
+export class HardCodedPromptIO<P extends PromptRegistration> extends PromptIO<P> {
   private readonly answerStates = new Map<string, number>();
 
-  constructor(private readonly answers: Record<P, boolean | string | string[]>) {}
+  constructor(private readonly answers: P) {
+    super();
+  }
 
   async ok(id: string, caption: string) {
     if (!this.answers[id]) {

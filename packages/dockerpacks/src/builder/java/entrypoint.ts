@@ -4,7 +4,7 @@ import { readFile } from 'fs/promises';
 import JSZip from 'jszip';
 import { MAIN_CLASS, MANIFEST_MF } from './constants';
 
-export const javaEntrypointBuilder: Builder<'entrypointJar'> = {
+export const javaEntrypointBuilder: Builder<{ entrypointJar: string }> = {
   async detect() {
     return { hit: true };
   },

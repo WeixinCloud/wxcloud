@@ -25,10 +25,14 @@ import { pipBuilder } from '@builder/python/pip';
 import { pythonRuntimeBuilder } from '@builder/python/runtime';
 import { pythonEntrypointBuilder } from '@builder/python/entrypoint';
 import { DeepReadonly } from '@utils/types';
+import { PromptRegistration } from '@builder/types';
 
 export type BuilderGroupType = typeof BUILDER_GROUPS[number]['type'];
 export type BuilderGroupId = typeof BUILDER_GROUPS[number]['id'];
-export type BuilderWithOptionalProp<P extends string> = [builder: Builder<P>, optional: boolean];
+export type BuilderWithOptionalProp<P extends PromptRegistration> = [
+  builder: Builder<P>,
+  optional: boolean
+];
 
 type GetBuilderGroupType<
   I extends BuilderGroupId,
@@ -40,29 +44,32 @@ type GetBuilderGroupType<
     ? GetBuilderGroupType<I, Rest>
     : never
   : never;
-type GetPromptIdsType<A extends { builders: readonly any[] }> = A['builders'][0] extends
-  | Builder<infer S>
-  | readonly [Builder<infer S>, ...infer _]
+type GetPromptPreConfigType<A extends { builders: readonly any[] }> = A['builders'][0] extends
+  | Builder<infer P>
+  | readonly [Builder<infer P>, ...infer _]
   ? [...A['builders']] extends [infer _, ...infer Rest]
-    ? GetPromptIdsImpl<Rest, S>
-    : S
+    ? GetPromptPreConfigImpl<Rest, [P] extends [never] ? {} : P>
+    : P
   : never;
-type GetPromptIdsImpl<A extends any[], P extends string> = A[0] extends
-  | Builder<infer S>
-  | readonly [Builder<infer S>, ...infer _]
+type GetPromptPreConfigImpl<A extends any[], P extends PromptRegistration> = A[0] extends
+  | Builder<infer P2>
+  | readonly [Builder<infer P2>, ...infer _]
   ? A extends [infer _, ...infer Rest]
-    ? GetPromptIdsImpl<Rest, S | P>
+    ? GetPromptPreConfigImpl<Rest, P & ([P2] extends [never] ? {} : P2)>
     : P
   : P;
+export type GetPromptPreConfigTypeByGroupId<I extends BuilderGroupId> = GetPromptPreConfigType<
+  GetBuilderGroupType<I>
+>;
 
-export interface BuilderGroup<P extends string = string> {
+export interface BuilderGroup<P extends PromptRegistration = never> {
   type: BuilderGroupType;
   id: BuilderGroupId;
   label: string;
   builders: Array<Builder<P> | BuilderWithOptionalProp<P>>;
 }
 
-export function extractBuilder<P extends string>(
+export function extractBuilder<P extends PromptRegistration>(
   input: Builder<P> | BuilderWithOptionalProp<P>
 ): Builder {
   if (isBuilderWithOptionalProp(input)) {
@@ -71,7 +78,7 @@ export function extractBuilder<P extends string>(
   return input;
 }
 
-export function isBuilderWithOptionalProp<P extends string>(
+export function isBuilderWithOptionalProp<P extends PromptRegistration>(
   input: Builder<P> | BuilderWithOptionalProp<P>
 ): input is BuilderWithOptionalProp<P> {
   return Array.isArray(input);
@@ -82,7 +89,7 @@ export function getBuilderGroup<I extends BuilderGroupId>(id: I) {
   if (!result) {
     throw new Error('invalid group id');
   }
-  return result as unknown as BuilderGroup<GetPromptIdsType<GetBuilderGroupType<I>>>;
+  return result as unknown as BuilderGroup<GetPromptPreConfigTypeByGroupId<I>>;
 }
 
 const BUILDER_GROUPS = [

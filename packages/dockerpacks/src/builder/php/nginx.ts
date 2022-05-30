@@ -6,7 +6,7 @@ import { join } from 'path';
 import { phpNginxConf } from './conf/nginx.conf';
 import { NGINX_CONF_PATH } from './constants';
 
-export const nginxBuilder: Builder<'staticDirectory'> = {
+export const nginxBuilder: Builder<{ staticDirectory: string }> = {
   async detect() {
     return { hit: true };
   },

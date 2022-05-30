@@ -1,8 +1,9 @@
 import { Builder } from '@builder/builder';
 
-export const phpExtensionsBuilder: Builder<
-  'databaseExtensionSelection' | 'databaseExtensionInput'
-> = {
+export const phpExtensionsBuilder: Builder<{
+  databaseExtensionSelection: string;
+  databaseExtensionInput: string;
+}> = {
   async detect(ctx) {
     const exists = await ctx.files.exists('./**/*.php');
     return { hit: exists };

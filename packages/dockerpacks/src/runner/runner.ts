@@ -12,13 +12,16 @@ import {
 } from '@builder/context';
 import {
   BuilderGroup,
+  BuilderGroupId,
   DEFAULT_BUILDER_GROUPS,
   extractBuilder,
+  getBuilderGroup,
+  GetPromptPreConfigTypeByGroupId,
   isBuilderWithOptionalProp
 } from '@group/group';
 
 interface DetectionResultItem {
-  group: BuilderGroup<string>;
+  group: BuilderGroup;
   hitBuilders: number[];
 }
 
@@ -67,10 +70,10 @@ export abstract class DockerpacksBase {
     return new DockerpacksBuilder(result.group, result.hitBuilders, ctx);
   }
 
-  async detectWithGroup<P extends string>(
-    group: BuilderGroup<P>,
+  async detectWithGroup<I extends BuilderGroupId>(
+    groupId: I,
     appRoot: string,
-    promptIo: PromptIO<P>,
+    promptIo: PromptIO<GetPromptPreConfigTypeByGroupId<I>>,
     messageHandler: MessageHandler = new NullMessageHandler()
   ): Promise<DockerpacksBuilder | null> {
     const ctx = new BuilderContext(
@@ -80,12 +83,13 @@ export abstract class DockerpacksBase {
       messageHandler
     );
 
-    const result = await this.detectImpl(ctx, group);
+    const group = getBuilderGroup(groupId);
+    const result = await this.detectImpl(ctx as BuilderContext, group);
     if (!result) {
       return null;
     }
 
-    return new DockerpacksBuilder(result.group, result.hitBuilders, ctx);
+    return new DockerpacksBuilder(result.group, result.hitBuilders, ctx as BuilderContext);
   }
 
   protected async detectImpl(
