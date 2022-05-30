@@ -4,6 +4,15 @@
 
 ![cloudkit](/images/cloudkit.svg)
 
+使用时，需要在 `wxcloud.config.json` 将部署类型指定为 `universal`，参考如下：
+
+```json
+{
+  "type": "universal",
+  "server": {}
+}
+```
+
 ## 支持情况
 
 目前混合部署模式，开箱即用支持以下框架：
