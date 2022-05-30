@@ -20,21 +20,21 @@
   <CodeGroupItem title="npm" active>
 
 ```bash:no-line-numbers
-npm i -g @wxcloud/cli@next
+npm i -g @wxcloud/cli
 ```
 
   </CodeGroupItem>
   <CodeGroupItem title="yarn">
 
 ```bash:no-line-numbers
-yarn global add @wxcloud/cli@next
+yarn global add @wxcloud/cli
 ```
 
   </CodeGroupItem>
   <CodeGroupItem title="pnpm">
 
 ```bash:no-line-numbers
-pnpm i -g @wxcloud/cli@next
+pnpm i -g @wxcloud/cli
 ```
 
   </CodeGroupItem>
