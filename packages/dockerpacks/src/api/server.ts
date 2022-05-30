@@ -10,6 +10,10 @@ export class ServerApi {
 
   constructor(private readonly serverUrl: string) {}
 
+  getServerUrl() {
+    return new URL(this.serverUrl);
+  }
+
   async queryNpmPackage(name: string, versionConstraint: string) {
     const url = new URL(`npm/${name}/${versionConstraint}`, this.serverUrl);
     const response = await fetchUrl(url.toString());

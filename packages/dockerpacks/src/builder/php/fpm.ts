@@ -1,3 +1,4 @@
+import { ServerApi } from '@api/server';
 import { Builder } from '@builder/builder';
 import { BuilderContext } from '@builder/context';
 import { COMPOSER_JSON } from './constants';
@@ -17,11 +18,14 @@ export const phpFpmBuilder: Builder = {
 
       dockerfile
         .add(
-          'https://cdn.jsdelivr.net/gh/mlocati/docker-php-extension-installer@latest/install-php-extensions',
+          new URL(
+            'gh/mlocati/docker-php-extension-installer@latest/install-php-extensions',
+            ServerApi.TCB_SHANGHAI.getServerUrl()
+          ).toString(),
           '/usr/local/bin'
         )
         .comment(
-          '安装 install-php-extensions 工具，您可以使用它来安装自己需要的 php 扩展，请参考：https://github.com/mlocati/docker-php-extension-installer\n例如，使用 RUN install-php-extensions @composer 来安装 compuser'
+          '安装 install-php-extensions 工具，您可以使用它来安装自己需要的 php 扩展，请参考：https://github.com/mlocati/docker-php-extension-installer\n例如，使用 RUN install-php-extensions @composer 来安装 composer'
         );
       dockerfile.run('chmod', '+x', '/usr/local/bin/install-php-extensions');
 
