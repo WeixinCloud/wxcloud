@@ -16,6 +16,7 @@ import ora from 'ora';
 import { logger } from '../../utils/log';
 import inquirer from 'inquirer';
 import { cli } from 'cli-ux';
+import { getDockerIgnore } from '../../functions/getDockerIgnore';
 
 const oraStages: Record<string, ora.Ora> = {};
 const stageName = {
@@ -148,6 +149,7 @@ export default class DeployCommand extends Command {
       }
     }
 
+    const fileToIgnore = getDockerIgnore(process.cwd());
     const res =
       cloudConfig.type === 'custom'
         ? cloudConfig.custom
@@ -156,6 +158,7 @@ export default class DeployCommand extends Command {
             config: cloudConfig,
             port,
             staticDomain,
+            fileToIgnore,
             lifecycleHooks: {
               enterStage(stage) {
                 oraStages[stage] = ora(stageName[stage]).start();
