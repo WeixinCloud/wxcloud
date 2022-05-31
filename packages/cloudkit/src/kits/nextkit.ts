@@ -57,7 +57,7 @@ export class NextKit extends Kit {
       'node.npm',
       ctx.fullPath,
       new HardCodedPromptIO({
-        environments: [],
+        environments: [`PORT=${ctx.port}`],
         generalEntrypoint: 'npm start',
         expose: `${ctx.port}`
       })

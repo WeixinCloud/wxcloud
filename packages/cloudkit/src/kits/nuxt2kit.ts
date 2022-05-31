@@ -6,6 +6,7 @@ import { logger } from '../utils/debug';
 import { RunKit } from './runkit';
 import { JSConfigASTHelper } from '../utils/astHelper/jsConfig';
 import { isMatchMajorVersion, safeGetDepsFromPkgJSON } from '../utils/utils';
+import { Dockerpacks, HardCodedPromptIO } from '@wxcloud/dockerpacks';
 export class Nuxt2Kit extends Kit {
   static description = 'CloudKit for Nuxt.js';
   static type = KitType.UNIVERSAL;
@@ -59,18 +60,29 @@ export class Nuxt2Kit extends Kit {
       child.on('close', () => res());
       child.on('error', err => rej(err));
     });
+    // build Dockerfile and related files
+    const dockerpacks = new Dockerpacks();
+    const detectionResult = await dockerpacks.detectWithGroup(
+      'node.npm',
+      ctx.fullPath,
+      new HardCodedPromptIO({
+        environments: [`NUXT_HOST=0.0.0.0`, `NUXT_PORT=${ctx.port}`],
+        generalEntrypoint: 'npm start',
+        expose: `${ctx.port}`
+      })
+    );
+    if (!detectionResult) {
+      throw new Error('failed to detect project via Dockerpacks');
+    }
+    const buildResult = await detectionResult.build();
+
     // execute runkit directly without detection
     const runKit = new RunKit();
     const runKitResult = await runKit.run(ctx, {
       fileGlob: ['package*.json', '.nuxt/**/*', 'static/**/*', 'nuxt.config.js'],
       providedFile: {
-        Dockerfile: `FROM node
-COPY . /app
-WORKDIR /app
-RUN npm i --registry=https://registry.npmmirror.com
-ENV NUXT_HOST=0.0.0.0
-ENV NUXT_PORT=${ctx.port}
-ENTRYPOINT [ "npm", "start" ]`
+        Dockerfile: buildResult.dockerfile,
+        ...Object.fromEntries(buildResult.files.entries())
       }
     });
     // NUXT will use config in production mode. So we should restore user nuxt.config.js here

@@ -5,6 +5,7 @@ import { IKitContext, IKitDeployTarget, Kit, KitType } from '../common/kit';
 import { logger } from '../utils/debug';
 import { RunKit } from './runkit';
 import { isMatchMajorVersion, safeGetDepsFromPkgJSON } from '../utils/utils';
+import { Dockerpacks, HardCodedPromptIO } from '@wxcloud/dockerpacks';
 export class Nuxt3Kit extends Kit {
   static description = 'CloudKit for Nuxt.js v3';
   static type = KitType.UNIVERSAL;
@@ -46,20 +47,30 @@ export class Nuxt3Kit extends Kit {
       child.on('close', () => res());
       child.on('error', err => rej(err));
     });
+    // build Dockerfile and related files
+    const dockerpacks = new Dockerpacks();
+    const detectionResult = await dockerpacks.detectWithGroup(
+      'node.npm',
+      ctx.fullPath,
+      new HardCodedPromptIO({
+        // nuxt3 just use env is OK
+        environments: [`HOST=0.0.0.0`, `PORT=${ctx.port}`, `NUXT_APP_CDN_URL=${ctx.staticDomain}`],
+        generalEntrypoint: 'node .output/server/index.mjs',
+        expose: `${ctx.port}`
+      })
+    );
+    if (!detectionResult) {
+      throw new Error('failed to detect project via Dockerpacks');
+    }
+    const buildResult = await detectionResult.build();
+
     // execute runkit directly without detection
     const runKit = new RunKit();
     const runKitResult = await runKit.run(ctx, {
       fileGlob: ['package*.json', '.output/**/*', 'public/**/*', nuxtConfigPath],
       providedFile: {
-        // nuxt3 just use env is OK
-        Dockerfile: `FROM node
-COPY . /app
-WORKDIR /app
-RUN npm i --registry=https://registry.npmmirror.com
-ENV NUXT_APP_CDN_URL=${ctx.staticDomain}
-ENV HOST=0.0.0.0
-ENV PORT=${ctx.port}
-ENTRYPOINT [ "node", ".output/server/index.mjs" ]`
+        Dockerfile: buildResult.dockerfile,
+        ...Object.fromEntries(buildResult.files.entries())
       }
     });
     return {
