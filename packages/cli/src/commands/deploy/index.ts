@@ -17,6 +17,7 @@ import { logger } from '../../utils/log';
 import inquirer from 'inquirer';
 import { cli } from 'cli-ux';
 import { getDockerIgnore } from '../../functions/getDockerIgnore';
+import { MigrateCommand } from '../migrate';
 
 const oraStages: Record<string, ora.Ora> = {};
 const stageName = {
@@ -26,7 +27,7 @@ const stageName = {
 const { tcbDescribeCloudBaseBuildService, tcbDescribeWxCloudBaseRunEnvs, tcbSubmitServerRelease } =
   CloudAPI;
 
-function extractCloudConfig(): CloudConfig {
+async function extractCloudConfig(migrated?: boolean): Promise<CloudConfig> {
   const cwd = process.cwd();
   const allowedPrefix = ['cjs', 'js', 'json'];
   let configFilePath = '';
@@ -42,7 +43,12 @@ function extractCloudConfig(): CloudConfig {
     const config = safeRequire(configFilePath);
     return config;
   }
-  // no config file, should prompt user to run `wxcloud migrate` first.
+  // no config file, auto run `wxcloud migrate` first.
+  if (!migrated) {
+    ora().info('没有配置文件，正在自动迁移项目...');
+    await MigrateCommand.run([]);
+    return extractCloudConfig(true);
+  }
   throw new Error('没有配置文件，请先执行 `wxcloud migrate` 将项目迁移到云托管');
 }
 
@@ -75,7 +81,7 @@ export default class DeployCommand extends Command {
   async run() {
     const { flags } = this.parse(DeployCommand);
 
-    const cloudConfig = extractCloudConfig();
+    const cloudConfig = await extractCloudConfig();
     const userConfig =
       typeof cloudConfig.server === 'string'
         ? {
