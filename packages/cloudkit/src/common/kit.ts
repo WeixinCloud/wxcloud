@@ -10,6 +10,7 @@ export interface IKitContext {
   config: CloudConfig;
   staticDomain?: string;
   port?: number;
+  fileToIgnore?: string[];
   lifecycleHooks?: {
     enterStage: (stageName: string, ...info: any) => void;
     leaveStage: (stageName: string, ...info: any) => void;

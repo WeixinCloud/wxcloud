@@ -27,7 +27,8 @@ export class RunKit extends Kit {
         {
           cwd: ctx.fullPath,
           dot: true,
-          ignore: [zipName]
+          // automatically ignore node_modules and .git
+          ignore: [zipName, 'node_modules', '.git', ...(ctx.fileToIgnore || [])]
         },
         {}
       );
