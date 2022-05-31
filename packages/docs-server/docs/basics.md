@@ -39,7 +39,7 @@ wxcloud migrate
 
 ## 部署到云托管
 
-默认的部署模式为 `run` 模式，即将 Next.js 服务端部署到云托管服务中。
+默认的部署模式为[云托管模式](./features/config.md#type)，即将 Next.js 服务端部署到云托管服务中。可以通过修改 `wxcloud.config.js` 修改默认的部署模式。
 
 执行如下命令，部署项目到云托管：
 ```:no-line-numbers

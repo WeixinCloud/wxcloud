@@ -38,10 +38,10 @@ client | 客户端配置 | { customDomain: 'cdn.example.com' }
 
 使用 `wxcloud deploy` 时使用的部署模式。
 
-- 对于后台项目（`type=run`），部署时会使用项目内的 Dockerfile 文件，部署项目到云托管服务中。
-- 对于前端项目（`type=static`），部署时会构建出静态资源，并部署到静态资源托管中。
-- 对于混合项目（`type=universal`），部署时会分别将文件上传到静态资源和云托管服务中。
-- 对于自定义项目（`type=custom`），请参考 [自定义部署](../terminology/cloudkit.md#自定义部署目标)。
+- 对于后台/全栈项目，使用云托管模式（`type=run`），部署时会使用项目内的 Dockerfile 文件，部署项目到云托管服务中。
+- 对于纯前端项目，使用静态模式（`type=static`），部署时会构建出静态资源，并部署到静态资源托管中。
+- 对于[支持的全栈框架](../terminology/cloudkit.md#支持情况)项目，使用混合部署模式（`type=universal`），部署时会分别将文件上传到静态资源和云托管服务中。
+- 对于自定义项目，使用自定义部署模式（`type=custom`），请参考 [自定义部署](../terminology/cloudkit.md#自定义部署目标)。
 
 ### server
 

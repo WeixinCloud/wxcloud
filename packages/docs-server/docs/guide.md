@@ -56,6 +56,14 @@ wxcloud login
 wxcloud login --appId <微信 AppId> --privateKey <秘钥>
 ```
 
+
+CLI工具的登录采用了密钥形式，在使用前需要前往[微信云托管控制台-设置-CLI密钥](https://cloud.weixin.qq.com/cloudrun/settings/other)生成，生成时需要账号管理员扫码，可以新建多个密钥，用于在不同地方使用。
+
+<img style="width:auto" src="/images/cli-key.png"/>
+
+获取的密钥不会在平台中显式保存，所以在新建后需要自己妥善保管。
+
+
 ## 登出
 
 当您完成使用之后，推荐手动登出账号：
