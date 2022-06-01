@@ -1,7 +1,7 @@
 import { MessageHandler, MessageLevel } from '@builder/context';
 
 export class TestMessageHandler implements MessageHandler {
-  pass(message: string, level?: MessageLevel) {
+  pass(level: MessageLevel, message: string) {
     console.info(`${level ?? 'info'}: ${message}`);
   }
 }

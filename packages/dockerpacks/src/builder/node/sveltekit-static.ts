@@ -17,8 +17,8 @@ export const svelteKitStaticBuilder: Builder = {
   },
   async build(ctx) {
     ctx.message.pass(
-      '您似乎正在使用 SvelteKit 的 adapter-static，请切换到 adapter-node，否则服务将无法运行您的项目',
-      'fatal'
+      'error',
+      '您似乎正在使用 SvelteKit 的 adapter-static，请切换到 adapter-node，否则服务将无法运行您的项目'
     );
     return ctx.panic('暂不支持 SvelteKit 的 adapter-static');
   }

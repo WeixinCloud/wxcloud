@@ -11,7 +11,7 @@ export const phpFpmBuilder: Builder = {
   async build(ctx) {
     const wrapper = await inferRuntimeImage(ctx);
     const targetTag = wrapper.getMostGeneralTag();
-    ctx.message.pass(`将使用镜像 ${targetTag.raw} (${wrapper.getFullVersionTag()})`);
+    ctx.message.pass('info', `将使用镜像 ${targetTag.raw} (${wrapper.getFullVersionTag()})`);
 
     return dockerfile => {
       dockerfile.from('php', targetTag.raw).comment('使用 php 官方提供的镜像，内置 fpm');
@@ -39,21 +39,22 @@ export const phpFpmBuilder: Builder = {
 
 async function inferRuntimeImage(ctx: BuilderContext) {
   if (!(await ctx.files.exists(COMPOSER_JSON))) {
-    ctx.message.pass('没有找到 composer.json，将使用推荐版本的 PHP 镜像');
+    ctx.message.pass('info', '没有找到 composer.json，将使用推荐版本的 PHP 镜像');
     return await getRecommendedVersionTag(ctx);
   }
 
   const composerJson = await ctx.files.readJson(COMPOSER_JSON);
   const versionConstraint = composerJson?.require?.php;
   if (!versionConstraint) {
-    ctx.message.pass('没有在 composer.json 中找到 PHP 版本约束，将使用推荐版本的 PHP 镜像');
+    ctx.message.pass('info', '没有在 composer.json 中找到 PHP 版本约束，将使用推荐版本的 PHP 镜像');
     return await getRecommendedVersionTag(ctx);
   }
 
-  ctx.message.pass(`在 composer.json 中找到了 PHP 版本约束 ${versionConstraint}`);
+  ctx.message.pass('info', `在 composer.json 中找到了 PHP 版本约束 ${versionConstraint}`);
   const wrapper = await ctx.api.queryRuntimeImage('php', versionConstraint, ['fpm']);
   if (!wrapper) {
     ctx.message.pass(
+      'info',
       `您在 composer.json 中对 PHP 版本的约束 ${versionConstraint} 已经太旧或无效，将为您使用推荐版本的 PHP 镜像`
     );
     return await getRecommendedVersionTag(ctx);

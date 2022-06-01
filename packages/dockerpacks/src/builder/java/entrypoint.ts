@@ -19,7 +19,7 @@ export const javaEntrypointBuilder: Builder<{ entrypointJar: string }> = {
             caption: '请输入您的项目的入口 jar 路径（例如: dist/main.jar）',
             validate: PROMPT_NON_EMPTY
           });
-    ctx.message.pass(`将使用 ${entrypointJar} 作为入口 jar`);
+    ctx.message.pass('info', `将使用 ${entrypointJar} 作为入口 jar`);
 
     return dockerfile => {
       // TODO: 询问是否添加 jvm options

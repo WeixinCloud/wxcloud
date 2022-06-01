@@ -11,7 +11,7 @@ export const pythonRuntimeBuilder: Builder = {
   async build(ctx) {
     const image = await getRecommendedImage(ctx);
     const targetTag = image.getMostGeneralTag();
-    ctx.message.pass(`将使用镜像 ${targetTag.raw} (${image.getFullVersionTag()})`);
+    ctx.message.pass('info', `将使用镜像 ${targetTag.raw} (${image.getFullVersionTag()})`);
 
     return dockerfile => {
       dockerfile.from('python', targetTag.raw).comment(`使用基于 alpine 的 python 官方镜像`);

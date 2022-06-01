@@ -21,7 +21,7 @@ export const commonExposeBuilder: Builder<{ expose: string }> = {
         });
 
     if (!ctx.env.has(DISABLE_HOST_WARNING)) {
-      ctx.message.pass('请将您的项目设置为监听 0.0.0.0 地址，否则部署后可能无法访问', 'warn');
+      ctx.message.pass('warn', '请将您的项目设置为监听 0.0.0.0 地址，否则部署后可能无法访问');
     }
 
     return dockerfile => {

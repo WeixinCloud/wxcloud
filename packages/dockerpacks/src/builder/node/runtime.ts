@@ -11,7 +11,7 @@ export const nodeRuntimeBuilder: Builder = {
   async build(ctx) {
     const wrapper = await inferNodeImage(ctx);
     const targetTag = wrapper.getMostGeneralTag();
-    ctx.message.pass(`将使用镜像 ${targetTag.raw} (${wrapper.getFullVersionTag()})`);
+    ctx.message.pass('info', `将使用镜像 ${targetTag.raw} (${wrapper.getFullVersionTag()})`);
 
     const npmVersion = await inferNpmVersion(ctx);
 
@@ -33,13 +33,17 @@ async function inferNodeImage(ctx: BuilderContext) {
   const packageJson = await ctx.files.readJson(PACKAGE_JSON);
   const constraint = packageJson?.engines?.node;
   if (!constraint) {
-    ctx.message.pass('没有在 package.json 中找到 Node 版本约束，将使用推荐版本的 Node 镜像');
+    ctx.message.pass(
+      'info',
+      '没有在 package.json 中找到 Node 版本约束，将使用推荐版本的 Node 镜像'
+    );
     return await getRecommendedNodeImage(ctx);
   }
 
   const wrapper = await ctx.api.queryRuntimeImage('node', constraint, ['alpine']);
   if (!wrapper) {
     ctx.message.pass(
+      'info',
       `您在 package.json 中对 Node 版本的约束 ${constraint} 已经太旧或无效，将为您使用推荐版本的 Node 镜像`
     );
     return await getRecommendedNodeImage(ctx);

@@ -20,7 +20,7 @@ export const commonEnvBuilder: Builder<{ environments: string[] }> = {
       envItems.push(input);
     }
 
-    ctx.message.pass(`收集到 ${envItems.length} 条环境变量`, 'warn');
+    ctx.message.pass('warn', `收集到 ${envItems.length} 条环境变量`);
 
     const args = envItems.map(item => item.split('=', 2) as [string, string]);
 

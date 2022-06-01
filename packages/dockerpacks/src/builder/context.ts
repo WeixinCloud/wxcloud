@@ -34,14 +34,14 @@ export class BuilderContext<P extends PromptRegistration = never> {
   }
 }
 
-export type MessageLevel = 'debug' | 'info' | 'warn' | 'fatal';
+export type MessageLevel = 'debug' | 'info' | 'warn' | 'error';
 
 export interface MessageHandler {
-  pass(message: string, level?: MessageLevel): void;
+  pass(level: MessageLevel, message: string): void;
 }
 
 export class NullMessageHandler implements MessageHandler {
-  pass(message: string, level?: MessageLevel | undefined) {}
+  pass(level: MessageLevel, message: string) {}
 }
 
 export class Environment {
@@ -235,6 +235,7 @@ export class PromptHandler<P extends PromptRegistration> {
           : config.validate.test(answer))
       ) {
         const message = `输入无效，请检查格式是否正确`;
+
         if (this.throwOnInvalidInput) {
           throw new Error(message);
         } else {
@@ -246,7 +247,7 @@ export class PromptHandler<P extends PromptRegistration> {
             throw new Error(`错误次数过多：${message}`);
           }
           this.promptFailedCounts.set(config.id, count + 1);
-          this.messageHandler.pass(message);
+          this.messageHandler.pass('error', message);
         }
         continue;
       }

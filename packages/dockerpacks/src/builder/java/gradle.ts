@@ -10,7 +10,7 @@ export const javaGradleBuilder: Builder = {
   async build(ctx) {
     const image = await getRecommendedImage(ctx);
     const targetTag = image.getMostGeneralTag();
-    ctx.message.pass(`将使用镜像 ${targetTag.raw} (${image.getFullVersionTag()})`);
+    ctx.message.pass('info', `将使用镜像 ${targetTag.raw} (${image.getFullVersionTag()})`);
 
     return dockerfile => {
       dockerfile.from('gradle', targetTag.raw).comment(`使用 Gradle 官方镜像`);
