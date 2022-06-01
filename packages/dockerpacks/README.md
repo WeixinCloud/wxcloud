@@ -25,6 +25,12 @@ See [Dockerpacks](https://cloud.weixin.qq.com/cli/terminology/dockerpacks.html) 
 
 See source files in the `examples`.
 
+Run the example by:
+
+1. `pnpm i`
+2. `pnpm build`
+3. `tsx SOURCE_FILE.ts`
+
 # Credits and Prior Art
 
 Dockerpacks is inspired by the following projects:
