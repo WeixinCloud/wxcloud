@@ -204,6 +204,7 @@ importers:
       '@types/lodash': ^4.14.182
       '@types/node-fetch': ^2.6.1
       '@types/semver': ^7.3.9
+      enquirer: ^2.3.6
       fast-glob: ^3.2.11
       jszip: ^3.9.1
       kolorist: ^1.5.1
@@ -228,6 +229,7 @@ importers:
       '@types/lodash': 4.14.182
       '@types/node-fetch': 2.6.1
       '@types/semver': 7.3.9
+      enquirer: 2.3.6
       kolorist: 1.5.1
       tsconfig-paths: 3.14.1
       tsup: 5.12.7
@@ -3374,7 +3376,6 @@ packages:
   /ansi-colors/4.1.2:
     resolution: {integrity: sha512-cEG18jjLG0O74o/33eEfnmtXYDEY196ZjL0eQEISULF+Imi7vr25l6ntGYmqS5lIrQIEeze+CqUtPVItywE7ZQ==}
     engines: {node: '>=6'}
-    dev: false
 
   /ansi-escapes/3.2.0:
     resolution: {integrity: sha512-cBhpre4ma+U0T1oM5fXg7Dy1Jw7zzwv7lt/GoCpr+hDQJoYnKVPLL4dCvSEFMmQurOQvSrwT7SL/DAlhBI97RQ==}
@@ -5286,7 +5287,6 @@ packages:
     engines: {node: '>=8.6'}
     dependencies:
       ansi-colors: 4.1.2
-    dev: false
 
   /entities/3.0.1:
     resolution: {integrity: sha512-WiyBqoomrwMdFG1e0kqvASYfnlb0lp8M5o5Fw2OFq1hNZxxcNk8Ik0Xm7LxzBhuidnZB/UtBqVCgUz3kBOP51Q==}

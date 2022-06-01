@@ -2,7 +2,7 @@
 
 A powerful library for generating a Dockerfile file from arbitrary source codes.
 
-This library is under heavy development, and the API is not stable yet.
+This library is currently under heavy development and the API is not stable yet.
 
 See [Dockerpacks](https://cloud.weixin.qq.com/cli/terminology/dockerpacks.html) for more details.
 
@@ -21,9 +21,14 @@ See [Dockerpacks](https://cloud.weixin.qq.com/cli/terminology/dockerpacks.html) 
 - How is it different from Buildpacks?
   - A lot. But key difference is that we generate plain Dockerfile instead of built images.
 
+# Usage
+
+See source files in the `examples`.
+
 # Credits and Prior Art
 
 Dockerpacks is inspired by the following projects:
+
 - [Buildpacks](https://buildpacks.io/)
 - [cloud66-oss/starter](https://github.com/cloud66-oss/starter)
 
