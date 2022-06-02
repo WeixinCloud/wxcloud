@@ -77,7 +77,7 @@ function onCopy() {
 </script>
 
 <template>
-  <header class="text-xl container ma py-4 px-256px">
+  <header class="text-xl container ma py-4 px-256px bg-white">
     <div class="flex place-items-center justify-between">
       <a href="/" class="text-black text-2xl flex place-items-center">
         <img src="/images/logo.svg" alt="CLI Logo" class="w-64px" />
@@ -93,7 +93,7 @@ function onCopy() {
       </ul>
     </div>
   </header>
-  <main class="text-xl">
+  <main class="text-xl bg-white">
     <section class="py-88px container ma px-256px">
       <div class="flex justify-between">
         <div class="flex-none flex flex-col gap-24px">
