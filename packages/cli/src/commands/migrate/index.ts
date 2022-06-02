@@ -85,13 +85,13 @@ export class MigrateCommand extends Command {
               );
               if (!builder) {
                 messageHandler.pass(
-                  '没有找到合适的构造器，当前项目的语言或框架可能暂未被我们支持',
-                  'fatal'
+                  'error',
+                  '没有找到合适的构造器，当前项目的语言或框架可能暂未被我们支持'
                 );
-                messageHandler.pass('您也可以检查指定的路径是否正确', 'fatal');
+                messageHandler.pass('error', '您也可以检查指定的路径是否正确');
                 throw new Error('分析失败');
               } else {
-                messageHandler.pass(`即将使用 ${builder.group.label}`);
+                messageHandler.pass('info', `即将使用 ${builder.group.label}`);
                 ctx.builder = builder;
               }
             } catch (e) {
@@ -218,7 +218,7 @@ class CliMessageHandler implements MessageHandler {
     this.output = output;
   }
 
-  pass(message: string, level?: MessageLevel) {
+  pass(level: MessageLevel, message: string) {
     let output = '';
     switch (level) {
       case 'debug':
@@ -227,7 +227,7 @@ class CliMessageHandler implements MessageHandler {
       case 'warn':
         output = wrapWarn(message);
         break;
-      case 'fatal':
+      case 'error':
         output = wrapError(message);
         break;
       case 'info':
