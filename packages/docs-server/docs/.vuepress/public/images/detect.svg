@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1182.21" height="283" viewBox="0 0 1182.21 283">
+  <g id="Group_5" data-name="Group 5" transform="translate(-216.027 -313)">
+    <g id="Group_4" data-name="Group 4" transform="translate(221.027 313)">
+      <g id="Group_3" data-name="Group 3" transform="translate(0 16.97)">
+        <path id="Path_89" data-name="Path 89" d="M221.027,1857.2v244.814h212.48v-176.04L364.734,1857.2Z" transform="translate(-221.027 -1857.201)" fill="none" stroke="#adadad" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+        <path id="Path_90" data-name="Path 90" d="M374.6,1860.5v66.721h69.287" transform="translate(-233.273 -1858.356)" fill="none" stroke="#adadad" stroke-linecap="round" stroke-linejoin="round" stroke-width="10"/>
+        <path id="Path_91" data-name="Path 91" d="M275.6,455.4l-26.125,26.125L275.6,507.653" transform="translate(-201.339 -345.1)" fill="none" stroke="#07c160" stroke-linejoin="round" stroke-width="12" opacity="0.504"/>
+        <path id="Path_92" data-name="Path 92" d="M249.471,455.4,275.6,481.528l-26.125,26.125" transform="translate(-111.247 -345.1)" fill="none" stroke="#07c160" stroke-linejoin="round" stroke-width="12" opacity="0.504"/>
+        <path id="Path_93" data-name="Path 93" d="M344.481,455.4l-34.729,51.889" transform="translate(-220.787 -345.1)" fill="none" stroke="#07c160" stroke-width="12" opacity="0.504"/>
+      </g>
+      <rect id="Rectangle_10" data-name="Rectangle 10" width="240" height="74" rx="8" transform="translate(362.63 2)" fill="rgba(198,198,198,0.36)"/>
+      <text id="Python" transform="translate(482.63 49)" font-size="30" font-family="Menlo-Regular, Menlo"><tspan x="0" y="0">Python</tspan></text>
+      <rect id="Rectangle_11" data-name="Rectangle 11" width="240" height="73" rx="8" transform="translate(362.63 88)" fill="#a5e9c5"/>
+      <text id="NodeJS" transform="translate(482.63 136)" font-size="30" font-family="Menlo-Regular, Menlo"><tspan x="0" y="0">NodeJS</tspan></text>
+      <rect id="Rectangle_13" data-name="Rectangle 13" width="240" height="73" rx="8" transform="translate(362.63 210)" fill="rgba(198,198,198,0.36)"/>
+      <text id="_._._." data-name=" . . ." transform="translate(548.63 190)" fill="#646464" font-size="18" font-family="Menlo-Regular, Menlo" letter-spacing="-0.299em" opacity="0.458"><tspan x="0" y="0" xml:space="preserve"> . . .</tspan></text>
+      <text id="PHP" transform="translate(540.63 257)" font-size="30" font-family="Menlo-Regular, Menlo"><tspan x="0" y="0">PHP</tspan></text>
+      <rect id="Rectangle_14" data-name="Rectangle 14" width="386.948" height="281.586" rx="8" transform="translate(790.262)" fill="#a5e9c5"/>
+      <text id="Dockerfile" transform="translate(821.964 48.445)" font-size="29" font-family="Menlo-Regular, Menlo"><tspan x="0" y="0">Dockerfile</tspan></text>
+      <rect id="Rectangle_15" data-name="Rectangle 15" width="325.409" height="186.481" rx="8" transform="translate(821.964 73.66)" fill="#fff"/>
+      <text id="_FROM_node:lts_WORKDIR_app_..." data-name="+ FROM node:lts
+
++ WORKDIR /app
+
+..." transform="translate(840.612 113.714)" fill="#009547" font-size="29" font-family="Menlo-Regular, Menlo"><tspan x="0" y="0">+ FROM node:lts</tspan><tspan x="0" y="22"></tspan><tspan x="0" y="44">+ WORKDIR /app</tspan><tspan fill="#797979"><tspan x="0" y="66"></tspan><tspan x="0" y="88">...</tspan></tspan></text>
+      <path id="Path_97" data-name="Path 97" d="M80.83,0H43.416V13.127h21.55L0,78.093l9.3,9.3,65-64.931v21.55H87.429V5.9A6.6,6.6,0,0,0,80.83,0Z" transform="translate(703.266 64.066) rotate(45)" fill="#82e0af"/>
+    </g>
+    <line id="Line_1" data-name="Line 1" y1="94" x2="95" transform="translate(467.737 360.5)" fill="none" stroke="#eaeaea" stroke-width="3"/>
+    <line id="Line_3" data-name="Line 3" y1="28" x2="95" transform="translate(467.737 426.5)" fill="none" stroke="#a5e9c5" stroke-width="3"/>
+    <line id="Line_5" data-name="Line 5" x2="95" y2="94" transform="translate(467.737 454.5)" fill="none" stroke="#eaeaea" stroke-width="3"/>
+    <line id="Line_7" data-name="Line 7" x2="95" y2="28" transform="translate(467.737 454.5)" fill="none" stroke="#eaeaea" stroke-width="3"/>
+  </g>
+</svg>

@@ -1,9 +1,9 @@
 ---
-home: true
+layout: HomeLayout
 heroImage: /images/logo.svg
 heroImageDark: /images/logo-white.svg
 heroText: '@wxcloud/cli'
-tagline: 微信云服务 CLI 工具使用文档
+tagline: 微信云托管 CLI 工具使用文档
 actions:
 - text: 立即开始 →
   link: /guide

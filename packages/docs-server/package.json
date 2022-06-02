@@ -9,16 +9,22 @@
     "build-cdn": "vuepress build docs && node rewrite-cdn-urls.mjs 'https://static-index-4gtuqm3bfa95c963-1304825656.tcloudbaseapp.com'"
   },
   "devDependencies": {
+    "@unocss/preset-wind": "^0.37.1",
     "@vuepress/client": "next",
     "@vuepress/plugin-back-to-top": "next",
     "@vuepress/plugin-nprogress": "next",
+    "@vuepress/plugin-register-components": "2.0.0-beta.46",
     "@vuepress/plugin-search": "next",
+    "@vuepress/theme-default": "2.0.0-beta.46",
     "cheerio": "1.0.0-rc.11",
     "fast-glob": "^3.2.11",
-    "vuepress": "next",
-    "vue": "^3"
+    "sass": "^1.52.1",
+    "unocss": "^0.37.1",
+    "vue": "^3",
+    "vuepress": "next"
   },
   "dependencies": {
+    "@vueuse/core": "^8.6.0",
     "vuepress-plugin-right-anchor": "2.1.0-rc.2"
   }
 }

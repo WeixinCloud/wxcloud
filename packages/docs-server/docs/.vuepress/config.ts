@@ -1,10 +1,13 @@
-import { defaultTheme, defineUserConfig } from 'vuepress';
+import { defaultTheme, defineUserConfig, viteBundler } from 'vuepress';
 import { nprogressPlugin } from '@vuepress/plugin-nprogress';
 import { backToTopPlugin } from '@vuepress/plugin-back-to-top';
 import { rightAnchorPlugin } from 'vuepress-plugin-right-anchor';
+import { registerComponentsPlugin } from '@vuepress/plugin-register-components';
 import { searchPlugin } from '@vuepress/plugin-search';
 import { readdirSync } from 'fs';
+import Unocss from 'unocss/vite';
 import path from 'path';
+import presetWind from '@unocss/preset-wind';
 
 const docs = ['commands', 'features', 'terminology'].map(category =>
   readdirSync(path.join(__dirname, `../${category}`))
@@ -16,8 +19,24 @@ const docs = ['commands', 'features', 'terminology'].map(category =>
 export default defineUserConfig({
   base: '/cli/',
   lang: 'zh-CN',
-  title: '@wxcloud/cli',
-  description: '微信云服务 CLI 工具使用文档',
+  title: '微信云托管 CLI',
+  description: '微信云托管 CLI 工具使用文档',
+  bundler: viteBundler({
+    viteOptions: {
+      plugins: [
+        Unocss({
+          shortcuts: [
+            {
+              'framework-card':
+                'bg-#FFFFFF3B rounded-12px border border-1 border-#FFFFFFCE px-64px py-8px grid place-items-center',
+              'primary-button': 'bg-#07C160 px-84px py-20px color-white w-max rounded-8px cursor-pointer'
+            }
+          ],
+          presets: [presetWind()]
+        })
+      ]
+    }
+  }),
   head: [
     [
       'link',
@@ -85,7 +104,7 @@ export default defineUserConfig({
           {
             text: '原理',
             children: docs[2]
-          },
+          }
         ]
       }
     ]
@@ -98,6 +117,9 @@ export default defineUserConfig({
       name: 'toc',
       showDepth: 2,
       expand: { clickModeDefaultOpen: true, trigger: 'click' }
+    }),
+    registerComponentsPlugin({
+      componentsDir: path.resolve(__dirname, './components')
     })
   ]
 });

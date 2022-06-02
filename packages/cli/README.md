@@ -1,6 +1,6 @@
 # @wxcloud/cli
 
-微信云服务 CLI 工具
+微信云托管 CLI 工具
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 
