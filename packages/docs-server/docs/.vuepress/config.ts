@@ -1,4 +1,5 @@
-import { defaultTheme, defineUserConfig, viteBundler } from 'vuepress';
+import { defaultTheme, defineUserConfig } from 'vuepress';
+import { viteBundler } from '@vuepress/bundler-vite';
 import { nprogressPlugin } from '@vuepress/plugin-nprogress';
 import { backToTopPlugin } from '@vuepress/plugin-back-to-top';
 import { rightAnchorPlugin } from 'vuepress-plugin-right-anchor';
