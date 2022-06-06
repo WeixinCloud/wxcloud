@@ -1,14 +1,11 @@
 import { Command, flags } from '@oclif/command';
-import * as path from 'path';
 import cli from 'cli-ux';
-import * as fs from 'fs';
 import {
   checkLoginState,
   openQrCodeLogin,
   saveLoginState,
   waitForQrCodeLoginResult
 } from '../utils/auth';
-import axios from 'axios';
 
 export default class LoginCommand extends Command {
   static description = '登录 CLI 工具';
@@ -29,10 +26,10 @@ export default class LoginCommand extends Command {
 
   async loginWithQrCode() {
     const randstr = await openQrCodeLogin();
-    cli.action.start('等待扫码登录结果……');
+    cli.action.start('等待扫码登录结果');
     const { accessToken, refreshToken } = await waitForQrCodeLoginResult(randstr, 30 * 1000);
     cli.action.stop();
-    this.log('✅登录成功');
+    this.log('✅ 登录成功');
     console.log({ accessToken, refreshToken });
     // saveLoginToken();
   }
@@ -48,9 +45,9 @@ export default class LoginCommand extends Command {
 
     if (isValid) {
       await saveLoginState(appid, privateKey);
-      this.log('✅登录成功');
+      this.log('✅ 登录成功');
     } else {
-      this.error('❌登录失败，请检查 AppID 与私钥文件是否正确');
+      this.error('❌ 登录失败，请检查 AppID 与私钥文件是否正确', { exit: 201 });
     }
   }
 }

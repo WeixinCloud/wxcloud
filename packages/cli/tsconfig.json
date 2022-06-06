@@ -11,8 +11,14 @@
     "preserveSymlinks": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
+    "composite": true,
+    "noEmit": false
   },
   "include": ["src/**/*"],
-  "exclude": ["src/api/cloudapi/crawler"]
+  "ts-node": {
+    "swc": true,
+    "transpileOnly": true,
+    "files": true
+  }
 }
