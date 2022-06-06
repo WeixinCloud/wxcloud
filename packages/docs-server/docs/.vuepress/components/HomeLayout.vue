@@ -104,12 +104,12 @@ COMMANDS
           <img src="/images/logo.svg" alt="CLI Logo" class="w-40px" />
           <span class="ml-4">微信云托管 CLI</span>
         </a>
-        <ul class="list-none flex space-x-12 text-xl">
+        <ul class="list-none flex space-x-12 text-xl m-0">
           <li>
-            <a class="font-500 text-gray" href="/cli/guide">文档</a>
+            <a class="font-500 text-black" href="/cli/guide">文档</a>
           </li>
           <li>
-            <a class="font-500 text-gray" href="https://cloud.weixin.qq.com/cloudrun" target="_blank">云托管控制台</a>
+            <a class="font-500 text-black" href="https://cloud.weixin.qq.com/cloudrun" target="_blank">云托管控制台</a>
           </li>
         </ul>
       </div>
@@ -121,7 +121,7 @@ COMMANDS
             <h1 class="m-0 text-dark-900 text-3xl font-bold">使用微信云托管 CLI<br>部署你的服务</h1>
             <span class="text-gray-500">将任意代码容器化并运行在云托管中</span>
             <div class="flex place-items-center">
-              <div class="border border-1 border-gray-400 rounded-6px px-16px py-12px font-mono flex items-center">
+              <div class="border-solid border-1 border-gray-400 rounded-6px px-16px py-12px font-mono flex items-center">
                 <span class="pointer-events-none select-none mr-8px">$ </span>
                 <span class="mr-24px">{{ INSTALL_COMMAND }}</span>
                 <img @click="onCopy" class="cursor-pointer" src="/images/copy_icon.svg" />
@@ -187,7 +187,7 @@ COMMANDS
           <img class="col-span-2 block w-full" src="/images/detect.svg" />
         </div>
       </section>
-      <section class="bg-emerald-500 py-88px">
+      <section class="bg-green-500 py-88px">
         <div class="section grid grid-cols-3 gap-24px">
           <div class="col-span-2 grid grid-cols-2 grid-rows-4 lg:grid-cols-4 lg:grid-rows-2 gap-32px">
             <div class="framework-card">
