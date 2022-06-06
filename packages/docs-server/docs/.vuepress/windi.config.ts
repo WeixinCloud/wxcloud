@@ -3,7 +3,7 @@ import { defineConfig } from 'windicss/helpers';
 export default defineConfig({
   // preflight: false,
   extract: {
-    include: ['**/*.{vue,html,jsx,tsx,ts}'],
+    include: ['*/**/HomeLayout.vue'],
     exclude: [
       'node_modules',
       '.git',
