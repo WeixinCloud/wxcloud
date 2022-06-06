@@ -7,9 +7,7 @@ import { registerComponentsPlugin } from '@vuepress/plugin-register-components';
 import { searchPlugin } from '@vuepress/plugin-search';
 import { readdirSync } from 'fs';
 import WindiCSS from 'vite-plugin-windicss'
-// import Unocss from 'unocss/vite';
 import path from 'path';
-import presetWind from '@unocss/preset-wind';
 
 const docs = ['commands', 'features', 'terminology'].map(category =>
   readdirSync(path.join(__dirname, `../${category}`))
