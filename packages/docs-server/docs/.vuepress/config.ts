@@ -27,6 +27,18 @@ export default defineUserConfig({
         WindiCSS({
           root: 'docs/.vuepress',
           transformCSS: 'pre',
+          config: {
+            extract: {
+              include: ['*/**/HomeLayout.vue']
+            },
+            shortcuts: {
+              'framework-card':
+                'bg-emerald-500 rounded-12px border border-1 border-gray-200 px-24px py-8px grid place-items-center',
+              'primary-button':
+                'bg-emerald-500 px-84px py-20px text-white w-max rounded-8px cursor-pointer',
+                'section': 'mx-auto px-24px sm:px-64px lg:px-128px xl:px-256px'
+            }
+          }
         })
       ]
     }
