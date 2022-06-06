@@ -6,7 +6,8 @@ import { rightAnchorPlugin } from 'vuepress-plugin-right-anchor';
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components';
 import { searchPlugin } from '@vuepress/plugin-search';
 import { readdirSync } from 'fs';
-import Unocss from 'unocss/vite';
+import WindiCSS from 'vite-plugin-windicss'
+// import Unocss from 'unocss/vite';
 import path from 'path';
 import presetWind from '@unocss/preset-wind';
 
@@ -25,15 +26,18 @@ export default defineUserConfig({
   bundler: viteBundler({
     viteOptions: {
       plugins: [
-        Unocss({
-          shortcuts: [
-            {
-              'framework-card':
-                'bg-#FFFFFF3B rounded-12px border border-1 border-#FFFFFFCE px-64px py-8px grid place-items-center',
-              'primary-button': 'bg-#07C160 px-84px py-20px color-white w-max rounded-8px cursor-pointer'
-            }
-          ],
-          presets: [presetWind()]
+        // Unocss({
+        //   shortcuts: [
+        //     {
+        //       'framework-card':
+        //         'bg-#FFFFFF3B rounded-12px border border-1 border-#FFFFFFCE px-64px py-8px grid place-items-center',
+        //       'primary-button': 'bg-#07C160 px-84px py-20px color-white w-max rounded-8px cursor-pointer'
+        //     }
+        //   ],
+        //   presets: [presetWind()]
+        // })
+        WindiCSS({
+          root: 'docs/.vuepress',
         })
       ]
     }
