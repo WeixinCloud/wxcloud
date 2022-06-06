@@ -15,6 +15,11 @@ const command = ref('');
 const state = reactive({ copied: false });
 const commandHistory = ref<CommandHistoryItem[]>([]);
 
+function onCopy() {
+  copy()
+  state.copied = true
+}
+
 function onCommand() {
   const trimmed = command.value.trim();
   const commandLine = `$ ${trimmed}`;
@@ -71,14 +76,10 @@ COMMANDS
   migrate  迁移项目到云托管`
   });
 }
-function onCopy() {
-  copy()
-  state.copied = true
-}
 </script>
 
 <template>
-  <header class="text-xl  mx-auto px-256px bg-white">
+  <header class="text-xl mx-auto px-256px bg-white text-gray-700">
     <div class="flex place-items-center justify-between pt-40px">
       <a href="/" class="text-black text-xl flex place-items-center">
         <img src="/images/logo.svg" alt="CLI Logo" class="w-40px" />
@@ -94,14 +95,14 @@ function onCopy() {
       </ul>
     </div>
   </header>
-  <main class="text-xl bg-white">
+  <main class="text-xl bg-white text-gray-700">
     <section class="py-88px  mx-auto px-256px">
       <div class="flex justify-between">
         <div class="flex-none flex flex-col gap-24px">
-          <h1 class="m-0 color-black text-3xl font-bold">使用微信云托管 CLI<br>部署你的服务</h1>
+          <h1 class="m-0 text-dark-900 text-3xl font-bold">使用微信云托管 CLI<br>部署你的服务</h1>
           <span class="text-gray-500">将任意代码容器化并运行在云托管中</span>
           <div class="flex place-items-center">
-            <div class="border border-1 border-#707070 rounded-6px px-16px py-12px font-mono flex items-center">
+            <div class="border border-1 border-gray-400 rounded-6px px-16px py-12px font-mono flex items-center">
               <span class="pointer-events-none select-none mr-8px">$ </span>
               <span class="mr-24px">{{ INSTALL_COMMAND }}</span>
               <img @click="onCopy" class="cursor-pointer" src="/images/copy_icon.svg" />
@@ -123,7 +124,9 @@ function onCopy() {
             <p class="my-0 text-gray-300"># 输入 `wxcloud help` 来查看所有命令</p>
             <template v-for="item of commandHistory">
               <p class="my-0">{{ item.commandLine }}</p>
-              <p class="my-0 mb-18px color-#eaecef"><pre class="m-0 font-mono">{{ item.result }}</pre></p>
+              <p class="my-0 mb-18px text-gray-400">
+              <pre class="m-0 font-mono">{{ item.result }}</pre>
+              </p>
             </template>
             <p class="mt-0 mb-18px">$&nbsp;<input
                 class="outline-none border-none bg-transparent text-white text-xl font-mono" v-model="command"
@@ -135,17 +138,17 @@ function onCopy() {
     <section class="py-88px bg-gray-100">
       <div class=" mx-auto px-256px grid grid-cols-3 gap-64px">
         <div class="space-y-4">
-          <h3 class="text-3xl color-black">轻松部署</h3>
+          <h3 class="text-3xl text-dark-900">轻松部署</h3>
           <p>
             无需编写 Dockerfile 配置和繁琐的上线流程，只需要选择你喜爱的框架，执行 wxcloud deploy，即可轻松部署到云托管。
           </p>
         </div>
         <div class="space-y-4">
-          <h3 class="text-3xl color-black">性能优越</h3>
+          <h3 class="text-3xl text-dark-900">性能优越</h3>
           <p>支持利用 CDN 分发静态文件，充分利用全球加速和服务端完整能力的优势，降低容器流量使用和负载。</p>
         </div>
         <div class="space-y-4">
-          <h3 class="text-3xl color-black">容器化伸缩</h3>
+          <h3 class="text-3xl text-dark-900">容器化伸缩</h3>
           <p>每一个云托管服务都是容器化的，利用云托管的自动扩缩容能力，可以让你的业务无惧流量波动，自动伸缩，无需操心运维和预估流量。</p>
         </div>
       </div>
@@ -153,7 +156,7 @@ function onCopy() {
     <section class="py-120px">
       <div class=" mx-auto px-256px grid grid-cols-3 gap-64px place-items-center">
         <div class="space-y-4">
-          <h3 class="text-3xl color-black">无需容器化知识<br>业务代码轻松上云</h3>
+          <h3 class="text-3xl text-dark-900">无需容器化知识<br>业务代码轻松上云</h3>
           <p>
             云托管 CLI 借助内置的项目特征集，结合云托管最佳实践，能够自动分析现有项目并自动生成可用的 Dockerfile。
           </p>
@@ -161,7 +164,7 @@ function onCopy() {
         <img class="col-span-2 block w-full" src="/images/detect.svg" />
       </div>
     </section>
-    <section class="bg-green-500 py-88px">
+    <section class="bg-emerald-500 py-88px">
       <div class="mx-auto px-256px grid grid-cols-3 gap-24px">
         <div class="col-span-2 grid grid-cols-4 grid-rows-2 gap-32px">
           <div class="framework-card">
@@ -200,7 +203,7 @@ function onCopy() {
     <section class="px-64px py-88px">
       <div class=" mx-auto grid place-items-center">
         <div class="flex flex-col items-center space-y-6">
-          <h3 class="text-3xl color-black">使用云托管部署你的下一个服务</h3>
+          <h3 class="text-3xl text-dark-900">使用云托管部署你的下一个服务</h3>
           <a href="https://cloud.weixin.qq.com/cloudrun" target="_blank">
             <div role="button" class="primary-button">
               立即体验
@@ -210,7 +213,7 @@ function onCopy() {
       </div>
     </section>
   </main>
-  <footer>
+  <footer class="bg-white">
     <div class="text-center text-gray-500 p-64px">
       MIT Licensed | Copyright © 2022 WeChat CloudRun. All Rights Reserved
     </div>

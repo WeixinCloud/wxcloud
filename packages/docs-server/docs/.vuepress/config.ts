@@ -6,7 +6,7 @@ import { rightAnchorPlugin } from 'vuepress-plugin-right-anchor';
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components';
 import { searchPlugin } from '@vuepress/plugin-search';
 import { readdirSync } from 'fs';
-import WindiCSS from 'vite-plugin-windicss'
+import WindiCSS from 'vite-plugin-windicss';
 import path from 'path';
 
 const docs = ['commands', 'features', 'terminology'].map(category =>
@@ -24,18 +24,19 @@ export default defineUserConfig({
   bundler: viteBundler({
     viteOptions: {
       plugins: [
-        // Unocss({
-        //   shortcuts: [
-        //     {
-        //       'framework-card':
-        //         'bg-#FFFFFF3B rounded-12px border border-1 border-#FFFFFFCE px-64px py-8px grid place-items-center',
-        //       'primary-button': 'bg-#07C160 px-84px py-20px color-white w-max rounded-8px cursor-pointer'
-        //     }
-        //   ],
-        //   presets: [presetWind()]
-        // })
         WindiCSS({
           root: 'docs/.vuepress',
+          config: {
+            extract: {
+              include: ['*/**/HomeLayout.vue']
+            },
+            shortcuts: {
+              'framework-card':
+                'bg-emerald-500 rounded-12px border border-1 border-gray-200 px-24px py-8px grid place-items-center',
+              'primary-button':
+                'bg-emerald-500 px-84px py-20px text-white w-max rounded-8px cursor-pointer'
+            }
+          }
         })
       ]
     }
