@@ -17,7 +17,6 @@ export async function zipDir(src: string, dest: string, ignore?: string[]) {
       {
         cwd: src,
         ignore: ignore || [],
-        skip: ignore || [],
         dot: true
       },
       {}
