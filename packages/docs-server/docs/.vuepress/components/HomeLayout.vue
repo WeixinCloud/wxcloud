@@ -128,7 +128,7 @@ COMMANDS
               </div>
               <span class="ml-4 opacity-60" v-if="state.copied">已复制 ✓</span>
             </div>
-            <a href="/cli/guide">
+            <a href="/cli/guide" class="w-max">
               <div role="button" class="primary-button">
                 查看文档
               </div>
@@ -148,7 +148,7 @@ COMMANDS
                 <pre class="m-0 font-mono">{{ item.result }}</pre>
                 </p>
               </template>
-              <p class="mt-0 mb-18px cursor-text flex items-baseline" @click="showingPrompt = true">$&nbsp;<span
+              <p class="mt-0 mb-18px last:mb-0 cursor-text flex items-baseline" @click="showingPrompt = true">$&nbsp;<span
                   class="text-xl cursorContainer" v-if="!showingPrompt">{{ command }}</span><input v-if="showingPrompt"
                   ref="promptInputRef" :size="command.length" :style="{ width: !command.length ? 0 : 'auto' }"
                   class="outline-none border-none bg-transparent text-white text-xl font-mono caret-transparent"
