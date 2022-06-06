@@ -1,7 +1,7 @@
 import { defineConfig } from 'windicss/helpers';
 
 export default defineConfig({
-  preflight: false,
+  // preflight: false,
   extract: {
     include: ['**/*.{vue,html,jsx,tsx,ts}'],
     exclude: [
