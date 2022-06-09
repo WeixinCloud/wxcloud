@@ -27,6 +27,10 @@ export default class ConfigServiceCommand extends Command {
     region: REGION_COMMAND_FLAG,
     envId: flags.string({ char: 'e', description: '环境ID' }),
     serviceName: flags.string({ char: 's', description: '服务名称' }),
+    noConfirm: flags.boolean({
+      description: '更新配置时跳过二次确认',
+      default: false
+    }),
     cpu: number({
       char: 'c',
       description: 'CPU'
@@ -108,7 +112,7 @@ export default class ConfigServiceCommand extends Command {
           ...config
         };
         cli.info(JSON.stringify(conf, null, 2));
-        const confirmed = await cli.confirm('确认要更新吗？');
+        const confirmed = flags.noConfirm || (await cli.confirm('确认要更新吗？'));
         if (!confirmed) {
           return;
         }
