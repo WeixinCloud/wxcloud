@@ -47,13 +47,11 @@ export default class ConfigServiceCommand extends Command {
       char: 'x',
       description: '最大实例数'
     }),
-    policyType: flags.enum({
-      options: ['cpu', 'mem'],
-      description: '调度策略类型'
+    cpuThreshold: flags.integer({
+      description: 'CPU 使用率调度策略阈值'
     }),
-    policyThreshold: flags.integer({
-      char: 't',
-      description: '调度策略阈值'
+    memThreshold: flags.integer({
+      description: '内存使用率调度策略阈值'
     }),
     envParams: flags.string({
       char: 'p',
@@ -75,19 +73,42 @@ export default class ConfigServiceCommand extends Command {
       envId,
       serverName: serviceName
     });
+
+    const config: Record<string, any> = {};
+    const policyDetails: Record<string, string | number>[] = [];
+
+    if (flags.cpuThreshold) {
+      if (flags.cpuThreshold > 100) {
+        this.error('CPU 使用率调度策略阈值只能介于 0 到 100 之间');
+      }
+      policyDetails.push({
+        policyType: 'cpu',
+        policyThreshold: flags.cpuThreshold
+      });
+    }
+
+    if (flags.memThreshold) {
+      if (flags.memThreshold > 100) {
+        this.error('内存使用率调度策略阈值只能介于 0 到 100 之间');
+      }
+      policyDetails.push({
+        policyType: 'mem',
+        policyThreshold: flags.memThreshold
+      });
+    }
+
+    if (flags.cpuThreshold || flags.memThreshold) {
+      Object.assign(config, {
+        // 这两个旧属性是后端必须的，即使没有实质作用
+        policyType: '',
+        policyThreshold: 0,
+        policyDetails
+      });
+    }
+
     // merge old config with new config
     // remove undefined
-    const config: Record<string, any> = {};
-    [
-      'cpu',
-      'mem',
-      'minNum',
-      'maxNum',
-      'policyType',
-      'policyThreshold',
-      'envParams',
-      'customLog'
-    ].forEach(key => {
+    ['cpu', 'mem', 'minNum', 'maxNum', 'envParams', 'customLog'].forEach(key => {
       if (flags[key] !== undefined) {
         config[key] = flags[key];
         if (key === 'envParams') {
@@ -100,6 +121,7 @@ export default class ConfigServiceCommand extends Command {
         }
       }
     });
+
     const { action } = args;
 
     switch (action) {
