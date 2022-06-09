@@ -125,7 +125,8 @@ COMMANDS
             <h1 class="m-0 text-dark-900 text-3xl font-bold">使用微信云托管 CLI<br>部署你的服务</h1>
             <span class="text-gray-500">将任意代码容器化并运行在云托管中</span>
             <div class="flex place-items-center">
-              <div class="border-solid border-1 border-gray-400 rounded-6px px-16px py-12px font-mono flex items-center">
+              <div
+                class="border-solid border-1 border-gray-400 rounded-6px px-16px py-12px font-mono flex items-center">
                 <span class="pointer-events-none select-none mr-8px">$ </span>
                 <span class="mr-24px">{{ INSTALL_COMMAND }}</span>
                 <img @click="onCopy" class="cursor-pointer" src="/images/copy_icon.svg" />
@@ -152,12 +153,13 @@ COMMANDS
                 <pre class="m-0 font-mono">{{ item.result }}</pre>
                 </p>
               </template>
-              <p class="mt-0 mb-18px last:mb-0 cursor-text flex items-baseline" @click="showingPrompt = true">$&nbsp;<span
-                  class="text-xl cursorContainer" v-if="!showingPrompt">{{ command }}</span><input v-if="showingPrompt"
-                  ref="promptInputRef" :size="command.length" :style="{ width: !command.length ? 0 : 'auto', padding: 0 }"
+              <p class="mt-0 mb-18px last:mb-0 cursor-text flex items-baseline" @click="showingPrompt = true">
+                $&nbsp;<span class="text-xl cursorContainer" v-if="!showingPrompt">{{ command.replace(/ /g, '&nbsp;')
+                }}</span><input v-if="showingPrompt" ref="promptInputRef" :size="command.length"
+                  :style="{ width: !command.length ? 0 : 'auto', padding: 0 }"
                   class="outline-none border-none bg-transparent text-white text-xl font-mono caret-transparent"
-                  autocorrect="off" autocomplete="off" spellcheck="false"
-                  v-model="command" @keydown.enter="onCommand" @focusout="showingPrompt = false" /><span class="cursor"
+                  autocorrect="off" autocomplete="off" spellcheck="false" v-model="command" @keydown.enter="onCommand"
+                  @focusout="showingPrompt = false" /><span class="cursor"
                   :style="{ marginLeft: !command ? '0' : (showingPrompt ? '-4px' : '3px') }"></span></p>
             </div>
           </div>
