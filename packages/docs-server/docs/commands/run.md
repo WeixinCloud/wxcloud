@@ -32,6 +32,32 @@ OPTIONS
   --targetDir=targetDir          目标目录
 ```
 
+### 实际举例
+
+在 wxrun-id 环境下的，demo 服务创建一个版本，以线上镜像作为源，端口为 80，不展示部署步骤，不确认，直接返回。
+
+```bash:no-line-numbers
+wxcloud run:deploy --envId wxrun-id --serviceName demo --libraryImage demo-001-20220425111535 --containerPort 80 --releaseType FULL --remark 测试备注 --noConfirm --detach
+```
+
+在 wxrun-id 环境下的，demo 服务创建一个版本，代码在当前命令运行目录，Dockerfile文件为 Dockerfile, 容器暴露端口为 80
+
+```bash:no-line-numbers
+wxcloud run:deploy --targetDir=. --dockerfile=Dockerfile --containerPort=80 --envId=wxrun-id --serviceName=demo
+```
+
+在 wxrun-id 环境下的，demo 服务创建一个版本，项目目录和端口配置按照之前最后的配置。
+
+```bash:no-line-numbers
+wxcloud run:deploy --envId=wxrun-id --serviceName=demo --override
+```
+
+在 wxrun-id 环境下的，demo 服务创建一个版本，项目目录和端口配置按照之前最后的配置，直接执行不二次确认。
+
+```bash:no-line-numbers
+wxcloud run:deploy --noConfirm --envId=wxrun-id --serviceName=demo --override
+```
+
 ## run:rollback
 
 回退云托管服务版本

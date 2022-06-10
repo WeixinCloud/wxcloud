@@ -22,3 +22,11 @@ OPTIONS
   -r, --remotePath=remotePath         目标目录
 
 ```
+
+### 实际举例
+
+在 wxrun-id 环境下上传本地 /foo/bar/baz 目录下的所有文件到对象存储的根目录下。
+
+```bash:no-line-numbers
+wxcloud storage:upload /foo/bar/baz --envId=wxrun-id --mode=storage --remotePath=/
+```
