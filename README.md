@@ -12,7 +12,7 @@
 <p align="center">
   <a href="https://developers.weixin.qq.com/miniprogram/dev/wxcloudrun/src/basic/intro.html"><strong>文档</strong></a> ·
   <a href="https://developers.weixin.qq.com/community/minihome/list/1919566493118201863/2"><strong>功能周报</strong></a> ·
-  <a href="https://cloud.weixin.qq.com"><strong>CLI</strong></a>
+  <a href="https://cloud.weixin.qq.com/cli/"><strong>CLI</strong></a>
 </p>
 <br/>
 
