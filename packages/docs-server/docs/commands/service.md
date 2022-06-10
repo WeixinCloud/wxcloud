@@ -47,9 +47,9 @@ OPTIONS
 
 ```
 
-## service:config
+## service:config <VersionSince version="2.0.9" />
 
-更新服务配置（CLI >2.0.9）
+更新服务配置
 
 ### 基本用法
 
@@ -87,7 +87,7 @@ OPTIONS
 wxcloud service:config update --cpuThreshold=60 --memThreshold=60
 ```
 
-## service:remove
+## service:remove <VersionSince version="2.0.9" />
 
 删除服务
 
