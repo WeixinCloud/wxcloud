@@ -1,0 +1,273 @@
+{
+  "name": "vscode-docker-wx-cloudbase",
+  "displayName": "Weixin Cloudbase Docker Extension",
+  "description": "Helps debugging Weixin Cloudbase containers more easily",
+  "version": "2.2.29",
+  "publisher": "weixin-cloudbase",
+  "author": "alankldeng",
+  "icon": "resources/cloudrun.png",
+  "enableProposedApi": false,
+  "engines": {
+    "vscode": "^1.49.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:vscodeDockerWxCloudbase.activate",
+    "onCommand:vscodeDockerWxCloudbase.messenger.callback",
+    "onView:wxContainers"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "views": {
+      "dockerView": [
+        {
+          "id": "wxContainers",
+          "name": "Weixin Cloudbase Containers"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "wxContainers.refresh",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "wxContainers.refreshNode",
+        "title": "Refresh",
+        "icon": {
+          "light": "resources/light/refresh.svg",
+          "dark": "resources/dark/refresh.svg"
+        }
+      },
+      {
+        "command": "wxContainers.rebuildStart",
+        "title": "Rebuild and Start"
+      },
+      {
+        "command": "wxContainers.start",
+        "title": "Start"
+      },
+      {
+        "command": "wxContainers.liveCoding",
+        "title": "Live Coding"
+      },
+      {
+        "command": "wxContainers.restart",
+        "title": "Restart"
+      },
+      {
+        "command": "wxContainers.stop",
+        "title": "Stop"
+      },
+      {
+        "command": "wxContainers.attachShell",
+        "title": "Attach Shell"
+      },
+      {
+        "command": "wxContainers.viewLogs",
+        "title": "View Logs"
+      },
+      {
+        "command": "wxContainers.debug",
+        "title": "Debug (NodeJS)"
+      },
+      {
+        "command": "wxContainers.browseViaWxServer",
+        "title": "Open in browser (via WX server)"
+      },
+      {
+        "command": "wxContainers.browseDirectly",
+        "title": "Open in browser (no WX auth)"
+      },
+      {
+        "command": "wxContainers.attachService",
+        "title": "Attach Weixin Devtools"
+      },
+      {
+        "command": "wxContainers.detachService",
+        "title": "Detach Weixin Devtools"
+      },
+      {
+        "command": "wxContainers.openConfiguration",
+        "title": "Open Extension Configuration",
+        "icon": {
+          "light": "resources/light/settings.svg",
+          "dark": "resources/dark/settings.svg"
+        }
+      },
+      {
+        "command": "wxContainers.addProxyNode",
+        "title": "Add VPC Proxy node for local debug access",
+        "icon": {
+          "light": "resources/light/add.svg",
+          "dark": "resources/dark/add.svg"
+        }
+      }
+    ],
+    "menus": {
+      "commandPalette": [],
+      "view/title": [
+        {
+          "command": "wxContainers.refresh",
+          "when": "view == wxContainers",
+          "group": "navigation"
+        },
+        {
+          "command": "wxContainers.openConfiguration",
+          "when": "view == wxContainers",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "wxContainers.attachShell",
+          "when": "view == wxContainers && viewItem =~ /^(local|proxy)_running$/i"
+        },
+        {
+          "command": "wxContainers.rebuildStart",
+          "when": "view == wxContainers && viewItem =~ /^local_(created|dead|exited|paused|terminated|paused|restarting|running)$/i"
+        },
+        {
+          "command": "wxContainers.liveCoding",
+          "when": "view == wxContainers && viewItem =~ /^(local)_(local|created|dead|exited|paused|terminated)$/i"
+        },
+        {
+          "command": "wxContainers.start",
+          "when": "view == wxContainers && viewItem =~ /^(local|proxy)_(local|created|dead|exited|paused|terminated)$/i"
+        },
+        {
+          "command": "wxContainers.restart",
+          "when": "view == wxContainers && viewItem =~ /^(local|proxy)_running$/i"
+        },
+        {
+          "command": "wxContainers.stop",
+          "when": "view == wxContainers && viewItem =~ /^(local|proxy)_(paused|restarting|running)$/i"
+        },
+        {
+          "command": "wxContainers.viewLogs",
+          "when": "view == wxContainers && viewItem =~ /^(local|proxy)_(paused|restarting|running)$/i"
+        },
+        {
+          "command": "wxContainers.browseViaWxServer",
+          "when": "view == wxContainers && viewItem =~ /^local_(paused|restarting|running)$/i"
+        },
+        {
+          "command": "wxContainers.browseDirectly",
+          "when": "view == wxContainers && viewItem =~ /^local_(paused|restarting|running)$/i"
+        },
+        {
+          "command": "wxContainers.attachService",
+          "when": "view == wxContainers && viewItem =~ /^running_running$/i"
+        },
+        {
+          "command": "wxContainers.detachService",
+          "when": "view == wxContainers && viewItem =~ /^running_running$/i"
+        }
+      ]
+    },
+    "configuration": [
+      {
+        "title": "Weixin Cloudbase Container Local Debug",
+        "properties": {
+          "wxcloud.containerDebug.VPC ProxyNodes": {
+            "type": "string",
+            "description": "如果需要在本地调试时访问 VPC 内的地址，在此填入域名:端口号或IP:端口号，多个以分号分隔。填入后，在插件面板中会列出相应节点，右键启动成功后，本地调试的容器访问相应地址时即会被路由到线上 VPC 相应节点。\n\nDeclare all the hostname:port & ip:port that your local container may access in the VPC. Once declared, you can enable each one of them in the extension side panel. Enable them and accesses to these addresses will route to their online counterpart in the VPC accordingly. Multiple entries can be separated by ;",
+            "scope": "window"
+          },
+          "wxcloud.containerDebug.VPC ProxyTargetEnvID": {
+            "type": "string",
+            "description": "云环境 ID。访问 VPC 内地址/使用开放接口服务时，会被路由到该环境对应的 VPC 内的地址/以该环境身份调用。\n\nCloud EnvID. Access to local VPC proxy nodes will route to VPC of the given cloud env.",
+            "scope": "window"
+          },
+          "wxcloud.containerDebug.appid": {
+            "type": "string",
+            "description": "小程序/公众号 AppID。\n\nMiniProgram/Official Account AppID.",
+            "scope": "window"
+          },
+          "wxcloud.containerDebug.cliKey": {
+            "type": "string",
+            "description": "微信云托管 CLI 秘钥。用于和微信后台交互获取本地调试所需信息。指引文档：https://developers.weixin.qq.com/miniprogram/dev/wxcloudrun/src/guide/cli/\n\nWxCloud CLI key. Used to communicate with Weixin server and obtain data needed for local debug.",
+            "scope": "window"
+          },
+          "wxcloud.containerDebug.hostPort": {
+            "type": "number",
+            "description": "容器调试端口，默认为 27081，如果端口不可用，将自动分配其他端口。\n\nContainer debug port.",
+            "scope": "window",
+            "default": 27081
+          },
+          "wxcloud.containerDebug.wxPort": {
+            "type": "number",
+            "description": "微信服务调试端口，需要和微信开发者工具中的服务调试端口一致，默认为 27082，如果端口不可用，将自动分配其他端口。\n\nWeixin server debug port. Must be the same as the port in WeChat Devtool.",
+            "scope": "window",
+            "default": 27082
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "node scripts/prepublish.js",
+    "dev": "gulp copy --target=public && tsc -watch -p ./",
+    "lint": "eslint . --ext .ts,.tsx",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node --main-fields=module,main",
+    "esbuild": "rm -rf ./out && npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "watch": "tsc -watch -p ./",
+    "esbuild-prod": "gulp inc-version && rm -rf ./out && npm run esbuild-base -- --minify",
+    "build": "npm run build-public && npm run build-ide",
+    "build-ide": "rm -rf ./out_ide && gulp build --target=ide",
+    "build-public": "rm -rf ./out && gulp build --target=public",
+    "build-ide-dev": "rm -rf ./out_ide && gulp build --target=ide --mode=development",
+    "build-public-dev": "rm -rf ./out && gulp build --target=public --mode=development"
+  },
+  "devDependencies": {
+    "@types/dockerode": "^3.2.1",
+    "@types/http-proxy": "^1.17.8",
+    "@types/lodash": "^4.14.172",
+    "@types/mkdirp": "^0.5.2",
+    "@types/node": "^12.12.0",
+    "@types/rimraf": "^2.0.2",
+    "@types/tar": "^4.0.4",
+    "@types/tmp": "^0.2.0",
+    "@types/vscode": "^1.45.0",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "esbuild": "^0.14.25",
+    "eslint": "^7.32.0",
+    "gulp": "^4.0.2",
+    "merge-stream": "^2.0.0",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.0.2",
+    "vsce": "^2.7.0",
+    "vscode-nls-dev": "^3.3.2",
+    "webpack": "^5.33.2",
+    "webpack-cli": "^4.6.0",
+    "yargs": "^17.0.1"
+  },
+  "dependencies": {
+    "@wxcloud/core": "workspace:*",
+    "docker-file-parser": "^1.0.7",
+    "dockerode": "3.2.1",
+    "fs-extra": "^9.1.0",
+    "ftp": "^0.3.10",
+    "get-port": "^5.1.1",
+    "get-proxy-settings": "^0.1.13",
+    "got": "^11.8.2",
+    "hpagent": "^0.1.1",
+    "http-proxy": "^1.18.1",
+    "jsonc-parser": "^3.0.0",
+    "lodash": "^4.17.21",
+    "minimist": "^1.2.6",
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.6.2",
+    "tar": "^6.1.7",
+    "tmp": "^0.2.1",
+    "ws": "^7.5.3"
+  }
+}

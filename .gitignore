@@ -6,6 +6,8 @@ tsconfig.tsbuildinfo
 /lib
 packages/**/lib
 packages/**/dist
+packages/**/out
+packages/**/out_ide
 /package-lock.json
 /tmp
 cloud-api-modified
