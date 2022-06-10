@@ -86,3 +86,24 @@ OPTIONS
 ```bash:no-line-numbers
 wxcloud service:config update --cpuThreshold=60 --memThreshold=60
 ```
+
+## service:remove
+
+删除服务
+
+### 基本用法
+
+```bash:no-line-numbers
+wxcloud service:remove
+```
+
+### 命令行参数
+
+```bash:no-line-numbers
+OPTIONS
+  -e, --envId=envId                             环境ID
+  -h, --help                                    查看帮助
+  -s, --serviceName=serviceName                 服务名称
+  --noConfirm                                   跳过删除确认
+  --region=ap-shanghai|ap-guangzhou|ap-beijing  [default: ap-shanghai] 地域
+```
