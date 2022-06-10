@@ -33,8 +33,7 @@ describe('service', () => {
       .stdout()
       .command(['service:list', '-e', TEST_ENV_ID, '--json'])
       .it('should return correct services list', ctx => {
-        // @ts-ignore
-        expect(ctx.stdout).toMatchSnapshot();
+        expect(ctx.stdout).to.contains('"code":0,"errmsg":"success","data":[{"');
       });
   });
 
@@ -60,8 +59,24 @@ describe('service', () => {
       ])
       .it('should update service config successfully');
   });
+
+  describe('remove', () => {
+    // wait until the service is created and updated successfully
+    delay(30 * 1000);
+
+    test
+      .stdout()
+      .command(['service:remove', '-e', TEST_ENV_ID, '-s', TEST_SERVICE_ID, '--noConfirm'])
+      .it('should delete service successfully');
+  });
 });
 
 describe('logout', () => {
   test.stdout().command(['logout']).it('should logout successfully');
 });
+
+function delay(timeMs: number) {
+  return it('should delay', done => {
+    setTimeout(() => done(), timeMs);
+  }).timeout(timeMs + 100);
+}
