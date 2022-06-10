@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es2019",
+		"lib": ["ES2019"],
+		"outDir": "out",
+		"sourceMap": true,
+		"rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "miniprogram-ci": ["src/libs/miniprogram-ci"]
+    },
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+	},
+	"exclude": [
+		"node_modules",
+		".vscode-test",
+		// "src/libs/miniprogram-ci/node_modules",
+		"src/libs",
+	]
+}

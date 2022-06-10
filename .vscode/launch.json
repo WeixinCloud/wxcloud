@@ -12,6 +12,22 @@
       "type": "node"
     },
     {
+      "name": "Debug WXCloud Extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+          "--extensionDevelopmentPath=${workspaceRoot}/packages/vscode-extension/"
+      ],
+      "stopOnEntry": false,
+      "sourceMaps": true,
+      "outFiles": [
+          "${workspaceRoot}/packages/vscode-extension/out/src/**/*.js"
+      ],
+      "cwd": "${workspaceFolder}/packages/vscode-extension/",
+      "preLaunchTask": "npm: esbuild-watch"
+  },
+    {
       "type": "pwa-node",
       "request": "launch",
       "name": "Launch Program",

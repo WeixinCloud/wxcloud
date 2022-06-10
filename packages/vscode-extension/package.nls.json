@@ -1,0 +1,4 @@
+{
+  "conf.wxcloud.containerDebug.vpcProxyNodes": "Declare all the hostname:port & ip:port that your local container may access in the VPC. Once declared, you can enable each one of them in the extension side panel. Enable them and accesses to these addresses will route to their online counterpart in the VPC accordingly. Multiple entries can be separated by ;",
+  "conf.wxcloud.containerDebug.vpcProxyTargetEnvId": "Cloud EnvID. Access to local VPC proxy nodes will route to VPC of the given cloud env."
+}

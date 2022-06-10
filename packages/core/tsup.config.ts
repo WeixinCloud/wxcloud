@@ -5,7 +5,7 @@ export default defineConfig({
   clean: true,
   outDir: 'dist',
   dts: true,
-  format: ['cjs'],
+  format: ['cjs', 'esm'],
   target: 'node12',
   tsconfig: 'tsconfig.json'
 });

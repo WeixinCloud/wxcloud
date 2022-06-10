@@ -1,0 +1,15 @@
+.vscode/**
+.vscode-test/**
+out/test/**
+out_ide/**
+node_modules
+test/**
+src/**
+**/*.map
+.gitignore
+tsconfig.json
+webpack.config*
+gulpfile.js
+.eslint*
+.git*
+CONTRIBUTING.md

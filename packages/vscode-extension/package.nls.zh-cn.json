@@ -1,0 +1,4 @@
+{
+  "conf.wxcloud.containerDebug.vpcProxyNodes": "如果需要在本地调试时访问 VPC 内的地址，在此填入域名:端口号或IP:端口号，多个以分号分隔。填入后，在插件面板中会列出相应节点，右键启动成功后，本地调试的容器访问相应地址时即会被路由到线上 VPC 相应节点。",
+  "conf.wxcloud.containerDebug.vpcProxyTargetEnvId": "云环境 ID。访问 VPC 内地址时，会被路由到该环境对应的 VPC 内的地址。"
+}
