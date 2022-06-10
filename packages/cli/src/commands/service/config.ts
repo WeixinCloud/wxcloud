@@ -78,7 +78,7 @@ export default class ConfigServiceCommand extends Command {
     const policyDetails: Record<string, string | number>[] = [];
 
     if (flags.cpuThreshold) {
-      if (flags.cpuThreshold > 100) {
+      if (flags.cpuThreshold < 0 || flags.cpuThreshold > 100) {
         this.error('CPU 使用率调度策略阈值只能介于 0 到 100 之间');
       }
       policyDetails.push({
@@ -88,7 +88,7 @@ export default class ConfigServiceCommand extends Command {
     }
 
     if (flags.memThreshold) {
-      if (flags.memThreshold > 100) {
+      if (flags.memThreshold < 0 || flags.memThreshold > 100) {
         this.error('内存使用率调度策略阈值只能介于 0 到 100 之间');
       }
       policyDetails.push({
