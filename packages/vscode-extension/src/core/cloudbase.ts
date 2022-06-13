@@ -304,9 +304,9 @@ class Cloudbase {
       for (const mount of ext.wxServerInfo.mounts) {
         if (mount.type === '.tencentcloudbase') {
           // if host is windows, we need to convert mount.path into win32 like command
-          if (process.platform === 'win32') {
-            console.log(path.win32.normalize(mount.path))
-            mount.path = path.win32.normalize(mount.path)
+          if (process.platform === 'win32' && (path as any).toNamespacedPath) {
+            console.log((path as any).toNamespacedPath(mount.path))
+            mount.path = (path as any).toNamespacedPath(mount.path)
           }
           cmd += ` --mount type=bind,source="${mount.path}",target=/.tencentcloudbase,readonly`;
         }
