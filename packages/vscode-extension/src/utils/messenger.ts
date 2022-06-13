@@ -11,7 +11,7 @@ const MAX_CONNECT_RETRY_TIME = 3; // default to 3
 
 // utilities and types
 interface IStringKeyMap<T = any> {
-  [propName: string]: T
+  [propName: string]: T;
 }
 type FN<R = any> = (...args: any[]) => R;
 const delay = (t: number) => new Promise<void>(res => setTimeout(res, t));
@@ -21,12 +21,12 @@ const getCallbackID = (function () {
     callbackID += 1;
     return callbackID;
   };
-}());
+})();
 function wrappedCallback(callback: FN<void>, resolve: FN<void>) {
   const callbackID = getCallbackID();
   this.callbackMap[callbackID] = {
     callback,
-    resolve,
+    resolve
   };
   return callbackID;
 }
@@ -44,12 +44,12 @@ export class MessengerClient {
 
   private callbackMap: {
     [id: number]: {
-      callback: FN<void>
-      resolve: FN<void>
-    }
+      callback: FN<void>;
+      resolve: FN<void>;
+    };
   } = {};
   private onEvent: {
-    [eventName: string]: any
+    [eventName: string]: any;
   } = {};
 
   public connect(port: number, token: string, mainProtocol: string, subProtocol: string) {
@@ -68,16 +68,14 @@ export class MessengerClient {
   }
 
   private addEventListener() {
-    if (!this.ws) throw new Error('[Messenger] Fatal: adding ws event handler before initialization');
+    if (!this.ws)
+      throw new Error('[Messenger] Fatal: adding ws event handler before initialization');
     this.ws.onopen = this.onOpen.bind(this);
     this.ws.onclose = this.onClose.bind(this);
     this.ws.onerror = this.onError.bind(this);
     this.ws.onmessage = this.onMessage.bind(this);
     this.registerCallback((msg: IStringKeyMap) => {
-      const {
-        command,
-        data,
-      } = msg;
+      const { command, data } = msg;
 
       if (command === 'INVOKE_CALLBACK') {
         const { callbackID, res } = data;
@@ -106,21 +104,19 @@ export class MessengerClient {
       this.retryCount += 1;
       this.reconnect();
     } else {
-      console.error('[Messenger] Fatal: Failed to connect with Wechat IDE. Ensure your protocol is correct and you have added to ExtensionProtocols in IDE.');
+      console.error(
+        '[Messenger] Fatal: Failed to connect with Wechat IDE. Ensure your protocol is correct and you have added to ExtensionProtocols in IDE.'
+      );
     }
   }
 
-  private onMessage(event: {
-    data: WebSocket.Data;
-    type: string;
-    target: WebSocket;
-  }) {
+  private onMessage(event: { data: WebSocket.Data; type: string; target: WebSocket }) {
     try {
       if (typeof event.data !== 'string') {
         throw new Error(`invalid event data encoding with invalid type: ${typeof event.data}`);
       }
       const msg = JSON.parse(event.data);
-      this.callback.forEach((fn) => {
+      this.callback.forEach(fn => {
         try {
           fn.call(null, msg);
         } catch (error) {
@@ -170,14 +166,20 @@ export class MessengerClient {
   }
 
   get invoke() {
-    return (command: string, data: any, cb?: FN<void>) => new Promise((resolve) => {
-      const safeCb = typeof cb === 'function' ? cb : () => { /* noop */ };
-      this.send({
-        command,
-        data,
-        callbackID: wrappedCallback.call(this, safeCb, resolve),
+    return (command: string, data: any, cb?: FN<void>) =>
+      new Promise(resolve => {
+        const safeCb =
+          typeof cb === 'function'
+            ? cb
+            : () => {
+                /* noop */
+              };
+        this.send({
+          command,
+          data,
+          callbackID: wrappedCallback.call(this, safeCb, resolve)
+        });
       });
-    });
   }
 
   get on() {
@@ -198,11 +200,20 @@ export function activateMessenger(context: vscode.ExtensionContext): MessengerCl
     messenger.connect(port, token, MESSENGER_MAIN_PROTOCOL, MESSENGER_SUB_PROTOCOL);
   };
   // no-op activate function
-  context.subscriptions.push(vscode.commands.registerCommand('vscodeDockerWxCloudbase.activate', () => {}));
-  context.subscriptions.push(vscode.commands.registerCommand(EXTENSION_MESSENGER_CALLBACK_COMMAND, commandHandler));
-  vscode.commands.executeCommand(EXTENSION_MESSENGER_REGISTER_COMMAND, {
-    callback: EXTENSION_MESSENGER_CALLBACK_COMMAND,
-    protocol: MESSENGER_MAIN_PROTOCOL,
-  }).then(() => {}, () => {});
+  context.subscriptions.push(
+    vscode.commands.registerCommand('vscodeDockerWxCloudbase.activate', () => {})
+  );
+  context.subscriptions.push(
+    vscode.commands.registerCommand(EXTENSION_MESSENGER_CALLBACK_COMMAND, commandHandler)
+  );
+  vscode.commands
+    .executeCommand(EXTENSION_MESSENGER_REGISTER_COMMAND, {
+      callback: EXTENSION_MESSENGER_CALLBACK_COMMAND,
+      protocol: MESSENGER_MAIN_PROTOCOL
+    })
+    .then(
+      () => {},
+      () => {}
+    );
   return messenger;
 }

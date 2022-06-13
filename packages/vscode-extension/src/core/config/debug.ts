@@ -21,11 +21,14 @@ export async function getDebugConfig(refresh?: boolean) {
     lazyWatchDebugConfigJSON();
   }
 
-  const filePath = path.join(cloudbase.targetWorkspace.uri.fsPath, '.cloudbase/container/debug.json');
+  const filePath = path.join(
+    cloudbase.targetWorkspace.uri.fsPath,
+    '.cloudbase/container/debug.json'
+  );
   if (!fse.existsSync(filePath)) {
     debugConfig = {
       containers: [],
-      config: {},
+      config: {}
     };
     await fse.outputFile(filePath, JSON.stringify(debugConfig));
   } else {
@@ -36,7 +39,10 @@ export async function getDebugConfig(refresh?: boolean) {
 
 export async function overwriteDebugConfig(config: any) {
   debugConfig = clone(config);
-  const filePath = path.join(cloudbase.targetWorkspace.uri.fsPath, '.cloudbase/container/debug.json');
+  const filePath = path.join(
+    cloudbase.targetWorkspace.uri.fsPath,
+    '.cloudbase/container/debug.json'
+  );
   await fse.outputFile(filePath, JSON.stringify(debugConfig));
 }
 export async function updateContainerConfig(config: Record<string, IContainerConfigJSON>) {
@@ -46,7 +52,10 @@ export async function updateContainerConfig(config: Record<string, IContainerCon
   if (config) {
     debugConfig.config = config;
   }
-  const filePath = path.join(cloudbase.targetWorkspace.uri.fsPath, '.cloudbase/container/debug.json');
+  const filePath = path.join(
+    cloudbase.targetWorkspace.uri.fsPath,
+    '.cloudbase/container/debug.json'
+  );
   await fse.outputFile(filePath, JSON.stringify(debugConfig, null, 2));
 }
 export async function updateContainerId(name: string, containerId?: string, mode?: 'compose') {
@@ -64,13 +73,16 @@ export async function updateContainerId(name: string, containerId?: string, mode
         containerId,
         domain: '',
         ip: '',
-        mode,
+        mode
       });
     }
   } else if (container) {
     delete container.containerId;
   }
-  const filePath = path.join(cloudbase.targetWorkspace.uri.fsPath, '.cloudbase/container/debug.json');
+  const filePath = path.join(
+    cloudbase.targetWorkspace.uri.fsPath,
+    '.cloudbase/container/debug.json'
+  );
   await fse.outputFile(filePath, JSON.stringify(debugConfig, null, 2));
 }
 
@@ -80,11 +92,13 @@ function lazyWatchDebugConfigJSON() {
   }
   debugConfigJsonWatcher = vscode.workspace.createFileSystemWatcher({
     base: path.join(cloudbase.targetWorkspace.uri.fsPath, '.cloudbase', 'container'),
-    pattern: 'debug.json',
+    pattern: 'debug.json'
   });
 
   const onChange = async (uri: vscode.Uri) => {
-    debugConfig = jsonc.parse(Buffer.from(await vscode.workspace.fs.readFile(uri)).toString('utf8'));
+    debugConfig = jsonc.parse(
+      Buffer.from(await vscode.workspace.fs.readFile(uri)).toString('utf8')
+    );
     if (debugConfig.config) {
       updateContainerConfigDirect(debugConfig.config);
     }

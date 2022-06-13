@@ -14,10 +14,10 @@ import { getConfiguration } from '../configuration/configuration';
 import { updateContainerConfig } from './config';
 
 interface IGetCreateContainerArgsResult {
-  args: Partial<Dockerode.ContainerCreateOptions>
-  cmd: string
-  hostPort: number
-  containerPort: number
+  args: Partial<Dockerode.ContainerCreateOptions>;
+  cmd: string;
+  hostPort: number;
+  containerPort: number;
 }
 
 class Cloudbase {
@@ -30,7 +30,7 @@ class Cloudbase {
   targetWorkspace: vscode.WorkspaceFolder;
 
   constructor() {
-    this.dockerode = new Dockerode;
+    this.dockerode = new Dockerode();
     this.getCloudcontainerRoot();
   }
 
@@ -41,7 +41,7 @@ class Cloudbase {
 
     // detect workspace
     // type A: workspace as container
-    getWorkspaceFolders().forEach((p) => {
+    getWorkspaceFolders().forEach(p => {
       if (fse.existsSync(path.join(p.uri.fsPath, 'Dockerfile'))) {
         // assume workspace folder is a service
         this.isWorkspaceAsContainer = true;
@@ -51,7 +51,7 @@ class Cloudbase {
     });
 
     // type B: workspace as miniprogram, read project.config.json
-    getWorkspaceFolders().forEach((p) => {
+    getWorkspaceFolders().forEach(p => {
       const filePath = path.join(p.uri.fsPath, 'project.config.json');
       if (fse.existsSync(filePath)) {
         const json = JSON.parse(fse.readFileSync(filePath, 'utf8'));
@@ -74,11 +74,15 @@ class Cloudbase {
       }
     } else {
       if (process.env.WX_ENV_IDE) {
-        console.log('no target workspace is available, entering third-party editor integration mode.');
+        console.log(
+          'no target workspace is available, entering third-party editor integration mode.'
+        );
         // eslint-disable-next-line prefer-destructuring
         this.targetWorkspace = vscode.workspace.workspaceFolders[0];
       } else {
-        throw new Error('找不到 Dockerfile 或 project.config.json. No Dockerfile or project.config.json not exists');
+        throw new Error(
+          '找不到 Dockerfile 或 project.config.json. No Dockerfile or project.config.json not exists'
+        );
       }
     }
   }
@@ -98,16 +102,18 @@ class Cloudbase {
       config.getContainerConfig(refresh),
       new Promise<IWXContainerInfo[]>((resolve, reject) => {
         if (this.isWorkspaceAsContainer) {
-          resolve([{
-            name: this.targetWorkspace.name.toLowerCase(),
-            path: this.cloudcontainerRoot,
-            uri: this.targetWorkspace.uri,
-            location: 'cloudcontainerRoot',
-          }]);
+          resolve([
+            {
+              name: this.targetWorkspace.name.toLowerCase(),
+              path: this.cloudcontainerRoot,
+              uri: this.targetWorkspace.uri,
+              location: 'cloudcontainerRoot'
+            }
+          ]);
         }
         if (!cloudcontainerRoot) return resolve([]);
         const cloudcontainerRootUri = vscode.Uri.file(cloudcontainerRoot);
-        vscode.workspace.fs.readDirectory(cloudcontainerRootUri).then((items) => {
+        vscode.workspace.fs.readDirectory(cloudcontainerRootUri).then(items => {
           const list: IWXContainerInfo[] = [];
           for (const item of items) {
             if (item[1] === vscode.FileType.Directory && !item[0].startsWith('.')) {
@@ -115,17 +121,19 @@ class Cloudbase {
                 name: item[0].toLowerCase(),
                 path: path.posix.join(cloudcontainerRoot, item[0]),
                 uri: vscode.Uri.joinPath(cloudcontainerRootUri, item[0]),
-                location: 'cloudcontainerRoot',
+                location: 'cloudcontainerRoot'
               });
             }
           }
           resolve(list);
         }, reject);
       }),
-      $(() => cloudbase.dockerode.listContainers({
-        all: true,
-      })),
-      this.ensureNetworkBridge(),
+      $(() =>
+        cloudbase.dockerode.listContainers({
+          all: true
+        })
+      ),
+      this.ensureNetworkBridge()
     ]);
 
     for (const localInfo of localList) {
@@ -155,15 +163,19 @@ class Cloudbase {
     ext.backend.notify({
       type: 'CONTAINERS_UPDATED',
       data: {
-        list: localList,
-      },
+        list: localList
+      }
     });
 
     this.containers = localList;
     return this.containers;
   }
 
-  async updateContainerInfo(name: string, containerInfo?: Dockerode.ContainerInfo, mode?: 'compose') {
+  async updateContainerInfo(
+    name: string,
+    containerInfo?: Dockerode.ContainerInfo,
+    mode?: 'compose'
+  ) {
     if (!this.containers) {
       await this.getContainers();
     }
@@ -178,7 +190,7 @@ class Cloudbase {
         path: path.posix.join(this.cloudcontainerRoot, name),
         uri: vscode.Uri.joinPath(cloudcontainerRootUri, name),
         container: containerInfo,
-        location: 'cloudcontainerRoot',
+        location: 'cloudcontainerRoot'
       });
     }
 
@@ -197,14 +209,19 @@ class Cloudbase {
 
     if (container.missingContainerConfigFile) {
       // prompt init config json
-      const { title } = await vscode.window.showWarningMessage('服务目录下缺少指定容器配置的 .cloudbase/container/debug.json（包括容器监听端口等配置），将创建默认配置，可按需修改，确认后手动重试。\nMissing config under service folder, the file is used to specify container options such as listening port. Proceed to create a default config file which you can modify according to your needs, and retry start container manually again.', {
-        modal: true,
-      }, {
-        title: 'Confirm',
-      }, {
-        title: 'Cancel',
-        isCloseAffordance: true,
-      });
+      const { title } = await vscode.window.showWarningMessage(
+        '服务目录下缺少指定容器配置的 .cloudbase/container/debug.json（包括容器监听端口等配置），将创建默认配置，可按需修改，确认后手动重试。\nMissing config under service folder, the file is used to specify container options such as listening port. Proceed to create a default config file which you can modify according to your needs, and retry start container manually again.',
+        {
+          modal: true
+        },
+        {
+          title: 'Confirm'
+        },
+        {
+          title: 'Cancel',
+          isCloseAffordance: true
+        }
+      );
 
       if (title === 'Cancel') {
         throw new Error('cancelled');
@@ -212,18 +229,25 @@ class Cloudbase {
 
       // create new config file by calling debug
       updateContainerConfig({
-        [container.name]: getDefaultConfig(),
+        [container.name]: getDefaultConfig()
       });
       // open config file automatically
-      await vscode.commands.executeCommand('vscode.open', vscode.Uri.file(path.join(this.targetWorkspace.uri.fsPath, '.cloudbase', 'container', 'debug.json')));
+      await vscode.commands.executeCommand(
+        'vscode.open',
+        vscode.Uri.file(
+          path.join(this.targetWorkspace.uri.fsPath, '.cloudbase', 'container', 'debug.json')
+        )
+      );
       // createDefaultConfigFile(vscode.Uri.joinPath(container.uri, 'container.config.json'));
-      throw new Error('请配置 debug.json 后重新启动容器。Please configure debug.json and restart container.');
+      throw new Error(
+        '请配置 debug.json 后重新启动容器。Please configure debug.json and restart container.'
+      );
       // throw new Error(`config file not found: ${vscode.Uri.joinPath(container.uri, serviceName, 'container.config.json')}, if file is added, refresh first`)
     }
 
     const debugConfig = await config.getDebugConfig();
     const containerDebugConfig = debugConfig.containers?.find(c => c.name === serviceName) || {
-      name: serviceName,
+      name: serviceName
     };
 
     let cmd = ' --network wxcb0';
@@ -245,7 +269,7 @@ class Cloudbase {
 
     // port, use configuration if available
     const hostPort = await getPort({
-      port: getConfiguration().ports.host,
+      port: getConfiguration().ports.host
     });
 
     // we dont care if this port conflict or not since wx server is singleton
@@ -288,18 +312,20 @@ class Cloudbase {
       args: {
         HostConfig: {
           PortBindings: {
-            [`${containerPort}/tcp`]: [{
-              HostPort: hostPort,
-            }],
+            [`${containerPort}/tcp`]: [
+              {
+                HostPort: hostPort
+              }
+            ]
           },
-          Memory: container.config.mem,
+          Memory: container.config.mem
           // no option equivalent to --cpus
         },
-        Env: env,
+        Env: env
       },
       cmd,
       hostPort,
-      containerPort,
+      containerPort
     };
   }
 
@@ -319,7 +345,7 @@ class Cloudbase {
       // }))
       await runDockerCommand({
         name: 'init',
-        command: 'docker network create --driver=bridge --subnet=10.0.0.0/8 wxcb0',
+        command: 'docker network create --driver=bridge --subnet=10.0.0.0/8 wxcb0'
       });
     }
   }
@@ -330,7 +356,7 @@ class Cloudbase {
     }
     this.projectConfigJsonWatcher = vscode.workspace.createFileSystemWatcher({
       base: this.targetWorkspace.uri.fsPath,
-      pattern: 'project.config.json',
+      pattern: 'project.config.json'
     });
 
     const onChange = async () => {
@@ -355,7 +381,7 @@ class Cloudbase {
     }
     this.containersWatcher = vscode.workspace.createFileSystemWatcher({
       base: this.targetWorkspace.uri.fsPath,
-      pattern: '*',
+      pattern: '*'
     });
 
     const onChange = () => ext.wxContainersProvider.refresh();
@@ -364,8 +390,7 @@ class Cloudbase {
   }
 }
 
-export const cloudbase = new Cloudbase;
-
+export const cloudbase = new Cloudbase();
 
 // let projectConfigJsonWatcher: vscode.FileSystemWatcher
 // let containersWatcher: vscode.FileSystemWatcher
@@ -376,4 +401,3 @@ export function getWorkspaceFolders() {
   // compatible with vscode 1.32
   return vscode.workspace.workspaceFolders;
 }
-

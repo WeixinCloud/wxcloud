@@ -22,5 +22,5 @@ export default {
   backend,
   wxContainersProvider,
   wxContainersTreeView,
-  wxServerInfo,
+  wxServerInfo
 };

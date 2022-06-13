@@ -2,17 +2,16 @@ import * as vscode from 'vscode';
 import ext from '../core/global';
 
 interface ICommonCommandHandlingOptions {
-  showError?: boolean
-  throwError?: boolean
-  refreshOnFinish?: boolean
+  showError?: boolean;
+  throwError?: boolean;
+  refreshOnFinish?: boolean;
 }
 
-export function withCommonCommandHandling(fn: (...$args: any[]) => any, options: ICommonCommandHandlingOptions = {}) {
-  const {
-    showError = true,
-    throwError = true,
-    refreshOnFinish = true,
-  } = options;
+export function withCommonCommandHandling(
+  fn: (...$args: any[]) => any,
+  options: ICommonCommandHandlingOptions = {}
+) {
+  const { showError = true, throwError = true, refreshOnFinish = true } = options;
 
   return async (...args: any[]) => {
     try {
@@ -27,4 +26,3 @@ export function withCommonCommandHandling(fn: (...$args: any[]) => any, options:
     }
   };
 }
-

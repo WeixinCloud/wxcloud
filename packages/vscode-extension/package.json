@@ -229,6 +229,7 @@
   "devDependencies": {
     "@types/dockerode": "^3.2.1",
     "@types/http-proxy": "^1.17.8",
+    "@types/js-yaml": "^4.0.5",
     "@types/lodash": "^4.14.172",
     "@types/mkdirp": "^0.5.2",
     "@types/node": "^12.12.0",
@@ -261,6 +262,7 @@
     "got": "^11.8.2",
     "hpagent": "^0.1.1",
     "http-proxy": "^1.18.1",
+    "js-yaml": "^4.1.0",
     "jsonc-parser": "^3.0.0",
     "lodash": "^4.17.21",
     "minimist": "^1.2.6",

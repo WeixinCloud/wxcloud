@@ -328,6 +328,7 @@ importers:
     specifiers:
       '@types/dockerode': ^3.2.1
       '@types/http-proxy': ^1.17.8
+      '@types/js-yaml': ^4.0.5
       '@types/lodash': ^4.14.172
       '@types/mkdirp': ^0.5.2
       '@types/node': ^12.12.0
@@ -350,6 +351,7 @@ importers:
       gulp: ^4.0.2
       hpagent: ^0.1.1
       http-proxy: ^1.18.1
+      js-yaml: ^4.1.0
       jsonc-parser: ^3.0.0
       lodash: ^4.17.21
       merge-stream: ^2.0.0
@@ -377,6 +379,7 @@ importers:
       got: 11.8.3
       hpagent: 0.1.2
       http-proxy: 1.18.1
+      js-yaml: 4.1.0
       jsonc-parser: 3.0.0
       lodash: 4.17.21
       minimist: 1.2.6
@@ -388,6 +391,7 @@ importers:
     devDependencies:
       '@types/dockerode': 3.3.9
       '@types/http-proxy': 1.17.9
+      '@types/js-yaml': 4.0.5
       '@types/lodash': 4.14.182
       '@types/mkdirp': 0.5.2
       '@types/node': 12.20.55
@@ -2998,6 +3002,10 @@ packages:
       '@types/istanbul-lib-report': 3.0.0
     dev: true
 
+  /@types/js-yaml/4.0.5:
+    resolution: {integrity: sha512-FhpRzf927MNQdRZP0J5DLIdTXhjLYzeUTmLAu69mnVksLH9CJY3IuSeEgbKUki7GQZm0WqDkGzyxju2EZGD2wA==}
+    dev: true
+
   /@types/jscodeshift/0.11.5:
     resolution: {integrity: sha512-7JV0qdblTeWFigevmwFUgROXX395F+MQx6v0YqPn8Bx0B4Sng6alEejz9PENzgLYpG+zL0O4tGdBzc4gKZH8XA==}
     dependencies:
@@ -4335,7 +4343,6 @@ packages:
 
   /argparse/2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
-    dev: true
 
   /argv-formatter/1.0.0:
     resolution: {integrity: sha1-oMoMvCmltz6Dbuvhy/bF4OTrgvk=}
@@ -9479,7 +9486,6 @@ packages:
     hasBin: true
     dependencies:
       argparse: 2.0.1
-    dev: true
 
   /jsbn/0.1.1:
     resolution: {integrity: sha1-peZUwuWi3rXyAdls77yoDA7y9RM=}

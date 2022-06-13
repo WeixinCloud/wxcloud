@@ -2,9 +2,9 @@ import { HttpProxyAgent, HttpsProxyAgent } from 'hpagent';
 import { getConfiguration } from '../configuration/configuration';
 
 interface IAgentInfo {
-  proxyURL: string
-  http: HttpProxyAgent
-  https: HttpsProxyAgent
+  proxyURL: string;
+  http: HttpProxyAgent;
+  https: HttpsProxyAgent;
 }
 
 const agents: Record<string, IAgentInfo> = {};
@@ -20,14 +20,13 @@ export const getProxyAgent = (): IAgentInfo | undefined => {
       proxyURL,
       http: new HttpProxyAgent({
         keepAlive: true,
-        proxy: proxyURL,
+        proxy: proxyURL
       }),
       https: new HttpsProxyAgent({
         keepAlive: true,
-        proxy: proxyURL,
-      }),
+        proxy: proxyURL
+      })
     };
   }
   return agents[proxyURL];
 };
-

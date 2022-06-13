@@ -25,15 +25,17 @@ export async function getContainerConfig(refresh?: boolean) {
   if (cloudbase.isWorkspaceAsContainer) {
     try {
       const configUri = vscode.Uri.joinPath(cloudbase.targetWorkspace.uri, 'container.config.json');
-      const json = jsonc.parse(Buffer.from(await vscode.workspace.fs.readFile(configUri)).toString('utf8'));
+      const json = jsonc.parse(
+        Buffer.from(await vscode.workspace.fs.readFile(configUri)).toString('utf8')
+      );
       containerConfigs = {
-        [cloudbase.targetWorkspace.name.toLowerCase()]: json,
+        [cloudbase.targetWorkspace.name.toLowerCase()]: json
       };
       // write containerConfigs into debug config
       updateContainerConfig(containerConfigs);
       // give warning
       vscode.window.showWarningMessage(
-        'container.config.json 已自动合并至 .cloudbase/container/debug.config.json，原配置文件将不再生效，请更新 debug.config.json 以使用新的配置。',
+        'container.config.json 已自动合并至 .cloudbase/container/debug.config.json，原配置文件将不再生效，请更新 debug.config.json 以使用新的配置。'
       );
     } catch (e) {
       containerConfigs = {};
@@ -49,7 +51,7 @@ export async function getContainerConfig(refresh?: boolean) {
   if (!cloudcontainerRoot) return;
   const rootUri = vscode.Uri.file(cloudcontainerRoot);
   return new Promise<typeof containerConfigs>((resolve, reject) => {
-    vscode.workspace.fs.readDirectory(rootUri).then(async (items) => {
+    vscode.workspace.fs.readDirectory(rootUri).then(async items => {
       try {
         const config: Record<string, IContainerConfigJSON> = {};
 
@@ -57,7 +59,9 @@ export async function getContainerConfig(refresh?: boolean) {
           try {
             if (item[1] === vscode.FileType.Directory) {
               const configUri = vscode.Uri.joinPath(rootUri, item[0], 'container.config.json');
-              const json = jsonc.parse(Buffer.from(await vscode.workspace.fs.readFile(configUri)).toString('utf8'));
+              const json = jsonc.parse(
+                Buffer.from(await vscode.workspace.fs.readFile(configUri)).toString('utf8')
+              );
               config[item[0].toLowerCase()] = json;
             }
           } catch (e) {
@@ -68,7 +72,7 @@ export async function getContainerConfig(refresh?: boolean) {
         // write containerConfigs into debug config
         updateContainerConfig(containerConfigs);
         vscode.window.showWarningMessage(
-          'container.config.json 已自动合并至 .cloudbase/container/debug.config.json，原配置文件将不再生效，请更新 debug.config.json 以使用新的配置',
+          'container.config.json 已自动合并至 .cloudbase/container/debug.config.json，原配置文件将不再生效，请更新 debug.config.json 以使用新的配置'
         );
         resolve(config);
       } catch (e) {
@@ -101,7 +105,7 @@ export const getDefaultConfig = (): IContainerConfigJSON => ({
   envParams: {},
   customLogs: 'stdout',
   containerPort: 80,
-  initialDelaySeconds: 2,
+  initialDelaySeconds: 2
 });
 
 const DEFAULT_CONFIG_FILE = `// 配置文件格式为 jsonc，支持注释
@@ -137,9 +141,8 @@ const DEFAULT_CONFIG_FILE = `// 配置文件格式为 jsonc，支持注释
 
 export async function createDefaultConfigFile(uri: vscode.Uri) {
   await vscode.workspace.fs.writeFile(uri, new Uint8Array(Buffer.from(DEFAULT_CONFIG_FILE)));
-  vscode.workspace.openTextDocument(uri).then(async (doc) => {
+  vscode.workspace.openTextDocument(uri).then(async doc => {
     await vscode.languages.setTextDocumentLanguage(doc, 'jsonc');
     await vscode.window.showTextDocument(doc, 1, false);
   });
 }
-

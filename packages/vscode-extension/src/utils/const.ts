@@ -1,4 +1,3 @@
-
 // status=(created|restarting|running|removing|paused|exited|dead|terminated)
 export const DockerStatusToIconName: Record<string, string> = {
   created: 'Stop',
@@ -8,5 +7,5 @@ export const DockerStatusToIconName: Record<string, string> = {
   paused: 'Pause',
   exited: 'Stop',
   terminated: 'Stop',
-  dead: 'Error',
+  dead: 'Error'
 };

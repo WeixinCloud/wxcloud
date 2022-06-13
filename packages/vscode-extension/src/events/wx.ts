@@ -8,7 +8,7 @@ export function onServerInfo(data: IWXServerInfo) {
 }
 
 interface IStartDebugOptions {
-  name?: string
+  name?: string;
 }
 
 export function onStartDebug(options: IStartDebugOptions) {
@@ -17,5 +17,3 @@ export function onStartDebug(options: IStartDebugOptions) {
     vscode.commands.executeCommand('wxContainers.start', options);
   }
 }
-
-

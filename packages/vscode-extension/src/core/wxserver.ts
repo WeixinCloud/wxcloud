@@ -17,7 +17,7 @@ interface IMapping {
 interface ILocalWxServerConfig {
   port: number;
   getMappings: () => Promise<IMapping[]>;
-  backend: CoreBackendService
+  backend: CoreBackendService;
 }
 
 export interface IDebugAuth {
@@ -48,7 +48,7 @@ export class LocalWxServer {
   port: string;
   mounts: { type: string; path: string }[] = [];
   debugAuth: IDebugAuth | undefined;
-  
+
   constructor(config: ILocalWxServerConfig) {
     this.config = config;
     // ensure mountPath is available
@@ -142,7 +142,7 @@ export class LocalWxServer {
       return;
     }
     this.debugAuth = await this.config.backend._invokeWxApi({
-      api: '/wxa-dev-qbase/gettcbtoken',
+      api: '/wxa-dev-qbase/gettcbtoken'
     });
     if (!this.debugAuth.cloudbaseaccesstoken) {
       // no access token, show warning message

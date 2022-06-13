@@ -9,38 +9,43 @@ import { getConfiguration } from '../configuration/configuration';
 import type { IWXContainerId, IWXContainerInfo } from '../types';
 import { ensureRemoteProxySetup } from '../core/image';
 export class WXContainersProvider implements vscode.TreeDataProvider<IWXContainerId> {
-  public onDidChangeTreeDataEmitter: vscode.EventEmitter<IWXContainerId | null> = new vscode.EventEmitter<IWXContainerId | null>();
-  readonly onDidChangeTreeData: vscode.Event<IWXContainerId | null> = this.onDidChangeTreeDataEmitter.event;
+  public onDidChangeTreeDataEmitter: vscode.EventEmitter<IWXContainerId | null> =
+    new vscode.EventEmitter<IWXContainerId | null>();
+  readonly onDidChangeTreeData: vscode.Event<IWXContainerId | null> =
+    this.onDidChangeTreeDataEmitter.event;
 
   localContainers: IWXContainerInfo[] = [];
   hostList: Dockerode.ContainerInfo[] = [];
 
   readonly credentialsId: IWXContainerId = {
     type: 'credentials',
-    name: 'Important: Enter MiniProgram AppID and CLI Key',
+    name: 'Important: Enter MiniProgram AppID and CLI Key'
   };
 
   readonly runningFolderId: IWXContainerId = {
     type: 'running',
     name: 'Running Containers',
-    folder: true,
+    folder: true
   };
 
   readonly localFolderId: IWXContainerId = {
     type: 'local',
     name: 'Local Containers',
-    folder: true,
+    folder: true
   };
 
   readonly proxyFolderId: IWXContainerId = {
     type: 'proxy',
     name: 'Proxy nodes for VPC access',
-    folder: true,
+    folder: true
   };
 
   private editor: vscode.TextEditor;
   private autoRefresh = true;
-  private refreshAll = throttle(this.onDidChangeTreeDataEmitter.fire.bind(this.onDidChangeTreeDataEmitter, undefined), 500);
+  private refreshAll = throttle(
+    this.onDidChangeTreeDataEmitter.fire.bind(this.onDidChangeTreeDataEmitter, undefined),
+    500
+  );
   private firstTimeEnsureRemoteProxy = true;
 
   // readonly debugServerFolderId: IWXContainerId = {
@@ -49,8 +54,7 @@ export class WXContainersProvider implements vscode.TreeDataProvider<IWXContaine
   // 	folder: true,
   // }
 
-  constructor(private context: vscode.ExtensionContext) {
-  }
+  constructor(private context: vscode.ExtensionContext) {}
 
   refresh(objectId?: IWXContainerId): void {
     if (objectId) {
@@ -75,57 +79,83 @@ export class WXContainersProvider implements vscode.TreeDataProvider<IWXContaine
 
     if (!objectId.folder) {
       return Promise.resolve([]);
-    } if (objectId.type === 'local') {
+    }
+    if (objectId.type === 'local') {
       const list = await cloudbase.getContainers(true);
       this.localContainers = list;
       return list.map(c => ({
         type: 'local',
         name: c.name,
-        mode: c.mode,
+        mode: c.mode
       }));
-    } if (objectId.type === 'proxy') {
-      this.hostList = await $(() => cloudbase.dockerode.listContainers({
-        all: true,
-      }));
+    }
+    if (objectId.type === 'proxy') {
+      this.hostList = await $(() =>
+        cloudbase.dockerode.listContainers({
+          all: true
+        })
+      );
       const conf = getConfiguration();
 
       if (conf.vpcProxyNodes.length && this.firstTimeEnsureRemoteProxy) {
         this.firstTimeEnsureRemoteProxy = false;
-        vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: 'Ensuring Remote VPC Proxy Server' }, async (progress) => {
-          try {
-            return await ensureRemoteProxySetup(s => progress.report({ message: s }));
-          } catch (e) {
-            vscode.window.showErrorMessage(`${e}`);
+        vscode.window.withProgress(
+          {
+            location: vscode.ProgressLocation.Notification,
+            title: 'Ensuring Remote VPC Proxy Server'
+          },
+          async progress => {
+            try {
+              return await ensureRemoteProxySetup(s => progress.report({ message: s }));
+            } catch (e) {
+              vscode.window.showErrorMessage(`${e}`);
+            }
           }
-        });
+        );
       }
       const extServices = await this.resolveExtServices();
-      return [...conf.vpcProxyNodes.map(name => ({
-        type: 'proxy',
-        name,
-      } as const)),
-      ...extServices.services.map(s => ({
-        type: 'proxy',
-        name: s.name,
-        ip: s.ip,
-      } as const)),
-      {
-        type: 'proxy',
-        name: 'api.weixin.qq.com',
-      }, {
-        type: 'proxy',
-        name: '+',
-      }];
-    } if (objectId.type === 'debugServer') {
-      return [{
-        type: 'debugServer',
-        name: 'port',
-      }];
-    } if (objectId.type === 'running') {
-      this.hostList = await $(() => cloudbase.dockerode.listContainers({
-        all: true,
-      }));
-      const runningContainers = this.hostList.filter(c => c.State === 'running')
+      return [
+        ...conf.vpcProxyNodes.map(
+          name =>
+            ({
+              type: 'proxy',
+              name
+            } as const)
+        ),
+        ...extServices.services.map(
+          s =>
+            ({
+              type: 'proxy',
+              name: s.name,
+              ip: s.ip
+            } as const)
+        ),
+        {
+          type: 'proxy',
+          name: 'api.weixin.qq.com'
+        },
+        {
+          type: 'proxy',
+          name: '+'
+        }
+      ];
+    }
+    if (objectId.type === 'debugServer') {
+      return [
+        {
+          type: 'debugServer',
+          name: 'port'
+        }
+      ];
+    }
+    if (objectId.type === 'running') {
+      this.hostList = await $(() =>
+        cloudbase.dockerode.listContainers({
+          all: true
+        })
+      );
+      const runningContainers = this.hostList
+        .filter(c => c.State === 'running')
         .filter(c => c.Labels.wxcloud)
         // we can't attach container without wxPort
         .filter(c => c.Labels.wxPort);
@@ -135,7 +165,7 @@ export class WXContainersProvider implements vscode.TreeDataProvider<IWXContaine
       }
       return runningContainers.map(c => ({
         type: 'running',
-        name: c.Labels.wxcloud,
+        name: c.Labels.wxcloud
       }));
     }
     return Promise.resolve([]);
@@ -143,7 +173,10 @@ export class WXContainersProvider implements vscode.TreeDataProvider<IWXContaine
 
   getTreeItem(objectId: IWXContainerId): vscode.TreeItem {
     if (objectId.folder) {
-      const treeItem: vscode.TreeItem = new vscode.TreeItem(objectId.name, vscode.TreeItemCollapsibleState.Expanded);
+      const treeItem: vscode.TreeItem = new vscode.TreeItem(
+        objectId.name,
+        vscode.TreeItemCollapsibleState.Expanded
+      );
       treeItem.iconPath = null;
       treeItem.description = '';
       treeItem.contextValue = this.getContextValue(objectId);
@@ -151,19 +184,25 @@ export class WXContainersProvider implements vscode.TreeDataProvider<IWXContaine
     }
 
     if (objectId.type === 'credentials') {
-      const treeItem: vscode.TreeItem = new vscode.TreeItem(objectId.name, vscode.TreeItemCollapsibleState.None);
+      const treeItem: vscode.TreeItem = new vscode.TreeItem(
+        objectId.name,
+        vscode.TreeItemCollapsibleState.None
+      );
       treeItem.iconPath = getIconPath(this.context, 'warning.svg');
       treeItem.description = '';
       treeItem.contextValue = '';
       treeItem.command = {
         command: 'wxContainers.openConfiguration',
-        title: '',
+        title: ''
       };
       return treeItem;
     }
 
     if (objectId.type === 'debugServer') {
-      const treeItem: vscode.TreeItem = new vscode.TreeItem(objectId.name, vscode.TreeItemCollapsibleState.None);
+      const treeItem: vscode.TreeItem = new vscode.TreeItem(
+        objectId.name,
+        vscode.TreeItemCollapsibleState.None
+      );
       treeItem.iconPath = null;
       treeItem.description = this.getDescription(objectId);
       treeItem.contextValue = '';
@@ -171,18 +210,24 @@ export class WXContainersProvider implements vscode.TreeDataProvider<IWXContaine
     }
 
     if (objectId.type === 'proxy' && objectId.name === '+') {
-      const treeItem: vscode.TreeItem = new vscode.TreeItem(objectId.name, vscode.TreeItemCollapsibleState.None);
+      const treeItem: vscode.TreeItem = new vscode.TreeItem(
+        objectId.name,
+        vscode.TreeItemCollapsibleState.None
+      );
       treeItem.iconPath = null;
       treeItem.description = '';
       treeItem.contextValue = 'proxy_Add';
       treeItem.command = {
         command: 'wxContainers.addProxyNode',
-        title: 'Enter hostname:port or ip:port (eg. www.qq.com:80 or 10.0.0.1:3000)',
+        title: 'Enter hostname:port or ip:port (eg. www.qq.com:80 or 10.0.0.1:3000)'
       };
       return treeItem;
     }
 
-    const treeItem: vscode.TreeItem = new vscode.TreeItem(objectId.name, vscode.TreeItemCollapsibleState.None);
+    const treeItem: vscode.TreeItem = new vscode.TreeItem(
+      objectId.name,
+      vscode.TreeItemCollapsibleState.None
+    );
     treeItem.iconPath = this.getIcon(objectId);
     treeItem.description = this.getDescription(objectId);
     treeItem.contextValue = this.getContextValue(objectId);
@@ -207,7 +252,7 @@ export class WXContainersProvider implements vscode.TreeDataProvider<IWXContaine
     const configuration = getConfiguration();
     const extServices = await ext.backend.getExtList({
       appid: configuration.appid,
-      envId: configuration.vpcProxyTargetEnvId,
+      envId: configuration.vpcProxyTargetEnvId
     });
     return extServices;
   }
@@ -247,6 +292,8 @@ export class WXContainersProvider implements vscode.TreeDataProvider<IWXContaine
       return localContainer?.container;
     }
     // proxy
-    return this.hostList.find(c => c.Labels.wxcloud === objectId.name || c.Labels.wxcloud === objectId.ip);
+    return this.hostList.find(
+      c => c.Labels.wxcloud === objectId.name || c.Labels.wxcloud === objectId.ip
+    );
   }
 }

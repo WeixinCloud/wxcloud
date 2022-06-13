@@ -12,14 +12,16 @@ export async function browseViaWxServer(node?: IWXContainerId): Promise<void> {
     try {
       await ext.backend.ensureDebugServer({
         new: true,
-        port: getConfiguration().ports.wx,
+        port: getConfiguration().ports.wx
       });
       if (!ext.wxServerInfo?.port) {
         throw new Error('wx server not ready after resetting backend');
       }
     } catch (error) {
       console.error(error);
-      throw new Error(`本地微信服务启动失败，请检查设置中 CLI Key，环境名称是否正确配置。local wx server not started. please check your config that the cli key and environment name is configured correctly. ${error}`);
+      throw new Error(
+        `本地微信服务启动失败，请检查设置中 CLI Key，环境名称是否正确配置。local wx server not started. please check your config that the cli key and environment name is configured correctly. ${error}`
+      );
     }
   }
 
@@ -62,4 +64,3 @@ export async function browseDirectly(node?: IWXContainerId): Promise<void> {
 
   vscode.env.openExternal(uri);
 }
-
