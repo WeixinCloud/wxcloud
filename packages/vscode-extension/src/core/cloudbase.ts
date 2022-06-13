@@ -286,7 +286,7 @@ class Cloudbase {
     const env: Dockerode.ContainerCreateOptions['Env'] = [];
     if (container.config.envParams) {
       for (const key of Object.keys(container.config.envParams)) {
-        cmd += ` -e ${key}=${container.config.envParams[key]}`;
+        cmd += ` -e '${key}=${container.config.envParams[key]}'`;
         env.push(`${key}=${container.config.envParams[key]}`);
       }
     }
@@ -303,6 +303,11 @@ class Cloudbase {
     if (ext.wxServerInfo?.mounts) {
       for (const mount of ext.wxServerInfo.mounts) {
         if (mount.type === '.tencentcloudbase') {
+          // if host is windows, we need to convert mount.path into win32 like command
+          if (process.platform === 'win32') {
+            console.log(path.win32.normalize(mount.path))
+            mount.path = path.win32.normalize(mount.path)
+          }
           cmd += ` --mount type=bind,source="${mount.path}",target=/.tencentcloudbase,readonly`;
         }
       }
