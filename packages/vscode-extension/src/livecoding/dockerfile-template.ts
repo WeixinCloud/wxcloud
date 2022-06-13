@@ -15,7 +15,7 @@ ${props.commands.join(os.EOL)}
 
 CMD [ "nodemon", "-x", "${props.entrypoint.join(' ')}", "-w", "${props.watchDir}", "-e", "${
     props.watchExt
-  }" ]`;
+  }" ${process.platform === 'win32' ? `, "--legacy-watch"` : ''} ]`;
 }
 
 export function dockerfileTemplate(props: {

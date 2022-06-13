@@ -2,7 +2,7 @@
 import * as fse from 'fs-extra';
 import * as os from 'os';
 import path from 'path';
-import { findLastIndex, get, set } from 'lodash';
+import { findLastIndex, get, set, uniq } from 'lodash';
 import { cloudbase } from '../core/cloudbase';
 import { load as yamlLoad, dump as yamlDump } from 'js-yaml';
 import { analyzeDockerfile, DevDockerfileElements } from './analyze-dockerfile';
@@ -58,10 +58,10 @@ export async function syncEnvironmentVariableToComposeFile(
   // parse original yaml, aggresively no type check
   const dockerComposeJson: any = yamlLoad(yamlConfig);
   // insert environment
-  set(dockerComposeJson, 'services.app.environment', [
+  set(dockerComposeJson, 'services.app.environment', uniq([
     ...get(dockerComposeJson, 'services.app.environment', []),
     ...Object.entries(container.config.envParams).map(([k, v]) => `${k}=${v}`)
-  ]);
+  ]));
   // dump yaml
   return yamlDump(dockerComposeJson);
 }
