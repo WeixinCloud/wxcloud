@@ -173,26 +173,38 @@ async function startOneLocal(
     // create and start container
     p('starting container');
 
-    await runDockerCommand({
+    runDockerCommand({
       command: debug
         ? `docker run --rm -d -p "9229:9229" sh ${cmd} ${imageTag}`
-        : `docker run --rm -d ${cmd} ${imageTag}`,
+        // allocate psudo-tty(-t) for color output.
+        // we don't use detach(-d) because container may exit immediately after start.
+        // keeping console attached is better for knowing why container exit.
+        : `docker run --rm -t ${cmd} ${imageTag}`,
       name: local.name,
       rejectOnExitCode: true
     });
 
-    // update debug info
-    await $(() =>
-      cloudbase.dockerode.listContainers({
-        all: true
-      })
-    ).then(async list => {
-      const info = list.find(c => c.Labels.wxcloud === local.name);
-      if (info) {
-        await cloudbase.updateContainerInfo(local.name, info);
-        ext.wxContainersProvider.refresh();
+    // update debug info after 3s
+    const updateDebugInfo = async (retried?: boolean) => {
+      () => {
+        $(() =>
+          cloudbase.dockerode.listContainers({
+            all: true
+          })
+        ).then(async list => {
+          const info = list.find(c => c.Labels.wxcloud === local.name);
+          if (info) {
+            await cloudbase.updateContainerInfo(local.name, info);
+            ext.wxContainersProvider.refresh();
+          } else if (!retried) {
+            // retry after 3s, only once
+            setTimeout(() => updateDebugInfo(true), 3000);
+          }
+        });
       }
-    });
+    }
+    setTimeout(updateDebugInfo, 3000);
+
     return;
   }
   const container = cloudbase.dockerode.getContainer(local.container.Id);
