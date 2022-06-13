@@ -11,7 +11,11 @@ export const LOG_OUTPUT = vscode.window.createOutputChannel('Weixin Cloudbase');
 
 export const sleep = (ms = 0) => new Promise(r => setTimeout(r, ms));
 
-export async function invokeDockerode<T>(fn: () => Promise<T>, timeout = 20 * 1000, token?: vscode.CancellationToken): Promise<T> {
+export async function invokeDockerode<T>(
+  fn: () => Promise<T>,
+  timeout = 20 * 1000,
+  token?: vscode.CancellationToken
+): Promise<T> {
   try {
     return await withTimeoutAndCancellationToken(fn, timeout, token);
   } catch (e) {
@@ -25,7 +29,11 @@ export async function invokeDockerode<T>(fn: () => Promise<T>, timeout = 20 * 10
   }
 }
 
-export async function withTimeoutAndCancellationToken<T>(fn: () => Promise<T>, timeout = 20 * 1000, token?: vscode.CancellationToken): Promise<T> {
+export async function withTimeoutAndCancellationToken<T>(
+  fn: () => Promise<T>,
+  timeout = 20 * 1000,
+  token?: vscode.CancellationToken
+): Promise<T> {
   const promises: Promise<T>[] = [fn(), getTimeoutPromise(timeout)];
   if (token) {
     promises.push(getCancelPromise(token));
@@ -51,13 +59,13 @@ export async function getCancelPromise(token: vscode.CancellationToken): Promise
 export function getIconPath(context: vscode.ExtensionContext, iconName: string) {
   return {
     light: context.asAbsolutePath(path.join('resources', 'light', iconName)),
-    dark: context.asAbsolutePath(path.join('resources', 'dark', iconName)),
+    dark: context.asAbsolutePath(path.join('resources', 'dark', iconName))
   };
 }
 
 interface IGetDockerFilePathResult {
-  uri: vscode.Uri
-  relativePath: string
+  uri: vscode.Uri;
+  relativePath: string;
 }
 
 export async function getDockerContext(info: IWXContainerInfo): Promise<string> {
@@ -68,7 +76,9 @@ export async function getDockerContext(info: IWXContainerInfo): Promise<string> 
     if (containerConfigJson.buildDir) {
       return containerConfigJson.buildDir;
     }
-  } catch (e) { /* noop */ }
+  } catch (e) {
+    /* noop */
+  }
   return '.';
 }
 
@@ -81,16 +91,18 @@ export async function getDockerFilePath(info: IWXContainerInfo): Promise<IGetDoc
     if (containerConfigJson.dockerfilePath) {
       return {
         uri: vscode.Uri.joinPath(info.uri, context, containerConfigJson.dockerfilePath),
-        relativePath: containerConfigJson.dockerfilePath,
+        relativePath: containerConfigJson.dockerfilePath
       };
     }
-  } catch (e) { /* noop */ }
+  } catch (e) {
+    /* noop */
+  }
 
   const rootDockerFileUri = vscode.Uri.joinPath(info.uri, 'Dockerfile');
   if (await fileUriExists(rootDockerFileUri)) {
     return {
       uri: rootDockerFileUri,
-      relativePath: 'Dockerfile',
+      relativePath: 'Dockerfile'
     };
   }
 
@@ -109,17 +121,17 @@ export async function removeHostContainer(name: string, id: string, includeImage
 
   await runDockerCommand({
     command: `docker container rm -f ${container.id}`,
-    name,
+    name
   });
 
   await runDockerCommand({
     command: `docker container rm -f ${container.id}`,
-    name,
+    name
   });
 
   await runDockerCommand({
     command: `docker image rm -f ${image.id}`,
-    name,
+    name
   });
 
   // if (inspectInfo.State.Running) {
@@ -133,17 +145,23 @@ export async function removeHostContainer(name: string, id: string, includeImage
   // }
 }
 
-export async function getHostContainerByContainerID(objectId: IWXContainerId): Promise<Dockerode.ContainerInfo> {
+export async function getHostContainerByContainerID(
+  objectId: IWXContainerId
+): Promise<Dockerode.ContainerInfo> {
   if (objectId.type === 'local') {
     const localContainers = await cloudbase.getContainers();
     const local = localContainers.find(c => c.name === objectId.name);
     return local?.container;
   }
   // proxy
-  const list = await withTimeoutAndCancellationToken(() => cloudbase.dockerode.listContainers({
-    all: true,
-  }));
-  const proxy = list.find(c => c.Labels?.wxcloud === objectId.name || c.Labels?.wxcloud === objectId.ip);
+  const list = await withTimeoutAndCancellationToken(() =>
+    cloudbase.dockerode.listContainers({
+      all: true
+    })
+  );
+  const proxy = list.find(
+    c => c.Labels?.wxcloud === objectId.name || c.Labels?.wxcloud === objectId.ip
+  );
   if (!proxy) {
     throw new Error('proxy container instance not created yet');
   }
@@ -152,7 +170,10 @@ export async function getHostContainerByContainerID(objectId: IWXContainerId): P
 
 export async function fileUriExists(uri: vscode.Uri): Promise<Boolean> {
   return new Promise<Boolean>(resolve => {
-    return vscode.workspace.fs.stat(uri).then(() => resolve(true), () => resolve(false));
+    return vscode.workspace.fs.stat(uri).then(
+      () => resolve(true),
+      () => resolve(false)
+    );
   });
 }
 
@@ -235,7 +256,6 @@ workbench.view.extension.dockerView
 
 */
 
-
 /*
 
 commands to focus on a specific sub-view:
@@ -245,5 +265,3 @@ dockerImages.focus
 wxContainers.focus
 
 */
-
-

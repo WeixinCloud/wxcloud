@@ -10,4 +10,3 @@ export function onDidChangeVisibility(e: vscode.TreeViewVisibilityChangeEvent) {
 export function onDidChangeConfiguration(e: vscode.ConfigurationChangeEvent) {
   ext.wxContainersProvider.refresh();
 }
-

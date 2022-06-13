@@ -12,7 +12,6 @@ export async function attachShell(node?: IWXContainerId): Promise<void> {
 
   return runDockerCommand({
     name: `${node.name}`,
-    command: `docker exec -it ${container.Id} bash || sh`,
+    command: `docker exec -it ${container.Id} bash || sh`
   });
 }
-

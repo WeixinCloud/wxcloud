@@ -15,8 +15,8 @@ const configuration: IConfiguration = {
   cliKey: '',
   ports: {
     host: 27081,
-    wx: 27082,
-  },
+    wx: 27082
+  }
 };
 
 const CONFIGURATION_ID = {
@@ -26,7 +26,7 @@ const CONFIGURATION_ID = {
   ciKey: 'wxcloud.containerDebug.ciKey',
   cliKey: 'wxcloud.containerDebug.cliKey',
   hostPort: 'wxcloud.containerDebug.hostPort',
-  wxPort: 'wxcloud.containerDebug.wxPort',
+  wxPort: 'wxcloud.containerDebug.wxPort'
 };
 
 export async function setupConfiguration(context: vscode.ExtensionContext) {
@@ -39,39 +39,41 @@ export async function setupConfiguration(context: vscode.ExtensionContext) {
   configuration.cliKey = getCLIKey();
   configuration.ports = {
     host: getHostPort(),
-    wx: await getWxPort(),
+    wx: await getWxPort()
   };
 
   // listen
-  context.subscriptions.push(vscode.workspace.onDidChangeConfiguration(async (e) => {
-    if (e.affectsConfiguration(CONFIGURATION_ID.vpcProxyNodes)) {
-      configuration.vpcProxyNodes = getProxyNodes();
-      ext.wxContainersProvider.refresh(ext.wxContainersProvider.proxyFolderId);
-    }
+  context.subscriptions.push(
+    vscode.workspace.onDidChangeConfiguration(async e => {
+      if (e.affectsConfiguration(CONFIGURATION_ID.vpcProxyNodes)) {
+        configuration.vpcProxyNodes = getProxyNodes();
+        ext.wxContainersProvider.refresh(ext.wxContainersProvider.proxyFolderId);
+      }
 
-    if (e.affectsConfiguration(CONFIGURATION_ID.vpcProxyTargetEnvId)) {
-      configuration.vpcProxyTargetEnvId = getProxyTargetEnvId();
-    }
+      if (e.affectsConfiguration(CONFIGURATION_ID.vpcProxyTargetEnvId)) {
+        configuration.vpcProxyTargetEnvId = getProxyTargetEnvId();
+      }
 
-    if (e.affectsConfiguration(CONFIGURATION_ID.appid)) {
-      configuration.appid = getAppID();
-      updateCIProject();
-    }
+      if (e.affectsConfiguration(CONFIGURATION_ID.appid)) {
+        configuration.appid = getAppID();
+        updateCIProject();
+      }
 
-    if (e.affectsConfiguration(CONFIGURATION_ID.ciKey)) {
-      configuration.ciKey = getCIKey();
-      updateCIProject();
-    }
+      if (e.affectsConfiguration(CONFIGURATION_ID.ciKey)) {
+        configuration.ciKey = getCIKey();
+        updateCIProject();
+      }
 
-    if (e.affectsConfiguration(CONFIGURATION_ID.cliKey)) {
-      configuration.cliKey = getCLIKey();
-      updateCIProject();
-    }
+      if (e.affectsConfiguration(CONFIGURATION_ID.cliKey)) {
+        configuration.cliKey = getCLIKey();
+        updateCIProject();
+      }
 
-    if (e.affectsConfiguration('http.proxy')) {
-      configuration.proxy = await getProxy();
-    }
-  }));
+      if (e.affectsConfiguration('http.proxy')) {
+        configuration.proxy = await getProxy();
+      }
+    })
+  );
 
   process.nextTick(() => {
     updateCIProject();
@@ -99,7 +101,8 @@ function getHostPort() {
 }
 
 async function getWxPort() {
-  const configPort = vscode.workspace.getConfiguration().get<number>(CONFIGURATION_ID.wxPort) || 27082;
+  const configPort =
+    vscode.workspace.getConfiguration().get<number>(CONFIGURATION_ID.wxPort) || 27082;
   // ensure port is not occupied
   const port = await getPort({ port: configPort, host: 'localhost' });
   // since most user use vscode to host wx-server, we don't want to prompt user about port occupied.
@@ -117,7 +120,9 @@ function updateCIProject() {
 }
 
 export function getProxyTargetEnvId() {
-  return vscode.workspace.getConfiguration().get<string>(CONFIGURATION_ID.vpcProxyTargetEnvId) || '';
+  return (
+    vscode.workspace.getConfiguration().get<string>(CONFIGURATION_ID.vpcProxyTargetEnvId) || ''
+  );
 }
 
 export function setProxyTargetEnvId(v: string) {
@@ -127,14 +132,16 @@ export function setProxyTargetEnvId(v: string) {
 function getProxyNodes() {
   return (vscode.workspace.getConfiguration().get<string>(CONFIGURATION_ID.vpcProxyNodes) || '')
     .split(';')
-    .map((rx) => {
+    .map(rx => {
       const x = rx.trim();
       const segments = x.split(':').map(a => a.trim());
       if (!x || segments.length > 2 || segments[0] === '') {
         return undefined;
-      } if (segments.length === 1) {
+      }
+      if (segments.length === 1) {
         return `${x}:80`;
-      } if (segments[1] === '') {
+      }
+      if (segments[1] === '') {
         return `${x}80`;
       }
       return x;
@@ -143,8 +150,16 @@ function getProxyNodes() {
 }
 
 export function addProxyNode(name: string) {
-  const current = (vscode.workspace.getConfiguration().get<string>(CONFIGURATION_ID.vpcProxyNodes) || '').trim();
-  vscode.workspace.getConfiguration().update(CONFIGURATION_ID.vpcProxyNodes, `${current}${!current || current.endsWith(';') ? '' : ';'}${name}`, true);
+  const current = (
+    vscode.workspace.getConfiguration().get<string>(CONFIGURATION_ID.vpcProxyNodes) || ''
+  ).trim();
+  vscode.workspace
+    .getConfiguration()
+    .update(
+      CONFIGURATION_ID.vpcProxyNodes,
+      `${current}${!current || current.endsWith(';') ? '' : ';'}${name}`,
+      true
+    );
 }
 
 /**
@@ -187,7 +202,8 @@ async function getProxy(): Promise<string | undefined> {
 
        */
       const str = child_process.execSync('scutil --proxy', { encoding: 'utf8' });
-      const settings: Record<string, string> = str.split('\n')
+      const settings: Record<string, string> = str
+        .split('\n')
         .filter((x, ind, arr) => ind > 0 && ind < arr.length - 1)
         .reduce((obj, str) => {
           const [key, value] = str.split(':').map(x => x.trim());
@@ -210,4 +226,3 @@ async function getProxy(): Promise<string | undefined> {
     console.error('get system proxy setting error', e);
   }
 }
-

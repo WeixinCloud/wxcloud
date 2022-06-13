@@ -12,7 +12,7 @@ export async function addProxyNode(): Promise<void> {
         return 'invalid format';
       }
       return null;
-    },
+    }
   });
 
   if (result) {

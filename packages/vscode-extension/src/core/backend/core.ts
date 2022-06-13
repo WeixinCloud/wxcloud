@@ -31,24 +31,23 @@ let CORE_IDENTITY = {
   privateKey: ''
 };
 async function transactRequest<T = any>(options: CloudAPI.IRequestOptions): Promise<T> {
-  const { body, statusCode } = await got
-    .post(`${BASE_URL}/wxa-dev-qbase/apihttpagent`, {
-      searchParams: {
-        appid: CORE_IDENTITY.appid,
-        autodev: 1
-      },
-      method: 'post',
-      json: {
-        postdata: options.postdata,
-        ...merge({}, options.identity)
-      },
-      headers: {
-        ...options.headers,
-        'content-type': 'application/json',
-        'X-CloudRunCli-Robot': '1',
-        'X-CloudRunCli-Key': CORE_IDENTITY.privateKey
-      }
-    });
+  const { body, statusCode } = await got.post(`${BASE_URL}/wxa-dev-qbase/apihttpagent`, {
+    searchParams: {
+      appid: CORE_IDENTITY.appid,
+      autodev: 1
+    },
+    method: 'post',
+    json: {
+      postdata: options.postdata,
+      ...merge({}, options.identity)
+    },
+    headers: {
+      ...options.headers,
+      'content-type': 'application/json',
+      'X-CloudRunCli-Robot': '1',
+      'X-CloudRunCli-Key': CORE_IDENTITY.privateKey
+    }
+  });
 
   if (statusCode === 413) {
     throw new Error(`Body too large`);
@@ -102,14 +101,14 @@ export class CoreBackendService implements IBackendService {
       searchParams: {
         appid: CORE_IDENTITY.appid,
         autodev: 1,
-        ...options.params,
+        ...options.params
       },
       method: options.method || 'get',
       headers: {
         'X-CloudRunCli-Robot': '1',
         'X-CloudRunCli-Key': CORE_IDENTITY.privateKey
       },
-      body: options.body,
+      body: options.body
     }).json();
     return res;
   }
@@ -118,7 +117,7 @@ export class CoreBackendService implements IBackendService {
       console.log('_checkLogin');
       // use getqbaseinfo to check login
       const res = await this._invokeWxApi({
-        api: '/wxa-dev-qbase/getqbaseinfo',
+        api: '/wxa-dev-qbase/getqbaseinfo'
       });
       if (res?.base_resp?.ret === 0) {
         this.loggedIn = true;
@@ -250,7 +249,7 @@ export class CoreBackendService implements IBackendService {
             to: `http://127.0.0.1:${c.container!.Ports?.find(info => info.PublicPort)?.PublicPort}`
           }));
       },
-      backend: this,
+      backend: this
     });
     await this.wxServer.listen();
   }

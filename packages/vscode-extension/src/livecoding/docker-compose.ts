@@ -2,16 +2,22 @@
 import * as fse from 'fs-extra';
 import * as os from 'os';
 import path from 'path';
-import { findLastIndex } from 'lodash';
+import { findLastIndex, get, set } from 'lodash';
 import { cloudbase } from '../core/cloudbase';
+import { load as yamlLoad, dump as yamlDump } from 'js-yaml';
 import { analyzeDockerfile, DevDockerfileElements } from './analyze-dockerfile';
 import { detectRepositoryType, RepositoryType } from './detect-repository';
 import { dockerfileNodemonTemplate, dockerfileTemplate } from './dockerfile-template';
 
 const DEV_DOCKERFILE_NAME = 'Dockerfile.development';
 
-export function dockerComposeTemplate(composeConfig: IDockerComposeConfiguration, dockerfilePath: string, workdir: string) {
-  const extraVolumes = !composeConfig.extraVolumes ? ''
+export function dockerComposeTemplate(
+  composeConfig: IDockerComposeConfiguration,
+  dockerfilePath: string,
+  workdir: string
+) {
+  const extraVolumes = !composeConfig.extraVolumes
+    ? ''
     : composeConfig.extraVolumes.map(item => `- ${item}`).join(os.EOL);
 
   return `version: '3'
@@ -43,21 +49,48 @@ networks:
 `;
 }
 
-export interface IDockerComposeConfiguration {
-  context: string
-  localPort: number
-  remotePort: number
-  wxPort: number
-  name: string
-  tokenVolume?: string
-  extraVolumes?: string[]
+export async function syncEnvironmentVariableToComposeFile(
+  serviceName: string,
+  yamlConfig: string
+) {
+  const containers = await cloudbase.getContainers();
+  const container = containers.find(c => c.name === serviceName);
+  // parse original yaml, aggresively no type check
+  const dockerComposeJson: any = yamlLoad(yamlConfig);
+  // insert environment
+  set(dockerComposeJson, 'services.app.environment', [
+    ...get(dockerComposeJson, 'services.app.environment', []),
+    ...Object.entries(container.config.envParams).map(([k, v]) => `${k}=${v}`)
+  ]);
+  // dump yaml
+  return yamlDump(dockerComposeJson);
 }
 
-export function generateDockerComposeAndDockerfileDev(dockerfilePath: string, composeConfig: IDockerComposeConfiguration) {
+export interface IDockerComposeConfiguration {
+  context: string;
+  localPort: number;
+  remotePort: number;
+  wxPort: number;
+  name: string;
+  tokenVolume?: string;
+  extraVolumes?: string[];
+  envVariables?: string[];
+}
+
+export async function generateDockerComposeAndDockerfileDev(
+  dockerfilePath: string,
+  composeConfig: IDockerComposeConfiguration
+) {
   const repoPath = cloudbase.targetWorkspace.uri.fsPath;
   const composePath = path.join(repoPath, 'docker-compose.yml');
   const dockerfileDevPath = path.join(repoPath, DEV_DOCKERFILE_NAME);
-  if (fse.existsSync(composePath) || fse.existsSync(dockerfileDevPath)) {
+  if (fse.existsSync(composePath) && fse.existsSync(dockerfileDevPath)) {
+    // only sync environment variable to docker compose yaml.
+    const targetDockerComposeFile = await syncEnvironmentVariableToComposeFile(
+      composeConfig.name,
+      fse.readFileSync(composePath, { encoding: 'utf8' })
+    );
+    fse.writeFileSync(composePath, targetDockerComposeFile);
     return;
   }
   if (!fse.existsSync(dockerfilePath)) {
@@ -72,29 +105,39 @@ export function generateDockerComposeAndDockerfileDev(dockerfilePath: string, co
 
   const nodemonNotNeeded = ['php', 'dotnet'].includes(type);
   if (nodemonNotNeeded) {
-    fse.writeFileSync(dockerfileDevPath, dockerfileTemplate({
-      from: elements.fromRaw,
-      commands: elements.necessaryCommandsRaw,
-      entrypoint: elements.entrypoint,
-    }));
+    fse.writeFileSync(
+      dockerfileDevPath,
+      dockerfileTemplate({
+        from: elements.fromRaw,
+        commands: elements.necessaryCommandsRaw,
+        entrypoint: elements.entrypoint
+      })
+    );
   } else {
-    fse.writeFileSync(dockerfileDevPath, dockerfileNodemonTemplate({
-      from: elements.fromRaw,
-      commands: elements.necessaryCommandsRaw,
-      entrypoint: elements.entrypoint,
-      watchDir: elements.workdir,
-      watchExt: 'java, js, mjs, json, ts, cs, py, go', // TODO: default watch exts
-    }));
+    fse.writeFileSync(
+      dockerfileDevPath,
+      dockerfileNodemonTemplate({
+        from: elements.fromRaw,
+        commands: elements.necessaryCommandsRaw,
+        entrypoint: elements.entrypoint,
+        watchDir: elements.workdir,
+        watchExt: 'java, js, mjs, json, ts, cs, py, go' // TODO: default watch exts
+      })
+    );
   }
-
-  fse.writeFileSync(composePath, dockerComposeTemplate(
-    composeConfig,
-    DEV_DOCKERFILE_NAME,
-    elements.workdir,
-  ));
+  // patch envVariables
+  const targetDockerComposeFile = await syncEnvironmentVariableToComposeFile(
+    composeConfig.name,
+    dockerComposeTemplate(composeConfig, DEV_DOCKERFILE_NAME, elements.workdir)
+  );
+  fse.writeFileSync(composePath, targetDockerComposeFile);
 }
 
-function correctConfigAndElements(type: RepositoryType, composeConfig: IDockerComposeConfiguration, elements: DevDockerfileElements) {
+function correctConfigAndElements(
+  type: RepositoryType,
+  composeConfig: IDockerComposeConfiguration,
+  elements: DevDockerfileElements
+) {
   switch (type) {
     case 'javascript':
       if (!composeConfig.extraVolumes) {
@@ -110,13 +153,16 @@ function correctConfigAndElements(type: RepositoryType, composeConfig: IDockerCo
 
       // 去除不必要的编译命令
       // eslint-disable-next-line no-case-declarations
-      const index = findLastIndex(elements.necessaryCommandsRaw, command => command.trim().toLowerCase()
-        .startsWith('run dotnet publish'));
+      const index = findLastIndex(elements.necessaryCommandsRaw, command =>
+        command.trim().toLowerCase().startsWith('run dotnet publish')
+      );
       if (index > 0) {
         elements.necessaryCommandsRaw.splice(index, 1);
       }
       // 增加 ASPNETCORE_URLS 环境变量，确保调试模式的 watch 监听在正确的端口上
-      elements.necessaryCommandsRaw.push(`ENV ASPNETCORE_URLS http://0.0.0.0:${composeConfig.remotePort}`,);
+      elements.necessaryCommandsRaw.push(
+        `ENV ASPNETCORE_URLS http://0.0.0.0:${composeConfig.remotePort}`
+      );
       break;
   }
 }

@@ -28,22 +28,42 @@ export function activate(context: vscode.ExtensionContext) {
   const wxContainersProvider = new WXContainersProvider(context);
   vscode.window.registerTreeDataProvider('wxContainers', wxContainersProvider);
   // treeView.onDidChangeVisibility
-  const wxContainersTreeView = vscode.window.createTreeView('wxContainers', { treeDataProvider: wxContainersProvider, canSelectMany: true });
+  const wxContainersTreeView = vscode.window.createTreeView('wxContainers', {
+    treeDataProvider: wxContainersProvider,
+    canSelectMany: true
+  });
   wxContainersTreeView.onDidChangeVisibility(onDidChangeVisibility);
   context.subscriptions.push(wxContainersTreeView);
   vscode.commands.registerCommand('wxContainers.refresh', () => wxContainersProvider.refresh());
-  vscode.commands.registerCommand('wxContainers.refreshNode', objectId => wxContainersProvider.refresh(objectId));
+  vscode.commands.registerCommand('wxContainers.refreshNode', objectId =>
+    wxContainersProvider.refresh(objectId)
+  );
   vscode.commands.registerCommand('wxContainers.start', withCommonCommandHandling(start));
   vscode.commands.registerCommand('wxContainers.liveCoding', withCommonCommandHandling(liveCoding));
   vscode.commands.registerCommand('wxContainers.restart', withCommonCommandHandling(start));
-  vscode.commands.registerCommand('wxContainers.rebuildStart', withCommonCommandHandling(objectId => start(objectId, undefined, true)));
+  vscode.commands.registerCommand(
+    'wxContainers.rebuildStart',
+    withCommonCommandHandling(objectId => start(objectId, undefined, true))
+  );
   vscode.commands.registerCommand('wxContainers.stop', withCommonCommandHandling(stop));
   vscode.commands.registerCommand('wxContainers.viewLogs', viewLogs);
   vscode.commands.registerCommand('wxContainers.attachShell', attachShell);
-  vscode.commands.registerCommand('wxContainers.browseViaWxServer', withCommonCommandHandling(browseViaWxServer, { throwError: false }));
-  vscode.commands.registerCommand('wxContainers.browseDirectly', withCommonCommandHandling(browseDirectly, { throwError: false }));
-  vscode.commands.registerCommand('wxContainers.attachService', withCommonCommandHandling(attachService, { throwError: false }));
-  vscode.commands.registerCommand('wxContainers.detachService', withCommonCommandHandling(detachService, { throwError: false }));
+  vscode.commands.registerCommand(
+    'wxContainers.browseViaWxServer',
+    withCommonCommandHandling(browseViaWxServer, { throwError: false })
+  );
+  vscode.commands.registerCommand(
+    'wxContainers.browseDirectly',
+    withCommonCommandHandling(browseDirectly, { throwError: false })
+  );
+  vscode.commands.registerCommand(
+    'wxContainers.attachService',
+    withCommonCommandHandling(attachService, { throwError: false })
+  );
+  vscode.commands.registerCommand(
+    'wxContainers.detachService',
+    withCommonCommandHandling(detachService, { throwError: false })
+  );
   vscode.commands.registerCommand('wxContainers.debug', withCommonCommandHandling(debug));
   vscode.commands.registerCommand('wxContainers.openConfiguration', openConfiguration);
   vscode.commands.registerCommand('wxContainers.addProxyNode', addProxyNode);
@@ -52,7 +72,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   setupConfiguration(context);
 
-  ext.backend = process.env.WX_ENV_IDE ? new IDEBackendService : new CoreBackendService;
+  ext.backend = process.env.WX_ENV_IDE ? new IDEBackendService() : new CoreBackendService();
 
   ext.messenger.on('START_DEBUG', onStartDebug);
   ext.messenger.on('WX_SERVER_INFO', onServerInfo);

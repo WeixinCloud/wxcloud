@@ -1,6 +1,15 @@
 import ext from '../global';
 import { withTimeoutAndCancellationToken as $ } from '../../utils/utils';
-import type { IBackendService, INotifyOptions, IEnsureDebugServerOptions, IGetEnvListResult, IQueryServiceResult, IDeployServiceResult, IQueryServiceOptions, IDeployServiceOptions } from './backend';
+import type {
+  IBackendService,
+  INotifyOptions,
+  IEnsureDebugServerOptions,
+  IGetEnvListResult,
+  IQueryServiceResult,
+  IDeployServiceResult,
+  IQueryServiceOptions,
+  IDeployServiceOptions
+} from './backend';
 
 export class IDEBackendService implements IBackendService {
   type = 'ide';
@@ -10,7 +19,7 @@ export class IDEBackendService implements IBackendService {
   }
   async getExtList() {
     return {
-      services: [],
+      services: []
     };
   }
   async attachService(data: any): Promise<void> {
@@ -36,5 +45,3 @@ export class IDEBackendService implements IBackendService {
     return ext.messenger.invoke('DEPLOY_SERVICE', opt);
   }
 }
-
-

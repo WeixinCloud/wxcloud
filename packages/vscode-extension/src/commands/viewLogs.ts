@@ -12,7 +12,7 @@ export async function viewLogs(node?: IWXContainerId): Promise<void> {
 
   return runDockerCommand({
     name: `${node.name} logs`,
-    command: `docker logs --tail 1000 -f ${container.Id}`,
+    command: `docker logs --tail 1000 -f ${container.Id}`
   });
 
   /*
@@ -44,4 +44,3 @@ export async function viewLogs(node?: IWXContainerId): Promise<void> {
   })
   */
 }
-

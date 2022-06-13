@@ -1,7 +1,12 @@
 import * as vscode from 'vscode';
 import * as REGEXP from '../utils/regexp';
 import { cloudbase } from '../core/cloudbase';
-import { getDockerContext, getDockerFilePath, invokeDockerode as $, removeHostContainer } from '../utils/utils';
+import {
+  getDockerContext,
+  getDockerFilePath,
+  invokeDockerode as $,
+  removeHostContainer
+} from '../utils/utils';
 import ext from '../core/global';
 import { getConfiguration, getProxyTargetEnvId } from '../configuration/configuration';
 import { ensureRemoteProxySetup } from '../core/image';
@@ -14,53 +19,81 @@ export enum SupportedDebugType {
   Python
 }
 
-export async function start(node?: IWXContainerId, nodes?: IWXContainerId[], buildImage?: boolean): Promise<void> {
+export async function start(
+  node?: IWXContainerId,
+  nodes?: IWXContainerId[],
+  buildImage?: boolean
+): Promise<void> {
   if (!node && !nodes) return;
-  await Promise.all((nodes || [node]).map(n => vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: 'Starting Container' }, async (progress) => {
-    try {
-      return await startOne(progress, n, buildImage);
-    } catch (e) {
-      if (`${e}` === 'cancelled') {
-        return;
-      }
-      vscode.window.showErrorMessage(`start container failed: ${e}`);
-    }
-  })));
+  await Promise.all(
+    (nodes || [node]).map(n =>
+      vscode.window.withProgress(
+        { location: vscode.ProgressLocation.Notification, title: 'Starting Container' },
+        async progress => {
+          try {
+            return await startOne(progress, n, buildImage);
+          } catch (e) {
+            if (`${e}` === 'cancelled') {
+              return;
+            }
+            vscode.window.showErrorMessage(`start container failed: ${e}`);
+          }
+        }
+      )
+    )
+  );
 }
-export async function debug(node?: IWXContainerId, nodes?: IWXContainerId[], buildImage?: boolean): Promise<void> {
+export async function debug(
+  node?: IWXContainerId,
+  nodes?: IWXContainerId[],
+  buildImage?: boolean
+): Promise<void> {
   if (!node && !nodes) return;
-  await Promise.all((nodes || [node]).map(n => vscode.window.withProgress({ location: vscode.ProgressLocation.Notification, title: 'Starting Container' }, async (progress) => {
-    try {
-      // ask user about debug type
-      const debugType = await vscode.window.showQuickPick(['Node', 'Python'], {
-        placeHolder: 'Select debug type',
-      });
-      if (!debugType) {
-        return;
-      }
-      switch (debugType) {
-        case 'Node':
-          return startOne(progress, n, buildImage, SupportedDebugType.Node);
-        case 'Python':
-          return startOne(progress, n, buildImage, SupportedDebugType.Python);
-      }
-    } catch (e) {
-      if (`${e}` === 'cancelled') {
-        return;
-      }
-      vscode.window.showErrorMessage(`start container failed: ${e}`);
-    }
-  })));
+  await Promise.all(
+    (nodes || [node]).map(n =>
+      vscode.window.withProgress(
+        { location: vscode.ProgressLocation.Notification, title: 'Starting Container' },
+        async progress => {
+          try {
+            // ask user about debug type
+            const debugType = await vscode.window.showQuickPick(['Node', 'Python'], {
+              placeHolder: 'Select debug type'
+            });
+            if (!debugType) {
+              return;
+            }
+            switch (debugType) {
+              case 'Node':
+                return startOne(progress, n, buildImage, SupportedDebugType.Node);
+              case 'Python':
+                return startOne(progress, n, buildImage, SupportedDebugType.Python);
+            }
+          } catch (e) {
+            if (`${e}` === 'cancelled') {
+              return;
+            }
+            vscode.window.showErrorMessage(`start container failed: ${e}`);
+          }
+        }
+      )
+    )
+  );
 }
 
-async function startOne(progress: vscode.Progress<{ message?: string; increment?: number }>, node?: IWXContainerId, buildImage?: boolean, debug?: SupportedDebugType): Promise<void> {
+async function startOne(
+  progress: vscode.Progress<{ message?: string; increment?: number }>,
+  node?: IWXContainerId,
+  buildImage?: boolean,
+  debug?: SupportedDebugType
+): Promise<void> {
   if (!node) {
     throw new Error('no node selected');
   }
 
   if (node.type === 'local') {
     return startOneLocal(progress, node, buildImage, debug);
-  } if (node.type === 'proxy') {
+  }
+  if (node.type === 'proxy') {
     if (node.name === 'api.weixin.qq.com') {
       return startAgent(progress);
     }
@@ -69,7 +102,12 @@ async function startOne(progress: vscode.Progress<{ message?: string; increment?
   throw new Error(`unknown node type ${node.type}`);
 }
 
-async function startOneLocal(progress: vscode.Progress<{ message?: string; increment?: number }>, node: IWXContainerId, buildImage?: boolean, debug?: SupportedDebugType): Promise<void> {
+async function startOneLocal(
+  progress: vscode.Progress<{ message?: string; increment?: number }>,
+  node: IWXContainerId,
+  buildImage?: boolean,
+  debug?: SupportedDebugType
+): Promise<void> {
   const p = (message: string) => progress.report({ message });
 
   const localContainers = await cloudbase.getContainers();
@@ -88,9 +126,11 @@ async function startOneLocal(progress: vscode.Progress<{ message?: string; incre
     }
 
     // remove container of conflicting name
-    const hostContainers = await $(() => cloudbase.dockerode.listContainers({
-      all: true,
-    }));
+    const hostContainers = await $(() =>
+      cloudbase.dockerode.listContainers({
+        all: true
+      })
+    );
     const conflictNameContainer = hostContainers.find(c => c.Labels.wxcloud === local.name);
     if (conflictNameContainer) {
       p(`cleaning old container and image wcloud_${local.name}`);
@@ -105,7 +145,7 @@ async function startOneLocal(progress: vscode.Progress<{ message?: string; incre
       command: `docker build -f "${dockerFileRelativePath}" -t ${imageTag} ${context}`,
       name: local.name,
       cwd: local.path,
-      rejectOnExitCode: true,
+      rejectOnExitCode: true
     });
 
     // @deprecated
@@ -133,18 +173,20 @@ async function startOneLocal(progress: vscode.Progress<{ message?: string; incre
     // create and start container
     p('starting container');
 
-
     await runDockerCommand({
-      command: debug ? `docker run --rm -d -p "9229:9229" sh ${cmd} ${imageTag}` : `docker run --rm -d ${cmd} ${imageTag}`,
+      command: debug
+        ? `docker run --rm -d -p "9229:9229" sh ${cmd} ${imageTag}`
+        : `docker run --rm -d ${cmd} ${imageTag}`,
       name: local.name,
-      rejectOnExitCode: true,
+      rejectOnExitCode: true
     });
 
-
     // update debug info
-    await $(() => cloudbase.dockerode.listContainers({
-      all: true,
-    })).then(async (list) => {
+    await $(() =>
+      cloudbase.dockerode.listContainers({
+        all: true
+      })
+    ).then(async list => {
       const info = list.find(c => c.Labels.wxcloud === local.name);
       if (info) {
         await cloudbase.updateContainerInfo(local.name, info);
@@ -166,19 +208,24 @@ async function startOneLocal(progress: vscode.Progress<{ message?: string; incre
   return $(() => container.start());
 }
 
-
-async function startAgent(progress: vscode.Progress<{ message?: string; increment?: number }>): Promise<void> {
+async function startAgent(
+  progress: vscode.Progress<{ message?: string; increment?: number }>
+): Promise<void> {
   const p = (message: string) => progress.report({ message });
   const nodeName = 'api.weixin.qq.com';
 
   const imageUri = 'ccr.ccs.tencentyun.com/tcb_prd/openapi-agent:debug';
   const remoteProxyInfo = await ensureRemoteProxySetup(p);
-  const list = await $(() => cloudbase.dockerode.listContainers({
-    all: true,
-  }));
+  const list = await $(() =>
+    cloudbase.dockerode.listContainers({
+      all: true
+    })
+  );
 
   checkConflictLocalContainer(list, nodeName);
-  const containerInfo = list.find(c => c.Labels.role === 'vpcdebugproxy' && c.Labels.wxcloud === nodeName);
+  const containerInfo = list.find(
+    c => c.Labels.role === 'vpcdebugproxy' && c.Labels.wxcloud === nodeName
+  );
 
   if (!containerInfo) {
     let args = '--rm -d --network wxcb0';
@@ -186,11 +233,12 @@ async function startAgent(progress: vscode.Progress<{ message?: string; incremen
     args += ' --name api.weixin.qq.com';
     const envId = getProxyTargetEnvId();
     args += ` -e CBR_ENV_ID=${envId}`;
-    args += ` -e TOAL_SERVER=${remoteProxyInfo.domain}:443`
-      + ` -e TOAL_KEY=${remoteProxyInfo.key}`
-      + ` -l domain=${nodeName}`
-      + ' -l role=vpcdebugproxy'
-      + ` -l wxcloud=${nodeName}`;
+    args +=
+      ` -e TOAL_SERVER=${remoteProxyInfo.domain}:443` +
+      ` -e TOAL_KEY=${remoteProxyInfo.key}` +
+      ` -l domain=${nodeName}` +
+      ' -l role=vpcdebugproxy' +
+      ` -l wxcloud=${nodeName}`;
 
     if (ext.wxServerInfo?.mounts) {
       for (const mount of ext.wxServerInfo.mounts) {
@@ -205,7 +253,7 @@ async function startAgent(progress: vscode.Progress<{ message?: string; incremen
     await runDockerCommand({
       command: `docker run ${args} ${imageUri}`,
       name: nodeName,
-      rejectOnExitCode: true,
+      rejectOnExitCode: true
     });
 
     ext.wxContainersProvider.refresh();
@@ -225,14 +273,21 @@ async function startAgent(progress: vscode.Progress<{ message?: string; incremen
 }
 
 function checkConflictLocalContainer(list: Dockerode.ContainerInfo[], nodeName: string) {
-  const conflictingLocalContainer = list.find(c => c.Labels.role === 'container' && (c.Labels.domain === nodeName));
+  const conflictingLocalContainer = list.find(
+    c => c.Labels.role === 'container' && c.Labels.domain === nodeName
+  );
   if (conflictingLocalContainer) {
     // local container already take up the place
-    throw new Error(`local container ${conflictingLocalContainer.Labels.wxcloud} already started with the same domain/ip, no need to add a proxy`);
+    throw new Error(
+      `local container ${conflictingLocalContainer.Labels.wxcloud} already started with the same domain/ip, no need to add a proxy`
+    );
   }
 }
 
-async function startOneProxy(progress: vscode.Progress<{ message?: string; increment?: number }>, node: IWXContainerId): Promise<void> {
+async function startOneProxy(
+  progress: vscode.Progress<{ message?: string; increment?: number }>,
+  node: IWXContainerId
+): Promise<void> {
   const p = (message: string) => progress.report({ message });
 
   // const proxyImageInfo = await ensureProxyImage(p);
@@ -240,12 +295,16 @@ async function startOneProxy(progress: vscode.Progress<{ message?: string; incre
   const remoteProxyInfo = await ensureRemoteProxySetup(p);
   const name = node.ip || node.name;
 
-  const list = await $(() => cloudbase.dockerode.listContainers({
-    all: true,
-  }));
+  const list = await $(() =>
+    cloudbase.dockerode.listContainers({
+      all: true
+    })
+  );
 
   checkConflictLocalContainer(list, name);
-  const containerInfo = list.find(c => c.Labels.role === 'vpcdebugproxy' && c.Labels.wxcloud === name);
+  const containerInfo = list.find(
+    c => c.Labels.role === 'vpcdebugproxy' && c.Labels.wxcloud === name
+  );
 
   if (!containerInfo) {
     // prepare createContainer args
@@ -263,23 +322,26 @@ async function startOneProxy(progress: vscode.Progress<{ message?: string; incre
     const conf = getConfiguration();
     // args += ` -p 127.0.0.1:${port}:${port}/tcp`
     args += ' --pull=always';
-    args += `${' -e TOAL_ROLE=client'
-      + ` -e TOAL_SERVER=${remoteProxyInfo.domain}:443`
-      + ` -e TOAL_KEY=${remoteProxyInfo.key}`
-      + ' -e TOAL_SERVER_TIMEOUT=200'
-      + ' -e TOAL_MODE=shortpoll'
-      + ` -e TOAL_LOCAL_PORT=${port}`}${conf.proxy ? ` -e TOAL_LOCAL_PROXY=${conf.proxy}` : ''} -e TOAL_TARGET=${name}`
-      + ' -e TOAL_VERBOSE=DEBUG'
-      + ' -l role=vpcdebugproxy'
-      + ` -l wxcloud=${name}`
-      + ` -l ${usingIP ? 'ip' : 'domain'}=${hostname}`;
+    args +=
+      `${
+        ' -e TOAL_ROLE=client' +
+        ` -e TOAL_SERVER=${remoteProxyInfo.domain}:443` +
+        ` -e TOAL_KEY=${remoteProxyInfo.key}` +
+        ' -e TOAL_SERVER_TIMEOUT=200' +
+        ' -e TOAL_MODE=shortpoll' +
+        ` -e TOAL_LOCAL_PORT=${port}`
+      }${conf.proxy ? ` -e TOAL_LOCAL_PROXY=${conf.proxy}` : ''} -e TOAL_TARGET=${name}` +
+      ' -e TOAL_VERBOSE=DEBUG' +
+      ' -l role=vpcdebugproxy' +
+      ` -l wxcloud=${name}` +
+      ` -l ${usingIP ? 'ip' : 'domain'}=${hostname}`;
 
     // create and start container
     p('starting container');
     await runDockerCommand({
       command: `docker run  ${args} ${imageUri}`,
       name: name,
-      rejectOnExitCode: true,
+      rejectOnExitCode: true
     });
 
     ext.wxContainersProvider.refresh();
@@ -297,4 +359,3 @@ async function startOneProxy(progress: vscode.Progress<{ message?: string; incre
     return $(() => container.start());
   }
 }
-

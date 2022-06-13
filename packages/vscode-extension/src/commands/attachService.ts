@@ -13,7 +13,7 @@ export async function attachService(node?: IWXContainerId): Promise<void> {
   node.attached = true;
   return ext.backend.attachService({
     wxPort: +(container.Labels.wxPort || '27082'),
-    service: container.Labels.wxcloud,
+    service: container.Labels.wxcloud
   });
 }
 
@@ -26,6 +26,6 @@ export async function detachService(node?: IWXContainerId): Promise<void> {
   }
   node.attached = false;
   return ext.backend.detachService({
-    service: container.Labels.wxcloud,
+    service: container.Labels.wxcloud
   });
 }
