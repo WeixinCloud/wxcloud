@@ -2,7 +2,7 @@
   "name": "vscode-docker-wx-cloudbase",
   "displayName": "Weixin Cloudbase Docker Extension",
   "description": "Helps debugging Weixin Cloudbase containers more easily",
-  "version": "2.2.29",
+  "version": "2.2.30",
   "publisher": "weixin-cloudbase",
   "author": "alankldeng",
   "icon": "resources/cloudrun.png",
@@ -224,7 +224,9 @@
     "build-ide": "rm -rf ./out_ide && gulp build --target=ide",
     "build-public": "rm -rf ./out && gulp build --target=public",
     "build-ide-dev": "rm -rf ./out_ide && gulp build --target=ide --mode=development",
-    "build-public-dev": "rm -rf ./out && gulp build --target=public --mode=development"
+    "build-public-dev": "rm -rf ./out && gulp build --target=public --mode=development",
+    "package": "pnpm vsce package --no-dependencies",
+    "publish": "pnpm vsce publish --no-dependencies"
   },
   "devDependencies": {
     "@types/dockerode": "^3.2.1",
