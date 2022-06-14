@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as fse from 'fs-extra';
 import * as path from 'path';
+import * as os from 'os';
 import Dockerode from 'dockerode';
 import getPort from 'get-port';
 import { merge } from 'lodash';
@@ -303,10 +304,18 @@ class Cloudbase {
     if (ext.wxServerInfo?.mounts) {
       for (const mount of ext.wxServerInfo.mounts) {
         if (mount.type === '.tencentcloudbase') {
-          // if host is windows, we need to convert mount.path into win32 like command
+          // if host is windows
           if (process.platform === 'win32') {
-            console.log(path.win32.normalize(mount.path))
-            mount.path = path.win32.normalize(mount.path)
+            try {
+              // parse os version
+              const [major, minor, patch] = os.release().split('.').map(Number);
+              if (major === 6 && minor === 1) {
+                // host is Win7, use legacy mount path form
+                mount.path = mount.path.replace(/[A-Z]:\//g, (v) => `/${v[0].toLowerCase()}/`)
+              }
+            } catch (error) {
+              console.warn('failed to patch mount path for docker ce(win7)', error);
+            }
           }
           cmd += ` --mount type=bind,source="${mount.path}",target=/.tencentcloudbase,readonly`;
         }
