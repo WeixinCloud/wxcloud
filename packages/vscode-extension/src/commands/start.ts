@@ -173,38 +173,40 @@ async function startOneLocal(
     // create and start container
     p('starting container');
 
-    runDockerCommand({
+    const containerStartPromise = runDockerCommand({
       command: debug
         ? `docker run --rm -d -p "9229:9229" sh ${cmd} ${imageTag}`
-        // allocate psudo-tty(-t) for color output.
-        // we don't use detach(-d) because container may exit immediately after start.
-        // keeping console attached is better for knowing why container exit.
-        : `docker run --rm -t ${cmd} ${imageTag}`,
+        : // allocate psudo-tty(-t) for color output.
+          // we don't use detach(-d) because container may exit immediately after start.
+          // keeping console attached is better for knowing why container exit.
+          `docker run --rm -t ${cmd} ${imageTag}`,
       name: local.name,
       rejectOnExitCode: true
+    }).catch(e => {
+      throw new Error(`start container failed: ${e}`);
     });
 
-    // update debug info after 3s
-    const updateDebugInfo = async (retried?: boolean) => {
-      () => {
-        $(() =>
+    // update debug info seperately, because it may take a long time to start container.
+    const probeContainterPromise = (async () => {
+      for (let count = 0; count < 10; count++) {
+        await new Promise(r => setTimeout(r, 3000));
+        const list = await $(() =>
           cloudbase.dockerode.listContainers({
             all: true
           })
-        ).then(async list => {
-          const info = list.find(c => c.Labels.wxcloud === local.name);
-          if (info) {
-            await cloudbase.updateContainerInfo(local.name, info);
-            ext.wxContainersProvider.refresh();
-          } else if (!retried) {
-            // retry after 3s, only once
-            setTimeout(() => updateDebugInfo(true), 3000);
-          }
-        });
+        );
+        const info = list.find(c => c.Labels.wxcloud === local.name);
+        if (info) {
+          await cloudbase.updateContainerInfo(local.name, info);
+          ext.wxContainersProvider.refresh();
+          break;
+        } else {
+          // container is crashed or failed to start
+          throw new Error('container crashed when starting. please check output logs.');
+        }
       }
-    }
-    setTimeout(updateDebugInfo, 3000);
-
+    })();
+    await Promise.race([probeContainterPromise, containerStartPromise]);
     return;
   }
   const container = cloudbase.dockerode.getContainer(local.container.Id);
