@@ -308,9 +308,9 @@ class Cloudbase {
           if (process.platform === 'win32') {
             try {
               // parse os version
-              const [major, minor, patch] = os.release().split('.').map(Number);
+              const [major, minor, _patch] = os.release().split('.').map(Number);
               if (major === 6 && minor === 1) {
-                // host is Win7, use legacy mount path form
+                // host is Win7, use legacy mount path form(C:/ -> /c/)
                 mount.path = mount.path.replace(/[A-Z]:\//g, (v) => `/${v[0].toLowerCase()}/`)
               }
             } catch (error) {
