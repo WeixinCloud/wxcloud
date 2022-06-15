@@ -2,7 +2,7 @@
   "name": "vscode-docker-wx-cloudbase",
   "displayName": "Weixin Cloudbase Docker Extension",
   "description": "Helps debugging Weixin Cloudbase containers more easily",
-  "version": "2.2.37",
+  "version": "2.2.38",
   "publisher": "weixin-cloudbase",
   "author": "alankldeng",
   "icon": "resources/cloudrun.png",

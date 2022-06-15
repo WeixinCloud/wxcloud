@@ -1,3 +1,0 @@
-[submodule "packages/core/src/cloud-api"]
-	path = packages/core/src/cloud-api
-	url = git@git.woa.com:devtools/cloud-api.git

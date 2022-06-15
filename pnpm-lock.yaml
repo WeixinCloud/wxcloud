@@ -193,18 +193,14 @@ importers:
   packages/core:
     specifiers:
       '@types/glob': ^7.2.0
-      eventemitter3: ^4.0.7
+      '@wxcloud/cloudapi': ^1.1.1
       glob: ^8.0.1
-      moment: ^2.24.0
-      moment-timezone: ^0.5.26
       prepend-file: ^2.0.1
       recursive-copy: ^2.0.14
       rimraf: ^3.0.2
       tsup: ^5.12.7
     dependencies:
-      eventemitter3: 4.0.7
-      moment: 2.29.3
-      moment-timezone: 0.5.34
+      '@wxcloud/cloudapi': 1.1.1
     devDependencies:
       '@types/glob': 7.2.0
       glob: 8.0.3
@@ -3987,6 +3983,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@wxcloud/cloudapi/1.1.1:
+    resolution: {integrity: sha512-xZbu1xQLj/LvwwcSDCFtJfpPidmT0JWf5wW38IKgLLNvZ+cQGAV/9S60yaXjDfCVuVT6dvQ2G83MAF2Yv/Zlwg==}
+    dependencies:
+      eventemitter3: 4.0.7
+      moment: 2.29.3
+      moment-timezone: 0.5.34
+    dev: false
 
   /@xtuc/ieee754/1.2.0:
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -14103,7 +14107,7 @@ packages:
     dev: true
 
   /wcwidth/1.0.1:
-    resolution: {integrity: sha1-8LDc+RW8X/FSivrbLA4XtTLaL+g=}
+    resolution: {integrity: sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==}
     dependencies:
       defaults: 1.0.3
 
