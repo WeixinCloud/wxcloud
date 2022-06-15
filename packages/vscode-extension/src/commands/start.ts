@@ -95,7 +95,8 @@ async function startOne(
   }
   if (node.type === 'proxy') {
     if (node.name === 'api.weixin.qq.com') {
-      return startAgent(progress);
+      // lol we just agent that to host
+      // but need to ensure cloud invoke is open
     }
     return startOneProxy(progress, node);
   }
@@ -220,70 +221,6 @@ async function startOneLocal(
   p('starting container');
 
   return $(() => container.start());
-}
-
-async function startAgent(
-  progress: vscode.Progress<{ message?: string; increment?: number }>
-): Promise<void> {
-  const p = (message: string) => progress.report({ message });
-  const nodeName = 'api.weixin.qq.com';
-
-  const imageUri = 'ccr.ccs.tencentyun.com/tcb_prd/openapi-agent:debug';
-  const remoteProxyInfo = await ensureRemoteProxySetup(p);
-  const list = await $(() =>
-    cloudbase.dockerode.listContainers({
-      all: true
-    })
-  );
-
-  checkConflictLocalContainer(list, nodeName);
-  const containerInfo = list.find(
-    c => c.Labels.role === 'vpcdebugproxy' && c.Labels.wxcloud === nodeName
-  );
-
-  if (!containerInfo) {
-    let args = '--rm -d --network wxcb0';
-    args += ' --pull=always';
-    args += ' --name api.weixin.qq.com';
-    const envId = getProxyTargetEnvId();
-    args += ` -e CBR_ENV_ID=${envId}`;
-    args +=
-      ` -e TOAL_SERVER=${remoteProxyInfo.domain}:443` +
-      ` -e TOAL_KEY=${remoteProxyInfo.key}` +
-      ` -l domain=${nodeName}` +
-      ' -l role=vpcdebugproxy' +
-      ` -l wxcloud=${nodeName}`;
-
-    if (ext.wxServerInfo?.mounts) {
-      for (const mount of ext.wxServerInfo.mounts) {
-        if (mount.type === '.tencentcloudbase') {
-          args += ` --mount type=bind,source="${mount.path}",target=/.tencentcloudbase,readonly`;
-        }
-      }
-    }
-
-    // create and start container
-    p('starting container');
-    await runDockerCommand({
-      command: `docker run ${args} ${imageUri}`,
-      name: nodeName,
-      rejectOnExitCode: true
-    });
-
-    ext.wxContainersProvider.refresh();
-  } else {
-    // start or restart
-    const container = cloudbase.dockerode.getContainer(containerInfo.Id);
-
-    const inspectInfo = await container.inspect();
-    if (inspectInfo.State.Running) {
-      p('restarting container');
-      return $(() => container.restart());
-    }
-
-    p('starting container');
-    return $(() => container.start());
-  }
 }
 
 function checkConflictLocalContainer(list: Dockerode.ContainerInfo[], nodeName: string) {
