@@ -7,7 +7,8 @@ import type {
   IDeployServiceResult,
   IQueryServiceOptions,
   IDeployServiceOptions,
-  IExtListResult
+  IExtListResult,
+  IErrorResult
 } from './backend';
 import * as vscode from 'vscode';
 import { LocalWxServer } from '../wxserver';
@@ -31,6 +32,7 @@ let CORE_IDENTITY = {
   privateKey: ''
 };
 async function transactRequest<T = any>(options: CloudAPI.IRequestOptions): Promise<T> {
+  // console.log('-> tcbAPI', options.postdata);
   const { body, statusCode } = await got.post(`${BASE_URL}/wxa-dev-qbase/apihttpagent`, {
     searchParams: {
       appid: CORE_IDENTITY.appid,
@@ -71,6 +73,7 @@ async function transactRequest<T = any>(options: CloudAPI.IRequestOptions): Prom
     throw new Error(`Base resp abnormal, ${JSON.stringify(parsedResp?.base_resp)}`);
   }
   const content: T = parsedResp.content;
+  // console.log('<- tcbAPI', content);
   return content;
 }
 
@@ -112,26 +115,31 @@ export class CoreBackendService implements IBackendService {
     }).json();
     return res;
   }
+  _loginTask: Promise<boolean> | undefined
   async _checkLogin() {
-    try {
-      console.log('_checkLogin');
-      // use getqbaseinfo to check login
-      const res = await this._invokeWxApi({
-        api: '/wxa-dev-qbase/getqbaseinfo'
-      });
-      if (res?.base_resp?.ret === 0) {
-        this.loggedIn = true;
-        console.log('_checkLogin', true);
-        return true;
+    if (this._loginTask) return this._loginTask;
+    const makeLoginTask = async () => {
+      try {
+        console.log('_checkLogin');
+        // use getqbaseinfo to check login
+        const res = await this._invokeWxApi({
+          api: '/wxa-dev-qbase/getqbaseinfo'
+        });
+        if (res?.base_resp?.ret === 0) {
+          this.loggedIn = true;
+          console.log('_checkLogin', true);
+          return true;
+        }
+        console.log('_checkLogin', false);
+        return false;
+      } catch (error) {
+        console.log('_checkLogin', error);
+        return false;
       }
-      console.log('_checkLogin', false);
-      return false;
-    } catch (error) {
-      console.log('_checkLogin', error);
-      return false;
     }
+    this._loginTask = makeLoginTask();
+    return this._loginTask;
   }
-
   init(appid: string, privateKey: string) {
     CORE_IDENTITY = {
       appid,
@@ -235,7 +243,7 @@ export class CoreBackendService implements IBackendService {
       return;
     }
     if (!this.loggedIn) {
-      throw new Error('未登录，请确认 CLI Token 和 AppID 已正确配置。');
+      await this._checkLogin()
     }
     // begin serveLocal
     this.wxServer = new LocalWxServer({
@@ -256,7 +264,7 @@ export class CoreBackendService implements IBackendService {
 
   async getEnvList(): Promise<IGetEnvListResult> {
     if (!this.loggedIn) {
-      throw new Error('未登录，请确认 CLI Token 和 AppID 已正确配置。');
+      await this._checkLogin()
     }
     const result = await CloudAPI.tcbDescribeWxCloudBaseRunEnvs({});
     return {
@@ -264,30 +272,35 @@ export class CoreBackendService implements IBackendService {
     };
   }
 
-  async queryService(opt: IQueryServiceOptions): Promise<IQueryServiceResult> {
-    // return $(() => ext.messenger.invoke('QUERY_SERVICE', opt)) as any;
+  async queryService(opt: IQueryServiceOptions): Promise<IQueryServiceResult | IErrorResult> {
     if (!this.loggedIn) {
-      throw new Error('未登录，请确认 CLI Token 和 AppID 已正确配置。');
+      await this._checkLogin()
     }
     const { envId, serviceName } = opt;
-    const domainInfo = await CloudAPI.tcbDescribeCloudBaseRunServiceDomain({
-      envId,
-      serviceName
-    });
-    const service = await CloudAPI.tcbDescribeCloudBaseRunServer({
-      envId,
-      serverName: serviceName,
-      limit: 1,
-      offset: 0
-    });
-    if (service.versionItems?.[0]) {
-      if (service.versionItems[0].remark.startsWith('TOAL_')) {
-        return {
-          server: service,
-          domainInfo,
-          key: service.versionItems[0].remark
-        };
+    let domainInfo: CloudAPI.IAPITCBDescribeCloudBaseRunServiceDomainResult;
+    let service: CloudAPI.IAPITCBDescribeCloudBaseRunServerResult;
+    try {
+      domainInfo = await CloudAPI.tcbDescribeCloudBaseRunServiceDomain({
+        envId,
+        serviceName
+      });
+      service = await CloudAPI.tcbDescribeCloudBaseRunServer({
+        envId,
+        serverName: serviceName,
+        limit: 1,
+        offset: 0
+      });
+      if (service.versionItems?.[0]) {
+        if (service.versionItems[0].remark.startsWith('TOAL_')) {
+          return {
+            server: service,
+            domainInfo,
+            key: service.versionItems[0].remark
+          };
+        }
       }
+    } catch (error) {
+      console.log(error);
     }
     // our return type need to be camel case
     return {
@@ -384,16 +397,35 @@ export class CoreBackendService implements IBackendService {
     });
     console.log('[!] oldConfig', oldConfig.serviceBaseConfig);
     // copy only allowed fields
-    const envRes = await CloudAPI.tcbUpdateServerBaseConfig({
+    const safeOldFields: (keyof CloudAPI.IAPITCBServiceBaseConfig)[] = [
+      'cpu',
+      'mem',
+      'minNum',
+      'maxNum',
+      'customLogs',
+      'envParams',
+      'initialDelaySeconds',
+      'policyDetails',
+      'envId',
+      'serverName',
+      'createTime'
+    ];
+    const prev = safeOldFields.reduce((acc, key) => {
+      acc[key] = oldConfig.serviceBaseConfig[key];
+      return acc;
+    }
+    , {} as any);
+    const newConf = {
       wxAppId: getConfiguration().appid,
       conf: {
-        ...oldConfig.serviceBaseConfig,
+        ...prev,
         envParams: opt.versionOptions.envParams
       },
       envId: opt.envId,
       serverName: opt.serviceName
-    });
-    console.log('[+] update env variables', envRes);
+    };
+    const envRes = await CloudAPI.tcbUpdateServerBaseConfig(newConf);
+    console.log('[+] update env variables', newConf, envRes);
     const payload = {
       deployType: opt.versionOptions.uploadType,
       envId: opt.envId,
