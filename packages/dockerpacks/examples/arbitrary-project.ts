@@ -48,9 +48,17 @@ async function main() {
   //
   // An `Error` or `DetectionError`(see src/runner/runner.ts) may be thrown.
   const result = await dockerpacks.detect(
+    // Path to the root directory of the application to be analyzed.
     appRoot,
+
+    // builder groups MAY ask some questions about the app,
+    // here we use `HardCodedPromptIO` to handle them.
     new ExamplePromptIO(),
+
+    // This argument is optional. By default an implementation that ignores
+    // all the messages will be used.
     new ExampleMessageHandler(),
+
     // This argument is optional, it's used to decide which builder group to use
     // when multiple builder groups detect the project successfully.
     //
