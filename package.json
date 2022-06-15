@@ -5,7 +5,10 @@
   "scripts": {
     "build": "pnpm --filter=!*-server --filter=!docs -r run build",
     "build:all": "pnpm -r run build",
-    "bump": "bumpp package.json \"packages/!(vscode-extension)/package.json\" --commit --push --tag",
+    "bump": "npm-run-all bumpp changelog push",
+    "bumpp": "bumpp package.json \"packages/!(vscode-extension)/package.json\" --commit --tag",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -l -s",
+    "push": "git push --follow-tags",
     "release": "pnpm -r publish --filter=!*-server --filter=!vscode-docker-wx-cloudbase --access=public --registry=https://registry.npmjs.org/ --no-git-checks --tag=$RELEASE_TAG"
   },
   "devDependencies": {
@@ -13,9 +16,11 @@
     "@typescript-eslint/eslint-plugin": "^5.23.0",
     "@typescript-eslint/parser": "^5.23.0",
     "bumpp": "^7.1.1",
+    "conventional-changelog-cli": "^2.2.2",
     "eslint": "^8.15.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.6.2",
     "typescript": "^4.7.2"
   },
