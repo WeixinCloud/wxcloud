@@ -131,7 +131,8 @@ export async function _ensureRemoteProxySetup(
     throw new Error(`pre query debug proxy service failed ${preQueryResult.error}`);
   }
   const versionItemPredicator = item => {
-    if (item.flowRatio === 100 && item.status === 'normal') {
+    if (item.flowRatio === 100 && 
+      (item.status === 'normal' || item.status === 'scaleActiveing')) {
       return true;
     }
     return false;
@@ -154,7 +155,7 @@ export async function _ensureRemoteProxySetup(
     };
   }
   if (!preQueryResult.key) {
-    console.warn('no key found in result. server may be obsolete, re-deploying...');
+    console.warn('no key found in result. server may be stale, re-deploying...');
   }
 
   // deploy
