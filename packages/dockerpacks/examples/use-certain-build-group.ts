@@ -22,8 +22,11 @@ async function main() {
     // The name of the builder group.
     // It's type-checked, change it and see what will happen.
     'node.npm',
+
+    // Path to the root directory of the application to be analyzed.
     appRoot,
-    // `node.npm` builder group MAY ask these questions,
+
+    // `node.npm` builder group MAY ask some questions about the app,
     // here we use `HardCodedPromptIO` to handle them.
     //
     // You can also provide your own implementation like in `arbitrary-project.ts`
@@ -38,7 +41,8 @@ async function main() {
       generalEntrypoint: 'npm start',
       expose: '3000'
     }),
-    // This argument is optional. By default an implementation that ignore
+
+    // This argument is optional. By default an implementation that ignores
     // all the messages will be used.
     new ExampleMessageHandler()
   );
