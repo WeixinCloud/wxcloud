@@ -419,7 +419,8 @@ export class CoreBackendService implements IBackendService {
       wxAppId: getConfiguration().appid,
       conf: {
         ...prev,
-        envParams: opt.versionOptions.envParams
+        envParams: opt.versionOptions.envParams,
+        maxNum: 1,
       },
       envId: opt.envId,
       serverName: opt.serviceName
