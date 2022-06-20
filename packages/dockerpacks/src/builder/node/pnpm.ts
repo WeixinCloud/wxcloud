@@ -10,7 +10,7 @@ export const pnpmBuilder: Builder = {
     return { hit: packageJsonExists && lockExists };
   },
   async build(ctx) {
-    const version = await inferPnpmVersion(ctx);
+    // const version = await inferPnpmVersion(ctx);
 
     const isYaml = await ctx.files.exists(PNPM_LOCK_YAML);
 
@@ -20,7 +20,7 @@ export const pnpmBuilder: Builder = {
       dockerfile
         .run('npm', 'config', 'set', 'registry', NPM_REGISTRY)
         .comment('使用速度更快的国内镜像源');
-      dockerfile.run('npm', 'install', '-g', `pnpm@${version}`).comment('安装 pnpm');
+      dockerfile.run('npm', 'install', '-g', `pnpm@7`).comment('安装 pnpm');
 
       dockerfile
         .copy(PACKAGE_JSON, isYaml ? PNPM_LOCK_YAML : PNPM_LOCK_YML, './')
