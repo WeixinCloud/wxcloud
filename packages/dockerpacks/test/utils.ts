@@ -12,10 +12,7 @@ const { writeFile, mkdir } = promises;
 
 export class TestDockerpacks extends DockerpacksBase {
   constructor() {
-    super(
-      process.env.CI === 'true' ? ServerApi.TCB_SHANGHAI : new ServerApi('http://localhost:8080'),
-      DEFAULT_BUILDER_GROUPS
-    );
+    super(ServerApi.TCB_SHANGHAI, DEFAULT_BUILDER_GROUPS);
   }
 }
 

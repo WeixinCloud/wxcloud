@@ -11,7 +11,7 @@ WORKDIR /app
 RUN npm config set registry https://registry.npmmirror.com
 
 # 安装 pnpm
-RUN npm install -g pnpm@7.2.1
+RUN npm install -g pnpm@7
 
 # 将这些文件拷贝到容器中
 COPY package.json pnpm-lock.yml ./
