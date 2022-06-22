@@ -155,6 +155,7 @@ export interface PromptInputConfig<P extends PromptRegistration, V, T>
   validate?: RegExp | ((input: string) => boolean);
   trim?: boolean;
   transform?: (input: string) => T;
+  default?: V;
 }
 
 export interface PromptSelectConfig<P extends PromptRegistration, V, T>
@@ -232,7 +233,8 @@ export class PromptHandler<P extends PromptRegistration> {
         config.validate &&
         !(typeof config.validate === 'function'
           ? config.validate(answer)
-          : config.validate.test(answer))
+          : config.validate.test(answer)) &&
+        !config.default
       ) {
         const message = `输入无效，请检查格式是否正确`;
 
@@ -263,7 +265,9 @@ export class PromptHandler<P extends PromptRegistration> {
     if (config.transform) {
       answer = config.transform(answer);
     }
-
+    if (!answer && config.default) {
+      return config.default as any;
+    }
     return answer as any;
   }
 

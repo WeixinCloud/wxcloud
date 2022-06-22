@@ -1,7 +1,6 @@
 .git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md
 node_modules

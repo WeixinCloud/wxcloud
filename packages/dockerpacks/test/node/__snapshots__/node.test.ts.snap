@@ -38,7 +38,6 @@ EXPOSE 3000",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md
 node_modules",
@@ -90,7 +89,6 @@ EXPOSE 3000",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md
 node_modules",
@@ -136,7 +134,6 @@ EXPOSE 3000",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md
 node_modules",
@@ -182,7 +179,6 @@ EXPOSE 3000",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md
 node_modules",
@@ -228,7 +224,6 @@ EXPOSE 3000",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md
 node_modules",
@@ -271,7 +266,6 @@ EXPOSE 3000",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md
 node_modules",
@@ -302,7 +296,6 @@ EXPOSE 3000",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md",
   },
@@ -347,7 +340,6 @@ EXPOSE 3000",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md
 node_modules",
@@ -393,7 +385,6 @@ EXPOSE 3000",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md
 node_modules",
@@ -442,7 +433,6 @@ EXPOSE 3000",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md
 node_modules",
@@ -488,7 +478,6 @@ EXPOSE 3000",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md
 node_modules",
@@ -531,7 +520,6 @@ EXPOSE 3000",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md
 node_modules",
@@ -577,7 +565,6 @@ EXPOSE 3000",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md
 node_modules",

@@ -26,7 +26,6 @@ CMD [\\"java\\", \\"-jar\\", \\"build/libs/demo-0.0.1-SNAPSHOT.jar\\"]",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md",
   },
@@ -59,7 +58,6 @@ CMD [\\"java\\", \\"-jar\\", \\"target/test.jar\\"]",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md",
   },
@@ -92,7 +90,6 @@ CMD [\\"java\\", \\"-jar\\", \\"target/springboot-wxcloudrun-1.0.jar\\"]",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md",
   },

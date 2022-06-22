@@ -29,7 +29,6 @@ EXPOSE 8080",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md",
   },

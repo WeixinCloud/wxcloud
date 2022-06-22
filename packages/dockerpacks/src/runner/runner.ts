@@ -150,7 +150,7 @@ export class DockerpacksBuilder {
     }
 
     const dockerIgnore = new DockerIgnore();
-    dockerIgnore.append('.git', '.gitignore', '.dockerignore', 'Dockerfile*', 'LICENSE', '*.md');
+    dockerIgnore.append('.git', '.gitignore', '.dockerignore', 'LICENSE', '*.md');
 
     const factory = new DockerfileFactory();
     for (const index of this.enabledBuilders) {
