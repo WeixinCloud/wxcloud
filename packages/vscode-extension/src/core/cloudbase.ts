@@ -5,7 +5,7 @@ import * as os from 'os';
 import Dockerode from 'dockerode';
 import getPort from 'get-port';
 import { merge } from 'lodash';
-import { invokeDockerode as $ } from '../utils/utils';
+import { invokeDockerode as $, isLegacyDockerEngine } from '../utils/utils';
 import * as config from './config';
 import ext from './global';
 import type { IWXContainerInfo } from '../types';
@@ -304,18 +304,9 @@ class Cloudbase {
     if (ext.wxServerInfo?.mounts) {
       for (const mount of ext.wxServerInfo.mounts) {
         if (mount.type === '.tencentcloudbase') {
-          // if host is windows
-          if (process.platform === 'win32') {
-            try {
-              // parse os version
-              const [major, minor, _patch] = os.release().split('.').map(Number);
-              if (major === 6 && minor === 1) {
-                // host is Win7, use legacy mount path form(C:/ -> /c/)
-                mount.path = mount.path.replace(/\\/g, '/').replace(/[A-Z]:\//g, (v) => `/${v[0].toLowerCase()}/`)
-              }
-            } catch (error) {
-              console.warn('failed to patch mount path for docker ce(win7)', error);
-            }
+          // if host is legacy docker engine
+          if (isLegacyDockerEngine()) {
+            mount.path = mount.path.replace(/\\/g, '/').replace(/[A-Z]:\//g, (v) => `/${v[0].toLowerCase()}/`)
           }
           cmd += ` --mount type=bind,source="${mount.path}",target=/.tencentcloudbase,readonly`;
         }
