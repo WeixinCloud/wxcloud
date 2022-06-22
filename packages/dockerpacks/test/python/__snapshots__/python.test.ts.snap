@@ -36,7 +36,6 @@ EXPOSE 80",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md",
   },
@@ -79,7 +78,6 @@ EXPOSE 80",
     ".dockerignore" => ".git
 .gitignore
 .dockerignore
-Dockerfile*
 LICENSE
 *.md",
   },

@@ -15,13 +15,11 @@ export const nginxBuilder: Builder<{ staticDirectory: string }> = {
 
     const rootPath = await ctx.prompt.input({
       id: 'staticDirectory',
-      caption: '请输入静态文件夹路径（例如 public）',
+      caption: '请输入静态文件夹路径（例如 public），不存在时，默认使用 public',
       validate: PROMPT_NON_EMPTY,
-      transform: input => trim(input, '/ ')
+      transform: input => trim(input, '/ '),
+      default: 'public'
     });
-    if (!rootPath || !(await ctx.files.exists(rootPath))) {
-      ctx.panic('输入的目录不存在');
-    }
 
     const nginxConfPath = await ctx.files.write('nginx.conf', phpNginxConf(rootPath));
 
