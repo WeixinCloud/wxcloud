@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as Dockerode from 'dockerode';
+import os from 'os';
 import ext from '../core/global';
 import { cloudbase } from '../core/cloudbase';
 import { runDockerCommand } from './terminal';
@@ -175,6 +176,22 @@ export async function fileUriExists(uri: vscode.Uri): Promise<Boolean> {
       () => resolve(false)
     );
   });
+}
+
+export function isLegacyDockerEngine() {
+  if (process.platform === 'win32') {
+    try {
+      // parse os version
+      const [major, minor, _patch] = os.release().split('.').map(Number);
+      if (major === 6 && minor === 1) {
+        // host is Win7, use legacy mount path form(C:/ -> /c/)
+        return true
+      }
+    } catch (error) {
+      console.warn('failed to parse os version(win7)', error);
+    }
+  }
+  return false
 }
 
 /*

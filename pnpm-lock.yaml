@@ -193,14 +193,14 @@ importers:
   packages/core:
     specifiers:
       '@types/glob': ^7.2.0
-      '@wxcloud/cloudapi': ^1.1.1
+      '@wxcloud/cloudapi': ^1.1.2
       glob: ^8.0.1
       prepend-file: ^2.0.1
       recursive-copy: ^2.0.14
       rimraf: ^3.0.2
       tsup: ^5.12.7
     dependencies:
-      '@wxcloud/cloudapi': 1.1.1
+      '@wxcloud/cloudapi': 1.1.2
     devDependencies:
       '@types/glob': 7.2.0
       glob: 8.0.3
@@ -3984,8 +3984,8 @@ packages:
       - supports-color
     dev: true
 
-  /@wxcloud/cloudapi/1.1.1:
-    resolution: {integrity: sha512-xZbu1xQLj/LvwwcSDCFtJfpPidmT0JWf5wW38IKgLLNvZ+cQGAV/9S60yaXjDfCVuVT6dvQ2G83MAF2Yv/Zlwg==}
+  /@wxcloud/cloudapi/1.1.2:
+    resolution: {integrity: sha512-RtZJG/GQX/FCOJ4IlpYqQqeLzDbGhY7682QkfxbLJ+V+2OFWQnW+nLQ8UGNn2OdmFzW3BnGfHg3xhtBPjk31rw==}
     dependencies:
       eventemitter3: 4.0.7
       moment: 2.29.3

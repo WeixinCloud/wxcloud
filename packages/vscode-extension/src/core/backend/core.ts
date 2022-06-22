@@ -279,6 +279,7 @@ export class CoreBackendService implements IBackendService {
     const { envId, serviceName } = opt;
     let domainInfo: CloudAPI.IAPITCBDescribeCloudBaseRunServiceDomainResult;
     let service: CloudAPI.IAPITCBDescribeCloudBaseRunServerResult;
+    let serviceConfig: CloudAPI.IAPITCBDescribeServiceBaseConfigResult;
     try {
       domainInfo = await CloudAPI.tcbDescribeCloudBaseRunServiceDomain({
         envId,
@@ -290,12 +291,19 @@ export class CoreBackendService implements IBackendService {
         limit: 1,
         offset: 0
       });
+      serviceConfig = await CloudAPI.tcbDescribeServiceBaseConfig({
+        envId,
+        serverName: serviceName,
+      })
+
       if (service.versionItems?.[0]) {
-        if (service.versionItems[0].remark.startsWith('TOAL_')) {
+        // parse toal key
+        const key = JSON.parse(serviceConfig.serviceBaseConfig.envParams)["TOAL_KEY"]
+        if (service.versionItems[0].status === 'normal' && key) {
           return {
             server: service,
             domainInfo,
-            key: service.versionItems[0].remark
+            key,
           };
         }
       }

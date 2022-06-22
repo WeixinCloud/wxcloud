@@ -5,6 +5,7 @@ import {
   getDockerContext,
   getDockerFilePath,
   invokeDockerode as $,
+  isLegacyDockerEngine,
   removeHostContainer
 } from '../utils/utils';
 import ext from '../core/global';
@@ -272,7 +273,9 @@ async function startOneProxy(
 
     const conf = getConfiguration();
     // args += ` -p 127.0.0.1:${port}:${port}/tcp`
-    args += ' --pull=always';
+    if (!isLegacyDockerEngine()) {
+      args += ' --pull=always';
+    }
     args +=
       `${
         ' -e TOAL_ROLE=client' +
