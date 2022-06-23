@@ -64,7 +64,7 @@ async function inferRuntimeImage(ctx: BuilderContext) {
 }
 
 async function getRecommendedVersionTag(ctx: BuilderContext) {
-  const wrapper = await ctx.api.queryRecommendedImage('php', ['fpm']);
+  const wrapper = await ctx.api.queryRecommendedImage('php', ['fpm', 'buster']);
   if (!wrapper) {
     // TODO: should ask user to manually set version
     ctx.panic('未找到推荐的版本，请联系客服');

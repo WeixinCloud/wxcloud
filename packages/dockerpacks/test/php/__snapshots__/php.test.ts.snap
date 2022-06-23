@@ -113,7 +113,7 @@ exports[`builders test (php cases) > case no-version-constraint > should have co
 # 本 Dockerfile 可能不能完全覆盖您的项目需求，若遇到问题请根据实际情况修改或询问客服
 
 # 使用 php 官方提供的镜像，内置 fpm
-FROM php:7.4-fpm
+FROM php:7.4-fpm-buster
 
 # 安装 install-php-extensions 工具，您可以使用它来安装自己需要的 php 扩展，请参考：https://github.com/mlocati/docker-php-extension-installer
 # 例如，使用 RUN install-php-extensions @composer 来安装 composer
