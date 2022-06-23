@@ -8,9 +8,10 @@ export const phpComposerBuilder: Builder = {
   },
   async build() {
     return dockerfile => {
-      dockerfile.run('install-php-extensions', '@composer').comment('安装 composer');
+      dockerfile.run('install-php-extensions', '@composer', 'gd').comment('安装 composer 和 gd');
 
       dockerfile.run('rm', '-rf', 'vendor').comment('移除容器中的 vendor 文件夹');
+      dockerfile.run('composer', 'update').comment('更新 composer 依赖');
       dockerfile
         .run(
           'composer',
