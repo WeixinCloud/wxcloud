@@ -28,11 +28,14 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && ln -sf /dev/stderr /var/log/
 # 用生成的 nginx.conf 替换掉默认配置，您可以随时修改生成的 nginx.conf 文件
 COPY wxcloudrun-files/nginx.conf /etc/nginx/nginx.conf
 
-# 安装 composer
-RUN install-php-extensions @composer
+# 安装 composer 和 gd
+RUN install-php-extensions @composer gd
 
 # 移除容器中的 vendor 文件夹
 RUN rm -rf vendor
+
+# 更新 composer 依赖
+RUN composer update
 
 # 使用 composer 重新安装依赖
 RUN composer install --no-dev --no-progress --no-interaction --optimize-autoloader
