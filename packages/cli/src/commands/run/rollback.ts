@@ -10,6 +10,7 @@ import { execWithLoading } from '../../utils/loading';
 import { computedBuildLog, computedTaskLog } from '../../utils/run';
 import { chooseEnvId, chooseServiceId, chooseVersionName } from '../../utils/ux';
 import { REGION_COMMAND_FLAG } from '../../utils/flags';
+import { CloudAPI } from '@wxcloud/core';
 
 export default class RunRollbackCommand extends Command {
   static description = '版本回退';
@@ -49,25 +50,23 @@ export default class RunRollbackCommand extends Command {
   }) {
     return new Promise<void>(resolve => {
       const timer = setInterval(async () => {
-        const { Task: manageTask } = await DescribeServerManageTask({
-          EnvId: envId,
-          ServerName: serviceName
+        const { task: manageTask } = await CloudAPI.tcbDescribeServerManageTask({
+          envId: envId,
+          serverName: serviceName
         });
         if (isPrintLog) {
-          const {
-            VersionItems: [versionItem]
-          } = await DescribeCloudBaseRunServer({
-            EnvId: envId,
-            ServerName: serviceName,
-            VersionName: versionName,
-            Offset: 0,
-            Limit: 1
+          const { versionItems } = await CloudAPI.tcbDescribeCloudBaseRunServer({
+            envId: envId,
+            serverName: serviceName,
+            versionName: versionName,
+            offset: 0,
+            limit: 1
           });
           const taskLog = await computedTaskLog(envId, manageTask);
-          const buildLog = await computedBuildLog(envId, versionItem);
+          const buildLog = await computedBuildLog(envId, versionItems?.[0]);
           this.log(`${taskLog}\n${buildLog}`);
         }
-        if (manageTask?.Status === 'finished') {
+        if (manageTask?.status === 'finished') {
           clearInterval(timer);
           resolve();
         }
