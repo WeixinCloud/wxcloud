@@ -246,7 +246,7 @@ importers:
       vite-tsconfig-paths: 3.4.1
       vitest: 0.10.5
 
-  packages/docs-server:
+  packages/docs:
     specifiers:
       '@vuepress/bundler-vite': 2.0.0-beta.46
       '@vuepress/client': next
@@ -3449,7 +3449,7 @@ packages:
       autoprefixer: 10.4.7_postcss@8.4.14
       connect-history-api-fallback: 1.6.0
       postcss: 8.4.14
-      rollup: 2.74.1
+      rollup: 2.75.6
       vite: 2.9.9_sass@1.52.1
       vue: 3.2.36
       vue-router: 4.0.15_vue@3.2.36
@@ -12209,6 +12209,7 @@ packages:
   /sass/1.52.1:
     resolution: {integrity: sha512-fSzYTbr7z8oQnVJ3Acp9hV80dM1fkMN7mSD/25mpcct9F7FPBMOI8krEYALgU1aZoqGhQNhTPsuSmxjnIvAm4Q==}
     engines: {node: '>=12.0.0'}
+    hasBin: true
     dependencies:
       chokidar: 3.5.3
       immutable: 4.0.0
