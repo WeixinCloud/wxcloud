@@ -1,6 +1,7 @@
 import { DescribeServerManageTask, DescribeCloudBaseRunServer } from '../api';
 import { computedTaskLog, computedBuildLog } from '../utils/run';
 import logUpdate from 'log-update';
+import { CloudAPI } from '@wxcloud/core';
 export async function getDeployResult({
   envId,
   serviceName,
@@ -14,24 +15,22 @@ export async function getDeployResult({
 }) {
   return new Promise<void>(resolve => {
     const timer = setInterval(async () => {
-      const { Task: manageTask } = await DescribeServerManageTask({
-        EnvId: envId,
-        ServerName: serviceName
+      const { task: manageTask } = await CloudAPI.tcbDescribeServerManageTask({
+        envId,
+        serverName: serviceName
       });
-      if (isPrintLog && manageTask?.VersionName) {
-        const {
-          VersionItems: [versionItem]
-        } = await DescribeCloudBaseRunServer({
-          EnvId: envId,
-          ServerName: serviceName,
-          VersionName: manageTask?.VersionName,
-          Offset: 0,
-          Limit: 1
+      if (isPrintLog && manageTask?.versionName) {
+        const { versionItems } = await CloudAPI.tcbDescribeCloudBaseRunServer({
+          envId: envId,
+          serverName: serviceName,
+          versionName: manageTask?.versionName,
+          offset: 0,
+          limit: 1
         });
         const taskLog = await computedTaskLog(envId, manageTask);
-        const buildLog = await computedBuildLog(envId, versionItem);
+        const buildLog = await computedBuildLog(envId, versionItems?.[0]);
         logUpdate(`${taskLog}\n${buildLog}\n`);
-        if (manageTask?.Status === 'finished') {
+        if (manageTask?.status === 'finished') {
           clearInterval(timer);
           resolve();
         }

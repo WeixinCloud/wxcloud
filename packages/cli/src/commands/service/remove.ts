@@ -96,8 +96,7 @@ export default class RemoveServiceCommand extends Command {
   }
 
   private async doRemoveService(appId: string, envId: string, serviceName: string) {
-    await CloudAPI.tcbDeleteWxCloudBaseRunServer({
-      wxAppid: appId,
+    await CloudAPI.tcbrDeleteCloudRunServer({
       envId,
       serverName: serviceName
     });

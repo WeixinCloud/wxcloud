@@ -1,3 +1,4 @@
+import { CloudAPI } from '@wxcloud/core';
 import { padEnd } from 'lodash';
 import moment from 'moment';
 import { DescribeCloudBaseRunBuildLog, DescribeCloudBaseRunProcessLog, SearchClsLog } from '../api';
@@ -19,14 +20,17 @@ function stripAnsi(string) {
 
   return string.replace(ansiRegex(), '');
 }
-export async function computedBuildLog(envId: string, version: VersionItems) {
-  const buildId = version?.BuildId;
-  const runId = version?.RunId;
+export async function computedBuildLog(
+  envId: string,
+  version?: CloudAPI.IAPITCBCloudBaseRunServerVersionItem
+) {
+  const buildId = version?.buildId;
+  const runId = version?.runId;
   const [runBuildLog, cbrLog, userLog] = await Promise.all([
     buildId
       ? DescribeCloudBaseRunBuildLog({
           EnvId: envId,
-          ServiceVersion: version?.VersionName,
+          ServiceVersion: version?.versionName,
           BuildId: buildId
         })
       : Promise.resolve(null),
@@ -40,7 +44,7 @@ export async function computedBuildLog(envId: string, version: VersionItems) {
       EnvId: envId,
       StartTime: moment().subtract(10, 'm').format('YYYY-MM-DD HH:mm:ss'),
       EndTime: moment().add(10, 'm').format('YYYY-MM-DD HH:mm:ss'),
-      QueryString: `tcb_type:CloudBaseRun AND container_name:${version?.VersionName}`,
+      QueryString: `tcb_type:CloudBaseRun AND container_name:${version?.versionName}`,
       Limit: 100
     })
       .then(({ LogResults = {} }) =>
@@ -68,20 +72,20 @@ export async function computedBuildLog(envId: string, version: VersionItems) {
 
   return [pipelineHtml, cbrHtml, userHtml].map(stripAnsi).filter(Boolean).join('<br/>***<br/>');
 }
-export async function computedTaskLog(envId: string, task: IServerManageTaskInfo) {
+export async function computedTaskLog(envId: string, task: CloudAPI.IAPITCBServerManageTaskInfo) {
   const { appid } = await readLoginState();
-  const stepsToConsider = task?.Steps?.filter(({ Status }) => Status !== 'notInvolve') ?? [];
-  const taskDisplayInfo = task?.Steps
-    ? `部署开始于 ${task.CreateTime}\n\nAppID: ${appid}\n环境名称：${envId}\n
+  const stepsToConsider = task?.steps?.filter(({ status }) => status !== 'notInvolve') ?? [];
+  const taskDisplayInfo = task?.steps
+    ? `部署开始于 ${task.createTime}\n\nAppID: ${appid}\n环境名称：${envId}\n
       ${stepsToConsider
-        .filter(({ Status }) => Status !== 'todo')
-        .map(({ Name, Status, FailReason, CostTime }, i) => {
+        .filter(({ status }) => status !== 'todo')
+        .map(({ name, status, failReason, costTime }, i) => {
           return [
             `[${i + 1}/${stepsToConsider?.length}]`,
-            padEnd(STAGE_TEXT[Name] || Name, 8, '　'),
-            padEnd(STATUS_TEXT[Status] || Status, 3, '　'),
-            Status === 'running' ? `预计需要 ${STAGE_COST[Name]}...` : `${CostTime}s`,
-            FailReason
+            padEnd(STAGE_TEXT[name] || name, 8, '　'),
+            padEnd(STATUS_TEXT[status] || status, 3, '　'),
+            status === 'running' ? `预计需要 ${STAGE_COST[name]}...` : `${costTime}s`,
+            failReason
           ]
             .filter(v => v)
             .join(' ');
