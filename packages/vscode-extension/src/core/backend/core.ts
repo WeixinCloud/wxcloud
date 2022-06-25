@@ -404,29 +404,11 @@ export class CoreBackendService implements IBackendService {
       serverName: opt.serviceName
     });
     console.log('[!] oldConfig', oldConfig.serviceBaseConfig);
-    // copy only allowed fields
-    const safeOldFields: (keyof CloudAPI.IAPITCBServiceBaseConfig)[] = [
-      'cpu',
-      'mem',
-      'minNum',
-      'maxNum',
-      'customLogs',
-      'envParams',
-      'initialDelaySeconds',
-      'policyDetails',
-      'envId',
-      'serverName',
-      'createTime'
-    ];
-    const prev = safeOldFields.reduce((acc, key) => {
-      acc[key] = oldConfig.serviceBaseConfig[key];
-      return acc;
-    }
-    , {} as any);
-    const newConf = {
+    const newConf: CloudAPI.IAPITCBUpdateServerBaseConfigOptions = {
       wxAppId: getConfiguration().appid,
       conf: {
-        ...prev,
+        ...oldConfig.serviceBaseConfig,
+        logType: 'none',
         envParams: opt.versionOptions.envParams,
         maxNum: 1,
       },
