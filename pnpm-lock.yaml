@@ -193,7 +193,7 @@ importers:
   packages/core:
     specifiers:
       '@types/glob': ^7.2.0
-      '@wxcloud/cloudapi': ^1.1.2
+      '@wxcloud/cloudapi': latest
       glob: ^8.0.1
       prepend-file: ^2.0.1
       recursive-copy: ^2.0.14
