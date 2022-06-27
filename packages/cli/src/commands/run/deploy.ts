@@ -25,6 +25,7 @@ import { getDeployResult } from '../../functions/getDeployResult';
 import chalk from 'chalk';
 import parse from 'gitignore-globs';
 import { getDockerIgnore } from '../../functions/getDockerIgnore';
+import { CloudAPI, preprocessBaseConfig } from '@wxcloud/core';
 
 export default class RunDeployCommand extends Command {
   static description = '创建版本';
@@ -221,19 +222,20 @@ export default class RunDeployCommand extends Command {
     return newReleaseConfig;
   }
 
-  async updateEnvParams(EnvId, ServerName, envParams) {
+  async updateEnvParams(envId, serverName, envParams) {
     await execWithLoading(
       async () => {
-        const { ServiceBaseConfig: lastConfig } = await DescribeServiceBaseConfig({
-          EnvId,
-          ServerName
+        const { serviceBaseConfig: lastConfig } = await CloudAPI.tcbDescribeServiceBaseConfig({
+          envId,
+          serverName
         });
-        await UpdateServerBaseConfig({
-          EnvId,
-          ServerName,
-          Conf: {
-            ...lastConfig,
-            EnvParams: JSON.stringify(
+        await CloudAPI.tcbUpdateServerBaseConfig({
+          wxAppId: (await readLoginState()).appid,
+          envId,
+          serverName,
+          conf: {
+            ...preprocessBaseConfig(lastConfig),
+            envParams: JSON.stringify(
               envParams.split('&').reduce((prev, cur) => {
                 prev[cur.split('=')[0]] = cur.split('=')[1];
                 return prev;

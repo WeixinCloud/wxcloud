@@ -18,7 +18,7 @@
     "build": "tsup"
   },
   "dependencies": {
-    "@wxcloud/cloudapi": "^1.1.2"
+    "@wxcloud/cloudapi": "latest"
   },
   "devDependencies": {
     "@types/glob": "^7.2.0",

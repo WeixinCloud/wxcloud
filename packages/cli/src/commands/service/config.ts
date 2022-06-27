@@ -5,7 +5,7 @@ import { ApiRegion, setApiCommonParameters } from '../../api/common';
 import { execWithLoading } from '../../utils/loading';
 import { chooseEnvId, chooseServiceId } from '../../utils/ux';
 import { REGION_COMMAND_FLAG } from '../../utils/flags';
-import { CloudAPI } from '@wxcloud/core';
+import { CloudAPI, preprocessBaseConfig } from '@wxcloud/core';
 import { Flags } from '@oclif/core';
 import { readLoginState } from '../../utils/auth';
 // @ts-ignore
@@ -130,7 +130,7 @@ export default class ConfigServiceCommand extends Command {
         break;
       case 'update':
         const conf = {
-          ...oldConfig,
+          ...preprocessBaseConfig(oldConfig),
           ...config
         };
         cli.info(JSON.stringify(conf, null, 2));
