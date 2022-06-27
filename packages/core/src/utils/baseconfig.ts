@@ -2,7 +2,7 @@ import { IAPITCBServiceBaseConfig } from '@wxcloud/cloudapi';
 
 export function preprocessBaseConfig(baseConfig: IAPITCBServiceBaseConfig) {
   const newBaseConfig = { ...baseConfig };
-  if (newBaseConfig.policyThreshold !== 0 && newBaseConfig.policyType !== '') {
+  if (newBaseConfig.policyThreshold && newBaseConfig.policyType) {
     newBaseConfig.policyDetails = [
       { policyThreshold: newBaseConfig.policyThreshold, policyType: newBaseConfig.policyType }
     ];
