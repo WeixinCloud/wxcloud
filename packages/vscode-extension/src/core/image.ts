@@ -43,7 +43,6 @@ export async function _ensureProxyImage(
 ): Promise<IEnsureProxyImageResult> {
   // ensure code
   const imageTag = `${imageName}:${currentImageInfo.version}`;
-
   // check image
   progress('checking image');
   const images = await $(() => cloudbase.dockerode.listImages());
@@ -98,6 +97,7 @@ export async function _ensureRemoteProxySetup(
 ): Promise<IEnsureRemoteProxySetup> {
   // check cloud env
   p('checking cloud env');
+
   const conf = configuration.getConfiguration();
   let envId = conf.vpcProxyTargetEnvId;
   if (!envId) {
@@ -131,8 +131,7 @@ export async function _ensureRemoteProxySetup(
     throw new Error(`pre query debug proxy service failed ${preQueryResult.error}`);
   }
   const versionItemPredicator = item => {
-    if (item.flowRatio === 100 && 
-      (item.status === 'normal' || item.status === 'scaleActiveing')) {
+    if (item.flowRatio === 100 && (item.status === 'normal' || item.status === 'scaleActiveing')) {
       return true;
     }
     return false;
@@ -147,8 +146,34 @@ export async function _ensureRemoteProxySetup(
     preQueryResult.key
   ) {
     // exists
-    // activate it, no wait
-    // probe is no longer valid since otp is introduced.
+    // we need to actively probe domain since cool starting is VERY slow
+    async function pollVpcProxyNodeDomain() {
+      let pollingMaxCount = 100;
+
+      while (pollingMaxCount--) {
+        try {
+          const r = await got(preQueryResult.domainInfo.defaultPublicDomain, {
+            headers: {
+              'x-toal-client-key': preQueryResult.key
+            },
+            timeout: 3000,
+          });
+          if (r.statusCode === 200) {
+            // continue?
+            pollingMaxCount = 0;
+            console.log('poll vpc proxy node success.');
+          }
+        } catch (error) {
+          console.log('poll vpc proxy node domain error, retry', error);
+        }
+        // sleep
+        if (pollingMaxCount) {
+          await sleep(5000)
+          p('awaiting vpc proxy node liveness')
+        }
+      }
+    }
+    await pollVpcProxyNodeDomain()
     return {
       domain: preQueryResult.domainInfo.defaultPublicDomain,
       key: preQueryResult.key
