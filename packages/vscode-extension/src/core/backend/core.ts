@@ -15,7 +15,7 @@ import { LocalWxServer } from '../wxserver';
 import { cloudbase } from '../cloudbase';
 import { getConfiguration } from '../../configuration/configuration';
 import * as _ from 'lodash';
-import { CloudAPI } from '@wxcloud/core';
+import { CloudAPI, preprocessBaseConfig } from '@wxcloud/core';
 import crypto from 'crypto';
 import got from 'got';
 import { merge } from 'lodash';
@@ -404,11 +404,16 @@ export class CoreBackendService implements IBackendService {
       serverName: opt.serviceName
     });
     console.log('[!] oldConfig', oldConfig.serviceBaseConfig);
+    const baseConfig = preprocessBaseConfig(oldConfig.serviceBaseConfig)
+
     const newConf: CloudAPI.IAPITCBUpdateServerBaseConfigOptions = {
       wxAppId: getConfiguration().appid,
       conf: {
-        ...oldConfig.serviceBaseConfig,
         logType: 'none',
+        policyDetails: [
+          { policyThreshold: 60, policyType: 'cpu' },
+        ],
+        ...baseConfig,
         envParams: opt.versionOptions.envParams,
         maxNum: 1,
       },
