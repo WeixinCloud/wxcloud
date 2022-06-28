@@ -73,14 +73,19 @@ async function startOneLocal(
   });
 
   try {
-    await generateDockerComposeAndDockerfileDev((await getDockerFilePath(local)).uri.fsPath, {
-      context: await getDockerContext(local),
-      localPort: hostPort,
-      remotePort: local.config.containerPort,
-      name: local.name,
-      // tokenVolume: `${ext.wxServerInfo.mounts[0].path}:/.tencentcloudbase`,
-      wxPort: getConfiguration().ports.wx
-    });
+    hostPort = await generateDockerComposeAndDockerfileDev(
+      (
+        await getDockerFilePath(local)
+      ).uri.fsPath,
+      {
+        context: await getDockerContext(local),
+        localPort: hostPort,
+        remotePort: local.config.containerPort,
+        name: local.name,
+        // tokenVolume: `${ext.wxServerInfo.mounts[0].path}:/.tencentcloudbase`,
+        wxPort: getConfiguration().ports.wx
+      }
+    );
   } catch (e) {
     LOG_OUTPUT.append(`Live Coding 出错: ${e.message}\n${e.stack}`);
     vscode.window
@@ -132,6 +137,7 @@ async function startOneLocal(
     // create and start container
     p('starting container');
 
+    let isContainerCreated = false;
     await runDockerCommand({
       command: 'docker-compose up -d',
       name: local.name,
@@ -143,34 +149,42 @@ async function startOneLocal(
       cloudbase.dockerode.listContainers({
         all: true
       })
-    ).then(async list => {
-      const info = list.find(c => c.Labels.wxcloud === local.name);
-      if (info) {
-        await cloudbase.updateContainerInfo(local.name, info, 'compose');
-        ext.wxContainersProvider.refresh();
-        hostPort = info.Ports[0]?.PublicPort;
-      }
-    });
+    )
+      .then(async list => {
+        const info = list.find(c => c.Labels.wxcloud === local.name);
+        if (info) {
+          if (info.State === 'running') {
+            await cloudbase.updateContainerInfo(local.name, info, 'compose');
+            ext.wxContainersProvider.refresh();
+            hostPort = info.Ports[0]?.PublicPort;
+          } else {
+            throw new Error('container crashed when starting: ' + info.Status);
+          }
+        }
+      })
+      .then(async () => {
+        // prompt to open browser
+        const url = `http://localhost:${hostPort}`;
+        const openBrowser = await vscode.window.showInformationMessage(
+          `实时开发已启动，访问地址：${url}`,
+          '在浏览器中打开'
+        );
+        if (openBrowser) {
+          await vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(url));
+        }
+      })
+      .catch(e => {
+        vscode.window.showErrorMessage(
+          `实时开发启动失败：${e.message}，可能是容器启动时异常退出，请检查终端输出和 Dockerfile.development。`
+        );
+      });
 
     // attach to docker compose(non-blocking)
     runDockerCommand({
       command: 'docker-compose up',
       name: local.name,
-      rejectOnExitCode: false
+      rejectOnExitCode: true
     });
-
-    // an prompt (non block as well)
-    (async function () {
-      // prompt to open browser
-      const url = `http://localhost:${hostPort}`;
-      const openBrowser = await vscode.window.showInformationMessage(
-        `实时开发已启动，访问地址：${url}`,
-        '在浏览器中打开'
-      );
-      if (openBrowser) {
-        await vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(url));
-      }
-    })();
 
     return;
   }
