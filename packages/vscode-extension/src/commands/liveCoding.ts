@@ -157,20 +157,17 @@ async function startOneLocal(
             await cloudbase.updateContainerInfo(local.name, info, 'compose');
             ext.wxContainersProvider.refresh();
             hostPort = info.Ports[0]?.PublicPort;
+            const url = `http://localhost:${hostPort}`;
+            const openBrowser = await vscode.window.showInformationMessage(
+              `实时开发已启动，访问地址：${url}`,
+              '在浏览器中打开'
+            );
+            if (openBrowser) {
+              await vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(url));
+            }    
           } else {
             throw new Error('container crashed when starting: ' + info.Status);
           }
-        }
-      })
-      .then(async () => {
-        // prompt to open browser
-        const url = `http://localhost:${hostPort}`;
-        const openBrowser = await vscode.window.showInformationMessage(
-          `实时开发已启动，访问地址：${url}`,
-          '在浏览器中打开'
-        );
-        if (openBrowser) {
-          await vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(url));
         }
       })
       .catch(e => {
