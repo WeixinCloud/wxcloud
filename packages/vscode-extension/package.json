@@ -259,7 +259,7 @@
     "dockerode": "3.2.1",
     "fs-extra": "^9.1.0",
     "ftp": "^0.3.10",
-    "get-port": "^5.1.1",
+    "get-port": "6.1.2",
     "get-proxy-settings": "^0.1.13",
     "got": "^11.8.2",
     "hpagent": "^0.1.1",
