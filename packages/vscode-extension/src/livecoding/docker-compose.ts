@@ -51,17 +51,19 @@ networks:
 
 export async function syncEnvironmentVariableToComposeFile(
   serviceName: string,
-  yamlConfig: string
+  dockerComposeJson: any
 ) {
   const containers = await cloudbase.getContainers();
   const container = containers.find(c => c.name === serviceName);
-  // parse original yaml, aggresively no type check
-  const dockerComposeJson: any = yamlLoad(yamlConfig);
   // insert environment
-  set(dockerComposeJson, 'services.app.environment', uniq([
-    ...get(dockerComposeJson, 'services.app.environment', []),
-    ...Object.entries(container.config.envParams).map(([k, v]) => `${k}=${v}`)
-  ]));
+  set(
+    dockerComposeJson,
+    'services.app.environment',
+    uniq([
+      ...get(dockerComposeJson, 'services.app.environment', []),
+      ...Object.entries(container.config.envParams).map(([k, v]) => `${k}=${v}`)
+    ])
+  );
   // dump yaml
   return yamlDump(dockerComposeJson);
 }
@@ -80,18 +82,20 @@ export interface IDockerComposeConfiguration {
 export async function generateDockerComposeAndDockerfileDev(
   dockerfilePath: string,
   composeConfig: IDockerComposeConfiguration
-) {
+): Promise<number> {
   const repoPath = cloudbase.targetWorkspace.uri.fsPath;
   const composePath = path.join(repoPath, 'docker-compose.yml');
   const dockerfileDevPath = path.join(repoPath, DEV_DOCKERFILE_NAME);
   if (fse.existsSync(composePath) && fse.existsSync(dockerfileDevPath)) {
     // only sync environment variable to docker compose yaml.
+    // parse original yaml, aggresively no type check
+    const dockerComposeJson: any = yamlLoad(fse.readFileSync(composePath, { encoding: 'utf8' }));
     const targetDockerComposeFile = await syncEnvironmentVariableToComposeFile(
       composeConfig.name,
-      fse.readFileSync(composePath, { encoding: 'utf8' })
+      dockerComposeJson
     );
     fse.writeFileSync(composePath, targetDockerComposeFile);
-    return;
+    return get(dockerComposeJson, 'services.app.ports').map(item => item.split(':')[0]);
   }
   if (!fse.existsSync(dockerfilePath)) {
     console.warn('invalid dockerfile path.');
@@ -125,12 +129,16 @@ export async function generateDockerComposeAndDockerfileDev(
       })
     );
   }
+  const jsonCompose = yamlLoad(
+    dockerComposeTemplate(composeConfig, DEV_DOCKERFILE_NAME, elements.workdir)
+  );
   // patch envVariables
   const targetDockerComposeFile = await syncEnvironmentVariableToComposeFile(
     composeConfig.name,
-    dockerComposeTemplate(composeConfig, DEV_DOCKERFILE_NAME, elements.workdir)
+    jsonCompose
   );
   fse.writeFileSync(composePath, targetDockerComposeFile);
+  return get(jsonCompose, 'services.app.ports').map(item => item.split(':')[0]);
 }
 
 function correctConfigAndElements(

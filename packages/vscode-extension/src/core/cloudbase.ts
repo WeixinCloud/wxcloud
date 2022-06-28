@@ -360,6 +360,7 @@ class Cloudbase {
       this.projectConfigJsonWatcher.dispose();
     }
     this.projectConfigJsonWatcher = vscode.workspace.createFileSystemWatcher({
+      baseUri: this.targetWorkspace.uri,
       base: this.targetWorkspace.uri.fsPath,
       pattern: 'project.config.json'
     });
@@ -386,6 +387,7 @@ class Cloudbase {
     }
     this.containersWatcher = vscode.workspace.createFileSystemWatcher({
       base: this.targetWorkspace.uri.fsPath,
+      baseUri: this.targetWorkspace.uri,
       pattern: '*'
     });
 

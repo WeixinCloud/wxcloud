@@ -90,8 +90,10 @@ function lazyWatchDebugConfigJSON() {
   if (debugConfigJsonWatcher) {
     debugConfigJsonWatcher.dispose();
   }
+  const base = vscode.Uri.joinPath(cloudbase.targetWorkspace.uri, '.cloudbase', 'container')
   debugConfigJsonWatcher = vscode.workspace.createFileSystemWatcher({
-    base: path.join(cloudbase.targetWorkspace.uri.fsPath, '.cloudbase', 'container'),
+    base: base.fsPath,
+    baseUri: base,
     pattern: 'debug.json'
   });
 
