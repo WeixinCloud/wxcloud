@@ -135,7 +135,8 @@ export class InitCommand extends Command {
 
   private checkTargetPath(path: string) {
     if (!isDirectoryExists(path)) {
-      this.error('请指定一个文件夹作为路径');
+      this.log(`项目初始化到 ${path}`);
+      fs.mkdirSync(path);
     }
     if (!isDirectoryEmpty(path)) {
       this.error('目标文件夹已经含有文件');
