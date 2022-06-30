@@ -34,6 +34,5 @@
 
 ## 贡献
 
-- [Code of Conduct]()
-- [Contributing Guidelines]()
-- [MIT License]()
+- [Contributing](./CONTRIBUTING.md)
+- [MIT License](./LICENSE)
