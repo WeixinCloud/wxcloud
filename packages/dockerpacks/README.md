@@ -17,7 +17,7 @@ See [Dockerpacks](https://cloud.weixin.qq.com/cli/terminology/dockerpacks.html) 
 - Is there a developer API?
   - Yes. You can `import { Dockerpacks } from @wxcloud/dockerpacks` and use it.
 - Is this open source?
-  - Soon. We are working on it.
+  - Yes. You can [view the source code](https://github.com/WeixinCloud/wxcloud/tree/main/packages/dockerpacks)
 - How is it different from Buildpacks?
   - A lot. But key difference is that we generate plain Dockerfile instead of built images.
 
