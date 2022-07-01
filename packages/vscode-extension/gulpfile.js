@@ -140,7 +140,6 @@ gulp.task('esbuild', () => {
       "process.env.WX_ENV_PUBLIC": target === 'public' ? true : undefined,
     },
     minify: true,
-    target: 'node13',
   });
 });
 
