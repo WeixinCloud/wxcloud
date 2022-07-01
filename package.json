@@ -7,7 +7,7 @@
     "build:all": "pnpm -r run build",
     "bump": "npm-run-all bumpp changelog push",
     "bumpp": "bumpp package.json \"packages/!(vscode-extension)/package.json\" --commit --tag",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -l -s",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -l -s -r 0",
     "push": "git push --follow-tags",
     "release": "pnpm -r publish --filter=!vscode-docker-wx-cloudbase --access=public --registry=https://registry.npmjs.org/ --no-git-checks --tag=$RELEASE_TAG"
   },
