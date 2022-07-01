@@ -1,9 +1,10 @@
 import { Builder } from '@builder/builder';
 import { BuilderContext, PROMPT_NON_EMPTY } from '@builder/context';
-import { readFile } from 'fs/promises';
+import { promises as fs } from 'fs';
 import JSZip from 'jszip';
 import { MAIN_CLASS, MANIFEST_MF } from './constants';
 
+const { readFile } = fs;
 export const javaEntrypointBuilder: Builder<{ entrypointJar: string }> = {
   async detect() {
     return { hit: true };
@@ -28,7 +29,7 @@ export const javaEntrypointBuilder: Builder<{ entrypointJar: string }> = {
   }
 };
 
-async function findExecutableJars(ctx: BuilderContext) {
+async function findExecutableJars(ctx: BuilderContext<any>) {
   const result: string[] = [];
   const jarFiles = await ctx.files.glob('./**/*.jar', false);
   await Promise.all(
