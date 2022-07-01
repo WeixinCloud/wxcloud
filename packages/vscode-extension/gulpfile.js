@@ -132,6 +132,7 @@ gulp.task('esbuild', () => {
     external: ['vscode'],
     format: 'cjs',
     platform: 'node',
+    target: 'node12',
     mainFields: ['module', 'main'],
     plugins: [nativeNodeModulesPlugin],
     define: {
