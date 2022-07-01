@@ -74,17 +74,8 @@ class Cloudbase {
         this.lazyWatchProjectConfigJSON();
       }
     } else {
-      if (process.env.WX_ENV_IDE) {
-        console.log(
-          'no target workspace is available, entering third-party editor integration mode.'
-        );
-        // eslint-disable-next-line prefer-destructuring
-        this.targetWorkspace = vscode.workspace.workspaceFolders[0];
-      } else {
-        throw new Error(
-          '找不到 Dockerfile 或 project.config.json. No Dockerfile or project.config.json not exists'
-        );
-      }
+      // use default workspace
+      this.targetWorkspace = vscode.workspace.workspaceFolders[0];
     }
   }
 
