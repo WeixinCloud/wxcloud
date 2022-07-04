@@ -8,7 +8,7 @@
     "bump": "npm-run-all bumpp changelog replaceurl push",
     "bumpp": "bumpp package.json \"packages/!(vscode-extension)/package.json\" --commit --tag",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -l -s -r 0",
-    "replaceurl": "sed -i '' 's/git.woa.com\/wx-cloudbase/github.com\/WeixinCloud/g' CHANGELOG.md",
+    "replaceurl": "scripts/patch-changelog.sh",
     "push": "git push --follow-tags",
     "release": "pnpm -r publish --filter=!vscode-docker-wx-cloudbase --access=public --registry=https://registry.npmjs.org/ --no-git-checks --tag=$RELEASE_TAG"
   },

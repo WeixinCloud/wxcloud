@@ -1,0 +1,1 @@
+sed -i '' 's/git.woa.com\/wx-cloudbase/github.com\/WeixinCloud/g' CHANGELOG.md
