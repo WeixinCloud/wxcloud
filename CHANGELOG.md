@@ -1,20 +1,101 @@
+## [2.0.17](https://github.com/WeixinCloud/wxcloud/compare/v2.0.16...v2.0.17) (2022-07-04)
+
+
+### Bug Fixes
+
+* commit changelog automatically ([c526cb9](https://github.com/WeixinCloud/wxcloud/commits/c526cb9717c553ceaba69c8a0b0eac59aa3aa325))
+
+
+
+## [2.0.16](https://github.com/WeixinCloud/wxcloud/compare/v2.0.15...v2.0.16) (2022-07-04)
+
+
+### Bug Fixes
+
+* changelog ([809476d](https://github.com/WeixinCloud/wxcloud/commits/809476d7daac9664ad874e1b5ab9f919e51c5e8d))
+* changelog url ([7a4f163](https://github.com/WeixinCloud/wxcloud/commits/7a4f163a7af6085845ff860d2d18f0fb1498a89a))
+* **cli/deploy:** pass `serviceName` flag correctly ([9f30bc9](https://github.com/WeixinCloud/wxcloud/commits/9f30bc927c28b97d158f109aeeffb383a2e3b3af))
+* **vscode:** target node to 12 ([6882b69](https://github.com/WeixinCloud/wxcloud/commits/6882b69a3dfb544e45edfef02b362d241c630e18))
+* **vscode:** target to node12 ([ab6fc2e](https://github.com/WeixinCloud/wxcloud/commits/ab6fc2ef3c44c7aa813e451fca237868329d2f2c))
+
+
+
+## [2.0.15](https://github.com/WeixinCloud/wxcloud/compare/v2.0.12...v2.0.15) (2022-07-01)
+
+
+### Bug Fixes
+
+* **cli:** `init` auto create directory if not exists ([501b7fa](https://github.com/WeixinCloud/wxcloud/commits/501b7facf2dbe73e982e7e31aeaf6adb4998ba06))
+* **cli:** correct docker ignore ([fdbda20](https://github.com/WeixinCloud/wxcloud/commits/fdbda20cc56b987946fde0986aab663f61f9112f))
+* **cli:** dont ignore dockerfile ([8ff3b71](https://github.com/WeixinCloud/wxcloud/commits/8ff3b715667927456d33189c40bdb2ff7b96f73f))
+* **core:** fix compatibility issue ([487feb4](https://github.com/WeixinCloud/wxcloud/commits/487feb45f503199908c62c4533f6901199e37a7b))
+* **core:** remove cloud-api ([07867c8](https://github.com/WeixinCloud/wxcloud/commits/07867c84fc6325848e6897a27d0c10b163666a76))
+* **vscode:** add active probe for local debug proxy ([218599b](https://github.com/WeixinCloud/wxcloud/commits/218599b51203bd18dd7665674b7242edee28d571))
+* **vscode:** allow non-container workspace ([f84f895](https://github.com/WeixinCloud/wxcloud/commits/f84f89596e51e7b1b9b78f976402fe5d4ae7d500))
+* **vscode:** live coding port and crash detection ([7bc9116](https://github.com/WeixinCloud/wxcloud/commits/7bc91169cc7a704ce66046fff517363ae8c43096))
+* **vscode:** livecoding incorrect block ([c751c93](https://github.com/WeixinCloud/wxcloud/commits/c751c933d7c6a6e584ef96e20908fd155d2b5a76))
+* **vscode:** non blocking prompt ([132e657](https://github.com/WeixinCloud/wxcloud/commits/132e6578a5a1c0dc9f3da1b86592ca43fd64ed09))
+
+
+
+## [2.0.12](https://github.com/WeixinCloud/wxcloud/compare/v2.0.11...v2.0.12) (2022-06-27)
+
+
+### Bug Fixes
+
+* ensure base config with preprocessing ([4467a72](https://github.com/WeixinCloud/wxcloud/commits/4467a72b80987692c4a20d0c0e3b5166b8fbd477))
+* **vscode:** invalid logtype ([94a64e8](https://github.com/WeixinCloud/wxcloud/commits/94a64e8c492e04c5898cd65df321c5289a208cfd))
+
+
+
+## [2.0.11](https://github.com/WeixinCloud/wxcloud/compare/v2.0.10...v2.0.11) (2022-06-24)
+
+
+### Bug Fixes
+
+* **cli:** use new api ([363ad64](https://github.com/WeixinCloud/wxcloud/commits/363ad64398e872f6bfa866bb0ab30cbc74089824))
+* **dockerpacks:** use buster to avoid privilege issue ([8c24868](https://github.com/WeixinCloud/wxcloud/commits/8c24868d02db7029c3fcad012ec94a1c6b750271))
+* **pnpm:** update lockfile ([4be0913](https://github.com/WeixinCloud/wxcloud/commits/4be091358d0cbf898eac9348e59b6c842bbf0411))
+
+
+
+## [2.0.10](https://github.com/WeixinCloud/wxcloud/compare/v2.0.9...v2.0.10) (2022-06-22)
+
+
+### Bug Fixes
+
+* **dockerpacks:** dont ignore dockerfile ([dc88b40](https://github.com/WeixinCloud/wxcloud/commits/dc88b4080c8effc38e3ab608f0db54f1fff0f75c))
+* **dockerpacks:** use static pnpm version to avoid snapshot changes ([8dc9432](https://github.com/WeixinCloud/wxcloud/commits/8dc9432b68b540220a550bff2065f0da5b4b1925))
+* **monorepo:** fix link ([00de800](https://github.com/WeixinCloud/wxcloud/commits/00de800e8b11f2a6dd29bd650bdf05effbb524d6))
+* **vscode:** add legacy watch to dockerfile dev if win32 ([6c2b860](https://github.com/WeixinCloud/wxcloud/commits/6c2b86027f44903a46bbde109ca29ad32464bae2))
+* **vscode:** always use `toNamespacedPath` for win32 systems ([91235fd](https://github.com/WeixinCloud/wxcloud/commits/91235fd35b5af7589603f4fc5b437f844aad6732))
+* **vscode:** normalize mount path for windows ([a90c556](https://github.com/WeixinCloud/wxcloud/commits/a90c556b4d8061b5bdcd0fca2f882cfc4e999c21))
+* **vscode:** rebuilt ([fe6fc34](https://github.com/WeixinCloud/wxcloud/commits/fe6fc34bb4053546f61dd96e33d8772796743760))
+* **vscode:** remove readme from public ([5b12b0e](https://github.com/WeixinCloud/wxcloud/commits/5b12b0ea655d3baee57e4cedca070e3eb5771229))
+* **vscode:** use `normalize` for command ([07b5e90](https://github.com/WeixinCloud/wxcloud/commits/07b5e9035f277566b6033badfe16c055aba9cd8d))
+* **vscode:** use lower maxNum for proxy ([8c3611d](https://github.com/WeixinCloud/wxcloud/commits/8c3611dc971503ad01f2619dfea770f516079c5d))
+* **vscode:** use prober to start container instead ([965f41f](https://github.com/WeixinCloud/wxcloud/commits/965f41f5773178e7b981dfa3c03a154bfe3e0b93))
+* **vscode:** use proper mount path for windows 7 ([e40b150](https://github.com/WeixinCloud/wxcloud/commits/e40b1501ce875968e05c24f3b838506e4840be7c))
+
+
+
 ## [2.0.9](https://github.com/WeixinCloud/wxcloud/compare/v2.0.8...v2.0.9) (2022-06-10)
 
 
 ### Bug Fixes
 
-* **cli/service:** check if the threshold is negative ([11d7ee2](https://github.com/WeixinCloud/wxcloud/commits/11d7ee2121a947b8217fea7b191ff3b4d088bd78))
-* **docs:** fix a bug for terminal component ([6f36bab](https://github.com/WeixinCloud/wxcloud/commits/6f36bab49e711dc2934a80f5e7f8508373c873ef))
-* **docs:** update home layout ([3d23242](https://github.com/WeixinCloud/wxcloud/commits/3d232424d881397bd77f758b70638fb8a24ed7d5))
-* **scripts:** fix bump command ([2efa4b3](https://github.com/WeixinCloud/wxcloud/commits/2efa4b369f8b1712a7bb4add9b93ac61b391114a))
+* **cli/service:** check if the threshold is negative ([67da658](https://github.com/WeixinCloud/wxcloud/commits/67da65802f46c33169780e1d397998a08ffc2993))
+* **docs:** fix a bug for terminal component ([de157e2](https://github.com/WeixinCloud/wxcloud/commits/de157e2f7ea904b933e3cb149eb90b2ccfd6491a))
+* **docs:** update home layout ([80c1824](https://github.com/WeixinCloud/wxcloud/commits/80c1824ead3102c18490700076c63f8d0822adf9))
+* **scripts:** fix bump command ([54c6f85](https://github.com/WeixinCloud/wxcloud/commits/54c6f8506e823f94eebc5796ea788bb8f38cb29c))
 
 
 ### Features
 
 * **cli/service:** add `noConfirm` flag for config command ([61af085](https://github.com/WeixinCloud/wxcloud/commits/61af085a545deaf9a4e6953d5347d9aca21ee14a))
-* **cli/service:** support new hpa policy api ([0c7fc5a](https://github.com/WeixinCloud/wxcloud/commits/0c7fc5abe33a251d6dc35e5144c5b8114eb20b10))
-* **cli:** add service:remove command ([ff47be9](https://github.com/WeixinCloud/wxcloud/commits/ff47be901b2c1f66192dc37668c59f33e687e632))
-* **docs-server:** add VersionSince badge ([cfe7872](https://github.com/WeixinCloud/wxcloud/commits/cfe78728c193fc60fa1872a971235fc0d47d10dd))
+* **cli/service:** support new hpa policy api ([166c1c3](https://github.com/WeixinCloud/wxcloud/commits/166c1c3eeefbaaa939c2bdaafa127871bb161cfa))
+* **cli:** add service:remove command ([b7d0e9c](https://github.com/WeixinCloud/wxcloud/commits/b7d0e9c018b73f08421f53884094e5729ab02b46))
+* **docs-server:** add VersionSince badge ([302da4e](https://github.com/WeixinCloud/wxcloud/commits/302da4e51feea0f655eba10df09dd8b7f11babab))
 
 
 
