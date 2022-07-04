@@ -91,7 +91,7 @@ export default class DeployCommand extends Command {
 
     const isStatic = cloudConfig.type === 'static';
     const envId = flags.envId || (await chooseEnvId());
-    const serviceName = flags.serviceName || isStatic ? undefined : await chooseServiceId(envId);
+    const serviceName = flags.serviceName || (isStatic ? undefined : await chooseServiceId(envId));
     let port = 3000;
     if (cloudConfig.type !== 'static') {
       port =
