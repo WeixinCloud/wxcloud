@@ -141,8 +141,8 @@ export async function _ensureRemoteProxySetup(
     port: getConfiguration().ports.wx
   });
   if (
-    preQueryResult.domainInfo.defaultPublicDomain &&
-    preQueryResult.server.versionItems.some(versionItemPredicator) &&
+    preQueryResult.domainInfo?.defaultPublicDomain &&
+    preQueryResult.server?.versionItems?.some(versionItemPredicator) &&
     preQueryResult.key
   ) {
     // exists
