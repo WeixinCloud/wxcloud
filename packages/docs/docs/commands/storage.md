@@ -30,3 +30,29 @@ OPTIONS
 ```bash:no-line-numbers
 wxcloud storage:upload /foo/bar/baz --envId=wxrun-id --mode=storage --remotePath=/
 ```
+
+## storage:purge
+
+刷新静态存储缓存
+
+### 基本用法
+```bash:no-line-numbers
+wxcloud storage:purge
+```
+
+### 命令行参数
+
+```bash:no-line-numbers
+OPTIONS
+  -e, --envId=envId                             环境ID
+  -h, --help                                    查看帮助信息
+  --region=ap-shanghai|ap-guangzhou|ap-beijing  [default: ap-shanghai] 地域
+```
+
+### 实际举例
+
+在 wxrun-id 环境下上传本地 /foo/bar/baz 目录下的所有文件到对象存储的根目录下。
+
+```bash:no-line-numbers
+wxcloud storage:upload /foo/bar/baz --envId=wxrun-id --mode=storage --remotePath=/
+```
