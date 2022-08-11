@@ -68,7 +68,9 @@ export default class RunDeployCommand extends Command {
     })
   };
 
-  async getReleaseConfig(): Promise<Parameters<typeof SubmitServerRelease>[0]> {
+  async getReleaseConfig(
+    mergedEnvParams: Record<string, string>
+  ): Promise<Parameters<typeof SubmitServerRelease>[0]> {
     const { flags } = this.parse(RunDeployCommand);
     const envId = flags.envId || (await chooseEnvId());
     const serviceName = flags.serviceName || (await chooseServiceId(envId));
@@ -215,8 +217,8 @@ export default class RunDeployCommand extends Command {
             ]
           : [{ 镜像地址: newReleaseConfig.ImageUrl }]),
         { 端口号: newReleaseConfig.Port },
-        flags.envParams && {
-          服务参数: flags.envParams
+        Object.keys(mergedEnvParams).length && {
+          服务参数: JSON.stringify(mergedEnvParams)
         },
         { 版本备注: newReleaseConfig.VersionRemark || '-' }
       ].filter((x): x is any => Boolean(x))
@@ -225,7 +227,7 @@ export default class RunDeployCommand extends Command {
     return newReleaseConfig;
   }
 
-  async updateEnvParams(envId, serverName, envParams = '', envParamsJson = '{}') {
+  async updateEnvParams(envId, serverName, envParams: Record<string, string>) {
     await execWithLoading(
       async () => {
         const { serviceBaseConfig: lastConfig } = await CloudAPI.tcbDescribeServiceBaseConfig({
@@ -238,15 +240,7 @@ export default class RunDeployCommand extends Command {
           serverName,
           conf: {
             ...preprocessBaseConfig(lastConfig),
-            envParams: JSON.stringify(
-              merge(
-                envParams.split('&').reduce((prev, cur) => {
-                  prev[cur.split('=')[0]] = cur.split('=')[1];
-                  return prev;
-                }, {}),
-                JSON.parse(envParamsJson || '{}')
-              )
-            )
+            envParams: JSON.stringify(envParams)
           }
         });
       },
@@ -289,12 +283,20 @@ export default class RunDeployCommand extends Command {
     const { flags } = this.parse(RunDeployCommand);
 
     setApiCommonParameters({ region: flags.region as ApiRegion });
+    // merge envParams with envParamsJson
+    const mergedEnvParams = merge(
+      (flags.envParams || '').split('&').reduce((prev, cur) => {
+        prev[cur.split('=')[0]] = cur.split('=')[1];
+        return prev;
+      }, {}),
+      JSON.parse(flags.envParamsJson || '{}')
+    );
 
-    let newReleaseConfig = await this.getReleaseConfig();
+    let newReleaseConfig = await this.getReleaseConfig(mergedEnvParams);
     const { ServerName, EnvId, DeployType } = newReleaseConfig;
     if (flags.noConfirm || (await cli.confirm('确定发布？(请输入yes或no)'))) {
-      if (flags.envParams || flags.envParamsJson) {
-        await this.updateEnvParams(EnvId, ServerName, flags.envParams, flags.envParamsJson);
+      if (Object.keys(mergedEnvParams).length) {
+        await this.updateEnvParams(EnvId, ServerName, mergedEnvParams);
       }
       if (DeployType === 'package') {
         const { PackageName, PackageVersion } = await this.packageDeploy(newReleaseConfig);
