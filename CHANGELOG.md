@@ -1,4 +1,4 @@
-## [2.0.19](https://github.com/WeixinCloud/wxcloud/compare/v2.0.16...v2.0.19) (2022-08-11)
+## [2.0.20](https://github.com/WeixinCloud/wxcloud/compare/v2.0.16...v2.0.20) (2022-08-11)
 
 
 ### Bug Fixes
