@@ -1,10 +1,11 @@
-## [2.0.18](https://github.com/WeixinCloud/wxcloud/compare/v2.0.16...v2.0.18) (2022-07-18)
+## [2.0.19](https://github.com/WeixinCloud/wxcloud/compare/v2.0.16...v2.0.19) (2022-08-11)
 
 
 ### Bug Fixes
 
 * commit changelog automatically ([c526cb9](https://github.com/WeixinCloud/wxcloud/commits/c526cb9717c553ceaba69c8a0b0eac59aa3aa325))
 * **dockerpacks/php:** use copy from instead of add ([de01c4b](https://github.com/WeixinCloud/wxcloud/commits/de01c4beaa7436bfdd2a7abc74d5e90cc08e1060))
+* **docs:** update `storage:purge` ([2dbce8b](https://github.com/WeixinCloud/wxcloud/commits/2dbce8b5bc8b331e5149295479d9d74855fda158))
 * **vscode:** check domainInfo is undefined ([e2f0463](https://github.com/WeixinCloud/wxcloud/commits/e2f046368739b2f8e7b1fa8c347fb867249154a0))
 
 
