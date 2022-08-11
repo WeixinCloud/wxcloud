@@ -26,7 +26,7 @@ import chalk from 'chalk';
 import parse from 'gitignore-globs';
 import { getDockerIgnore } from '../../functions/getDockerIgnore';
 import { CloudAPI, preprocessBaseConfig } from '@wxcloud/core';
-
+import { merge } from 'lodash';
 export default class RunDeployCommand extends Command {
   static description = '创建版本';
 
@@ -55,6 +55,9 @@ export default class RunDeployCommand extends Command {
     }),
     envParams: flags.string({
       description: '服务环境变量，在此版本开始生效，同步到服务设置，格式为xx=a&yy=b，默认为空'
+    }),
+    envParamsJson: flags.string({
+      description: '服务环境变量，在此版本开始生效，同步到服务设置，格式为json，默认为空'
     }),
     releaseType: flags.string({
       description: '发布类型：FULL-全量发布；GRAY-灰度发布；',
@@ -222,7 +225,7 @@ export default class RunDeployCommand extends Command {
     return newReleaseConfig;
   }
 
-  async updateEnvParams(envId, serverName, envParams) {
+  async updateEnvParams(envId, serverName, envParams = '', envParamsJson = '{}') {
     await execWithLoading(
       async () => {
         const { serviceBaseConfig: lastConfig } = await CloudAPI.tcbDescribeServiceBaseConfig({
@@ -236,10 +239,13 @@ export default class RunDeployCommand extends Command {
           conf: {
             ...preprocessBaseConfig(lastConfig),
             envParams: JSON.stringify(
-              envParams.split('&').reduce((prev, cur) => {
-                prev[cur.split('=')[0]] = cur.split('=')[1];
-                return prev;
-              }, {})
+              merge(
+                envParams.split('&').reduce((prev, cur) => {
+                  prev[cur.split('=')[0]] = cur.split('=')[1];
+                  return prev;
+                }, {}),
+                JSON.parse(envParamsJson || '{}')
+              )
             )
           }
         });
@@ -287,8 +293,8 @@ export default class RunDeployCommand extends Command {
     let newReleaseConfig = await this.getReleaseConfig();
     const { ServerName, EnvId, DeployType } = newReleaseConfig;
     if (flags.noConfirm || (await cli.confirm('确定发布？(请输入yes或no)'))) {
-      if (flags.envParams) {
-        await this.updateEnvParams(EnvId, ServerName, flags.envParams);
+      if (flags.envParams || flags.envParamsJson) {
+        await this.updateEnvParams(EnvId, ServerName, flags.envParams, flags.envParamsJson);
       }
       if (DeployType === 'package') {
         const { PackageName, PackageVersion } = await this.packageDeploy(newReleaseConfig);
