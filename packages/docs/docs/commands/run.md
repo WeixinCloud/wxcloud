@@ -24,6 +24,8 @@ OPTIONS
 
   --envParams=envParams          服务环境变量，在此版本开始生效，同步到服务设置，格式为xx=a&yy=
                                  b，默认为空
+  --envParamsJson=envParams      服务环境变量，在此版本开始生效，同步到服务设置，格式为 
+                                 `{"xx":"a",  "yy":"b"}`，默认为空
   --libraryImage=libraryImage    线上镜像仓库的tag
   --noConfirm                    发布前是否跳过二次确认
   --override                     缺省的参数是否沿用旧版本配置
