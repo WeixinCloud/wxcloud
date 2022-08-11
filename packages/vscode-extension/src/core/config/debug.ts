@@ -57,6 +57,7 @@ export async function updateContainerConfig(config: Record<string, IContainerCon
     '.cloudbase/container/debug.json'
   );
   await fse.outputFile(filePath, JSON.stringify(debugConfig, null, 2));
+  return filePath;
 }
 export async function updateContainerId(name: string, containerId?: string, mode?: 'compose') {
   if (!debugConfig) {

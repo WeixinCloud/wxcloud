@@ -3,10 +3,30 @@ import * as jsonc from 'jsonc-parser';
 import { cloudbase } from '../cloudbase';
 import type { IContainerConfigJSON } from '../../types';
 import { getDebugConfig, updateContainerConfig } from './debug';
-
+import { get, set } from 'lodash';
 // let containerConfigJsonWatcher: vscode.FileSystemWatcher;
 let containerConfigs: Record<string, IContainerConfigJSON>;
 
+// patch json from template, inserting needed sql configurations
+function patchDefaultJSON(json: any) {
+  try {
+    // insert empty env to json if not exist
+    const defaultEnvironments = [
+      'MYSQL_USERNAME',
+      'MYSQL_PASSWORD',
+      'MYSQL_ADDRESS',
+    ]
+    defaultEnvironments.forEach(env => {
+      if (!get(json, `envParams.${env}`)) {
+        set(json, `envParams.${env}`, '');
+      }
+    })
+    return json
+  } catch (error) {
+    console.log('failed to patch original json, return original json')
+    return json
+  }
+}
 export async function getContainerConfig(refresh?: boolean) {
   if (containerConfigs && !refresh) {
     return containerConfigs;
@@ -25,18 +45,24 @@ export async function getContainerConfig(refresh?: boolean) {
   if (cloudbase.isWorkspaceAsContainer) {
     try {
       const configUri = vscode.Uri.joinPath(cloudbase.targetWorkspace.uri, 'container.config.json');
-      const json = jsonc.parse(
+      let json = jsonc.parse(
         Buffer.from(await vscode.workspace.fs.readFile(configUri)).toString('utf8')
       );
+      json = patchDefaultJSON(json);
       containerConfigs = {
         [cloudbase.targetWorkspace.name.toLowerCase()]: json
       };
       // write containerConfigs into debug config
-      updateContainerConfig(containerConfigs);
+      const fp = await updateContainerConfig(containerConfigs);
       // give warning
       vscode.window.showWarningMessage(
-        'container.config.json 已自动合并至 .cloudbase/container/debug.config.json，原配置文件将不再生效，请更新 debug.config.json 以使用新的配置。'
-      );
+        'container.config.json 已自动合并至 .cloudbase/container/debug.config.json，原配置文件将不再生效，请更新 debug.config.json 以使用新的配置。',
+        '查看配置',
+      ).then(async (item) => {
+        if (item === '查看配置') {
+          await vscode.commands.executeCommand('vscode.open', vscode.Uri.file(fp));
+        }
+      });
     } catch (e) {
       containerConfigs = {};
     }
@@ -59,9 +85,10 @@ export async function getContainerConfig(refresh?: boolean) {
           try {
             if (item[1] === vscode.FileType.Directory) {
               const configUri = vscode.Uri.joinPath(rootUri, item[0], 'container.config.json');
-              const json = jsonc.parse(
+              let json = jsonc.parse(
                 Buffer.from(await vscode.workspace.fs.readFile(configUri)).toString('utf8')
               );
+              json = patchDefaultJSON(json)
               config[item[0].toLowerCase()] = json;
             }
           } catch (e) {
