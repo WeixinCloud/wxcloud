@@ -1,14 +1,14 @@
 {
   "name": "@wxcloud/monorepo",
   "private": true,
-  "version": "2.0.19",
+  "version": "2.0.20",
   "scripts": {
     "build": "pnpm --filter=!docs -r run build",
     "build:all": "pnpm -r run build",
-    "bump": "npm-run-all bumpp changelog replaceurl push",
+    "bump": "npm-run-all bumpp push changelog replaceurl",
     "bumpp": "bumpp package.json \"packages/!(vscode-extension)/package.json\" --commit --tag",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -l -s -r 0",
-    "replaceurl": "scripts/patch-changelog.sh && git commit --amend --no-edit -a",
+    "replaceurl": "scripts/patch-changelog.sh && git commit -a -m 'Update changelog'",
     "push": "git push --follow-tags",
     "release": "pnpm -r publish --filter=!vscode-docker-wx-cloudbase --access=public --registry=https://registry.npmjs.org/ --no-git-checks --tag=$RELEASE_TAG"
   },
