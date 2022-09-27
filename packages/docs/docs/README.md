@@ -1,5 +1,5 @@
 ---
-layout: HomeLayout
+# layout: HomeLayout
 heroImage: /images/logo.svg
 heroImageDark: /images/logo-white.svg
 heroText: '@wxcloud/cli'
