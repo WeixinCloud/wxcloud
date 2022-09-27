@@ -3,6 +3,7 @@ import { existsSync } from 'fs';
 import path from 'path';
 import { IKitContext, IKitDeployTarget, Kit, KitType } from '../common/kit';
 import { logger } from '../utils/debug';
+import { crossPlatformNpm } from '../utils/utils';
 
 export class StaticKit extends Kit {
   static description = 'CloudKit for Static Sites';
@@ -38,7 +39,7 @@ export class StaticKit extends Kit {
   }
   async run(ctx: IKitContext): Promise<IKitDeployTarget> {
     await new Promise<void>((res, rej) => {
-      const child = spawn('npm', ['run', this._detectedScript], {
+      const child = spawn(crossPlatformNpm, ['run', this._detectedScript], {
         cwd: ctx.fullPath,
         stdio: 'inherit'
       });

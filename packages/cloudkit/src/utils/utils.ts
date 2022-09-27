@@ -22,3 +22,5 @@ export const isMatchMajorVersion = (version: string, majorVersion: string) => {
 export const safeGetDepsFromPkgJSON = (packageJson: any, key: string) => {
   return packageJson?.dependencies?.[key] || packageJson?.devDependencies?.[key];
 };
+
+export const crossPlatformNpm = /^win/.test(process.platform) ? 'npm.cmd' : 'npm';

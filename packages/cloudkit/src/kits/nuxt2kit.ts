@@ -5,7 +5,7 @@ import { IKitContext, IKitDeployTarget, Kit, KitType } from '../common/kit';
 import { logger } from '../utils/debug';
 import { RunKit } from './runkit';
 import { JSConfigASTHelper } from '../utils/astHelper/jsConfig';
-import { isMatchMajorVersion, safeGetDepsFromPkgJSON } from '../utils/utils';
+import { crossPlatformNpm, isMatchMajorVersion, safeGetDepsFromPkgJSON } from '../utils/utils';
 import { Dockerpacks, HardCodedPromptIO } from '@wxcloud/dockerpacks';
 export class Nuxt2Kit extends Kit {
   static description = 'CloudKit for Nuxt.js';
@@ -53,7 +53,7 @@ export class Nuxt2Kit extends Kit {
     }
     console.log('patching nuxt.config.js for CDN assets.');
     await new Promise<void>((res, rej) => {
-      const child = spawn('npm', ['run', 'build'], {
+      const child = spawn(crossPlatformNpm, ['run', 'build'], {
         cwd: ctx.fullPath,
         stdio: 'inherit'
       });

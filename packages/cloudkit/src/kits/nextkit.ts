@@ -3,7 +3,7 @@ import { existsSync, readFileSync, unlinkSync, writeFileSync } from 'fs';
 import { IKitContext, IKitDeployTarget, Kit, KitType } from '../common/kit';
 import { logger } from '../utils/debug';
 import { RunKit } from './runkit';
-import { safeGetDepsFromPkgJSON } from '../utils/utils';
+import { crossPlatformNpm, safeGetDepsFromPkgJSON } from '../utils/utils';
 import { spawn } from 'child_process';
 import { Dockerpacks, HardCodedPromptIO } from '@wxcloud/dockerpacks';
 
@@ -35,7 +35,7 @@ export class NextKit extends Kit {
       writeFileSync(nextConfigPath, `module.exports = ${JSON.stringify(nextConfig)}`);
     }
     await new Promise<void>((res, rej) => {
-      const child = spawn('npm', ['run', 'build'], {
+      const child = spawn(crossPlatformNpm, ['run', 'build'], {
         cwd: ctx.fullPath,
         stdio: 'inherit'
       });

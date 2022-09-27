@@ -4,7 +4,7 @@ import path from 'path';
 import { IKitContext, IKitDeployTarget, Kit, KitType } from '../common/kit';
 import { logger } from '../utils/debug';
 import { RunKit } from './runkit';
-import { isMatchMajorVersion, safeGetDepsFromPkgJSON } from '../utils/utils';
+import { crossPlatformNpm, isMatchMajorVersion, safeGetDepsFromPkgJSON } from '../utils/utils';
 import { Dockerpacks, HardCodedPromptIO } from '@wxcloud/dockerpacks';
 export class Nuxt3Kit extends Kit {
   static description = 'CloudKit for Nuxt.js v3';
@@ -40,7 +40,7 @@ export class Nuxt3Kit extends Kit {
       throw new Error('server port is required using nuxtKit.');
     }
     await new Promise<void>((res, rej) => {
-      const child = spawn('npm', ['run', 'build'], {
+      const child = spawn(crossPlatformNpm, ['run', 'build'], {
         cwd: ctx.fullPath,
         stdio: 'inherit'
       });
