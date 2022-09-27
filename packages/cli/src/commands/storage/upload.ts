@@ -1,6 +1,6 @@
 import Command, { flags } from '@oclif/command';
 import { CloudAPI } from '@wxcloud/core';
-import { resolve, relative } from 'path';
+import { resolve, relative, sep, posix } from 'path';
 import { promises } from 'fs';
 import COS from 'cos-nodejs-sdk-v5';
 import { fetchApi } from '../../api/base';
@@ -87,7 +87,9 @@ export async function beginUpload(
   // do not upload uploaded-file twice
   const files = (await getFiles(path)).filter(item => !uploadedFileSet.has(item));
   files.forEach(rp => uploadedFileSet.add(rp));
-  const relativePaths: string[] = files.map(p => relative(path, p));
+  const relativePaths: string[] = files
+    .map(p => relative(path, p))
+    .map(p => p.split(sep).join(posix.sep));
   const log = console;
   const res = await putObjectToCos(
     relativePaths.map((rp, i) => {
