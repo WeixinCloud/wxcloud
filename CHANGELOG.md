@@ -1,3 +1,12 @@
+## [2.0.21](https://github.com/WeixinCloud/wxcloud/compare/v2.0.20...v2.0.21) (2022-09-27)
+
+
+### Bug Fixes
+
+* **cli/storage:** convert windows path to posix ([9e89ffa](https://github.com/WeixinCloud/wxcloud/commits/9e89ffade3f087cea18c68c19ffdc3a5fc4cff7e))
+
+
+
 ## [2.0.20](https://github.com/WeixinCloud/wxcloud/compare/v2.0.19...v2.0.20) (2022-08-11)
 
 
