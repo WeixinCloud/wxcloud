@@ -1,9 +1,18 @@
-## [2.0.21](https://github.com/WeixinCloud/wxcloud/compare/v2.0.20...v2.0.21) (2022-09-27)
+# [2.1.0](https://github.com/WeixinCloud/wxcloud/compare/v2.0.20...v2.1.0) (2022-10-31)
 
 
 ### Bug Fixes
 
 * **cli/storage:** convert windows path to posix ([9e89ffa](https://github.com/WeixinCloud/wxcloud/commits/9e89ffade3f087cea18c68c19ffdc3a5fc4cff7e))
+* **cli/upload:** split win32 path ([edc9493](https://github.com/WeixinCloud/wxcloud/commits/edc94930f70697b2f0e3b657e130536d32272461))
+* **cloudkit:** use npm.cmd in windows ([5502897](https://github.com/WeixinCloud/wxcloud/commits/550289704a3b83b8c081ddb95b85827f59d0dc40))
+* **docs:** lock minor ([fcf935e](https://github.com/WeixinCloud/wxcloud/commits/fcf935e8299f4a65bfa2ba1fbed5222d5dfb6803))
+* **docs:** temporarily disable layout ([3d73aa2](https://github.com/WeixinCloud/wxcloud/commits/3d73aa28f4c8230825c3a22b51e8df5ffcb4c0e0))
+
+
+### Features
+
+* **cli:** parse env params using regular expression ([#1](https://github.com/WeixinCloud/wxcloud/issues/1)) ([a690cb1](https://github.com/WeixinCloud/wxcloud/commits/a690cb1d62af278e62c38b768305598e79899d55))
 
 
 
