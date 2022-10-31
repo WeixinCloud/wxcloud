@@ -1,6 +1,5 @@
 import { Command, flags } from '@oclif/command';
 import { cli } from 'cli-ux';
-import { EstablishCloudBaseRunServerWx } from '../../api';
 import { ApiRegion, setApiCommonParameters } from '../../api/common';
 import { execWithLoading } from '../../utils/loading';
 import { chooseEnvId, chooseServiceId } from '../../utils/ux';
@@ -8,6 +7,9 @@ import { REGION_COMMAND_FLAG } from '../../utils/flags';
 import { CloudAPI, preprocessBaseConfig } from '@wxcloud/core';
 import { Flags } from '@oclif/core';
 import { readLoginState } from '../../utils/auth';
+import { merge } from 'lodash';
+import { parseEnvParams } from '../../utils/envParams';
+
 // @ts-ignore
 export const number = Flags.build({
   // @ts-ignore
@@ -20,7 +22,9 @@ export default class ConfigServiceCommand extends Command {
   static description = '配置服务';
 
   static examples = ['wxcloud service:config <action> [options]'];
-  static args = [{ name: 'action', description: '操作模式', default: 'read' }];
+  static args = [
+    { name: 'action', description: '操作模式，默认为 read，更新配置为 update', default: 'read' }
+  ];
 
   static flags = {
     help: flags.help({ char: 'h', description: '查看帮助' }),
@@ -56,6 +60,9 @@ export default class ConfigServiceCommand extends Command {
     envParams: flags.string({
       char: 'p',
       description: '环境变量，格式aa=bb&cc=dd'
+    }),
+    envParamsJson: flags.string({
+      description: '服务环境变量，在此版本开始生效，同步到服务设置，格式为json，默认为空'
     }),
     customLog: flags.string({
       char: 'l',
@@ -112,12 +119,11 @@ export default class ConfigServiceCommand extends Command {
       if (flags[key] !== undefined) {
         config[key] = flags[key];
         if (key === 'envParams') {
-          config[key] = JSON.stringify(
-            flags[key]!.split('&').reduce((prev, cur) => {
-              prev[cur.split('=')[0]] = cur.split('=')[1];
-              return prev;
-            }, {})
+          const mergedEnvParams = merge(
+            parseEnvParams(flags.envParams),
+            JSON.parse(flags.envParamsJson || '{}')
           );
+          config[key] = JSON.stringify(mergedEnvParams);
         }
       }
     });

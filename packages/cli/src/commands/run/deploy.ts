@@ -5,9 +5,6 @@ import {
   DescribeCloudBaseRunServerVersion,
   DescribeCloudBaseRunServer,
   SubmitServerRelease,
-  DescribeServiceBaseConfig,
-  UpdateServerBaseConfig,
-  DescribeServerManageTask,
   DescribeCloudBaseRunImages
 } from '../../api';
 import { chooseEnvId, chooseServiceId, printVerticalTable } from '../../utils/ux';
@@ -18,15 +15,13 @@ import { readLoginState } from '../../utils/auth';
 import * as inquirer from 'inquirer';
 import { zipDir } from '../../utils/zip';
 import { execWithLoading } from '../../utils/loading';
-import { computedBuildLog, computedTaskLog } from '../../utils/run';
 import { REGION_COMMAND_FLAG } from '../../utils/flags';
 import { ApiRegion, setApiCommonParameters } from '../../api/common';
 import { getDeployResult } from '../../functions/getDeployResult';
-import chalk from 'chalk';
-import parse from 'gitignore-globs';
 import { getDockerIgnore } from '../../functions/getDockerIgnore';
 import { CloudAPI, preprocessBaseConfig } from '@wxcloud/core';
 import { merge } from 'lodash';
+import { parseEnvParams } from '../../utils/envParams';
 export default class RunDeployCommand extends Command {
   static description = '创建版本';
 
@@ -285,10 +280,7 @@ export default class RunDeployCommand extends Command {
     setApiCommonParameters({ region: flags.region as ApiRegion });
     // merge envParams with envParamsJson
     const mergedEnvParams = merge(
-      (flags.envParams || '').split('&').reduce((prev, cur) => {
-        prev[cur.split('=')[0]] = cur.split('=')[1];
-        return prev;
-      }, {}),
+      parseEnvParams(flags.envParams),
       JSON.parse(flags.envParamsJson || '{}')
     );
 
