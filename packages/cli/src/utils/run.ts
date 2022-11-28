@@ -20,6 +20,15 @@ function stripAnsi(string) {
 
   return string.replace(ansiRegex(), '');
 }
+function buildVersionSearchQuery(server?: string, version?: string) {
+  if (server) {
+    return version
+      ? `(container_name:${version} OR __TAG__.container_name:${version})`
+      : `(container_name:/${server}-[0-9]+/ OR __TAG__.container_name:/${server}-[0-9]+/)`;
+  }
+  return '';
+}
+
 export async function computedBuildLog(
   envId: string,
   version?: CloudAPI.IAPITCBCloudBaseRunServerVersionItem
@@ -44,7 +53,7 @@ export async function computedBuildLog(
       EnvId: envId,
       StartTime: moment().subtract(10, 'm').format('YYYY-MM-DD HH:mm:ss'),
       EndTime: moment().add(10, 'm').format('YYYY-MM-DD HH:mm:ss'),
-      QueryString: `tcb_type:CloudBaseRun AND container_name:${version?.versionName}`,
+      QueryString: buildVersionSearchQuery(version?.versionName, version?.versionName),
       Limit: 100
     })
       .then(({ LogResults = {} }) =>
