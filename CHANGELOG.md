@@ -1,3 +1,17 @@
+## [2.1.2](https://github.com/WeixinCloud/wxcloud/compare/v2.1.1...v2.1.2) (2022-11-28)
+
+
+
+## [2.1.1](https://github.com/WeixinCloud/wxcloud/compare/v2.1.0...v2.1.1) (2022-11-28)
+
+
+### Bug Fixes
+
+* **cli/run:** support new log tags ([3d8aebf](https://github.com/WeixinCloud/wxcloud/commits/3d8aebfa6f5ed109a80454027f8ba1387ca899c6))
+* **vscode:** bump dependencies ([60ae8a1](https://github.com/WeixinCloud/wxcloud/commits/60ae8a18d34479baac6310fe4e88148a44a79ec1))
+
+
+
 # [2.1.0](https://github.com/WeixinCloud/wxcloud/compare/v2.0.20...v2.1.0) (2022-10-31)
 
 
