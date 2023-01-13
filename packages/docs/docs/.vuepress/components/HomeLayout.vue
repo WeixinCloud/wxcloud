@@ -118,7 +118,8 @@ COMMANDS
 <template>
   <div class="min-w-880px text-xl relative bg-white z-0">
     <!-- background -->
-    <div class="absolute h-1080px w-full bg-gradient-to-b from-green-100/5 to-transparent -z-1" />
+    <div class="absolute h-1080px w-full bg-gradient-to-b from-green-100/5 to-transparent -z-1 banner-bg" />
+    <div class="absolute h-1080px w-full bg-gradient-to-b from-green-100/5 to-transparent -z-2" />
     <header class="section text-gray-700">
       <div class="flex place-items-center justify-between pt-40px">
         <a href="/" class="text-black text-xl flex place-items-center">
@@ -227,13 +228,13 @@ COMMANDS
       <section class="py-80px section space-y-12">
         <div class="flex flex-col h-400px card-1 px-12 justify-center">
           <h3 class="text-3xl font-700 mb-4">
-            无需容器化知识<br/>业务代码轻松上云
+            无需容器化知识<br />业务代码轻松上云
           </h3>
           <p class="text-base text-gray-500 max-w-480px">云托管 CLI 借助内置的项目特征集，结合云托管最佳实践，能够自动分析现有项目并自动生成可用的 Dockerfile。</p>
         </div>
         <div class="flex flex-col h-400px card-2 px-12 justify-center">
           <h3 class="text-3xl font-700 mb-4">
-            无语言限制<br/>支持市面常见框架
+            无语言限制<br />支持市面常见框架
           </h3>
           <p class="text-base text-gray-500 max-w-480px">在云托管上使用你喜欢的服务端、前端、全栈框架，无需运维管理，将你从各种基础架构工作中解放出来。 </p>
         </div>
@@ -248,7 +249,7 @@ COMMANDS
           </a>
         </div>
       </section>
-      
+
     </main>
     <footer>
       <div class="text-center text-gray-500 p-64px text-sm">
@@ -282,15 +283,25 @@ COMMANDS
   background-size: contain;
   background-repeat: no-repeat;
 }
+
 .card-2 {
   background-image: url("/images/banner_bg_2@2x.png");
   background-size: contain;
   background-repeat: no-repeat;
 }
+
 .card-3 {
   background-image: url("/images/banner_bg_3@2x.png");
   background-size: contain;
   background-repeat: no-repeat;
+}
+
+.banner-bg {
+  background-image: url("/images/banner_img.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 85% -70%;
+  background-size: 800px 1000px;
 }
 
 .cursor {
