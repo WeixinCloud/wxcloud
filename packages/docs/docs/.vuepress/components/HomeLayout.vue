@@ -4,6 +4,8 @@ import 'virtual:windi.css'
 import { useClipboard } from '@vueuse/core'
 import { onMounted, onUpdated, reactive, ref } from 'vue';
 
+
+
 interface CommandHistoryItem {
   commandLine: string;
   result: string;
@@ -12,7 +14,12 @@ interface CommandHistoryItem {
 const INSTALL_COMMAND = 'npm i -g @wxcloud/cli';
 const { copy } = useClipboard({ source: INSTALL_COMMAND });
 
-const state = reactive({ copied: false });
+const state = reactive({ copied: false, activeTab: 'npm' });
+
+
+function onSwitchTab(tab: string) {
+  state.activeTab = tab
+}
 
 const promptContainerRef = ref<HTMLDivElement>(null!);
 const showingPrompt = ref(false);
@@ -23,8 +30,16 @@ const scrollToBottom = ref(false);
 
 
 function onCopy() {
-  copy()
+  const commands = {
+    npm: 'npm install -g @wxcloud/cli',
+    yarn: 'yarn global add @wxcloud/cli',
+    pnpm: 'pnpm install -g @wxcloud/cli'
+  }
+  copy(commands[state.activeTab])
   state.copied = true
+  setTimeout(() => {
+    state.copied = false
+  }, 5000)
 }
 
 onUpdated(() => {
@@ -101,38 +116,34 @@ COMMANDS
 </script>
 
 <template>
-  <div class="min-w-880px text-xl bg-white">
+  <div class="min-w-880px text-xl relative bg-white z-0">
+    <!-- background -->
+    <div class="absolute h-1080px w-full bg-gradient-to-b from-green-100/5 to-transparent -z-1" />
     <header class="section text-gray-700">
       <div class="flex place-items-center justify-between pt-40px">
         <a href="/" class="text-black text-xl flex place-items-center">
-          <img src="/images/logo.svg" alt="CLI Logo" class="w-40px" />
-          <span class="ml-4">微信云托管 CLI</span>
+          <!-- <img src="/images/logo.svg" alt="CLI Logo" class="w-40px" /> -->
+          <span>微信云托管 CLI</span>
         </a>
-        <ul class="list-none flex space-x-12 text-xl m-0">
+        <ul class="list-none flex space-x-8 text-lg m-0">
           <li>
-            <a class="font-500 text-black" href="/cli/guide">文档</a>
+            <a class="font-400 text-black" href="/cli/guide">文档</a>
           </li>
           <li>
-            <a class="font-500 text-black" href="https://cloud.weixin.qq.com/cloudrun" target="_blank">云托管控制台</a>
+            <a class="font-400 text-black" href="https://github.com/WeixinCloud/wxcloud" target="_blank">GitHub</a>
+          </li>
+          <li>
+            <a class="font-400 text-black" href="https://cloud.weixin.qq.com/cloudrun" target="_blank">云托管控制台</a>
           </li>
         </ul>
       </div>
     </header>
     <main class="text-gray-700">
-      <section class="py-88px section">
-        <div class="flex justify-between">
+      <section class="py-80px section">
+        <div class="flex justify-between items-center">
           <div class="flex-none flex flex-col gap-24px mr-48px">
-            <h1 class="m-0 text-dark-900 text-3xl font-bold">使用微信云托管 CLI<br>部署你的服务</h1>
+            <h1 class="m-0 text-dark-900 text-5xl font-700">使用微信云托管 CLI<br>部署你的服务</h1>
             <span class="text-gray-500">将任意代码容器化并运行在云托管中</span>
-            <div class="flex place-items-center">
-              <div
-                class="border-solid border-1 border-gray-400 rounded-6px px-16px py-12px font-mono flex items-center">
-                <span class="pointer-events-none select-none mr-8px">$ </span>
-                <span class="mr-24px">{{ INSTALL_COMMAND }}</span>
-                <img @click="onCopy" class="cursor-pointer" src="/images/copy_icon.svg" />
-              </div>
-              <span class="ml-4 opacity-60" v-if="state.copied">已复制 ✓</span>
-            </div>
             <a href="/cli/guide" class="w-max">
               <div role="button" class="primary-button">
                 查看文档
@@ -140,13 +151,18 @@ COMMANDS
             </a>
           </div>
           <div class="flex-none">
-            <div ref="promptContainerRef"
-              class="w-480px xl:w-580px h-405px rounded-12px p-24px bg-slate-800 text-white font-mono overflow-y-auto">
-              <p class="my-0 text-gray-300"># 安装 @wxcloud/cli</p>
-              <p class="mt-0 mb-18px">$ npm install -g @wxcloud/cli</p>
-              <p class="my-0 text-gray-300"># 部署到云托管</p>
+            <div ref="promptContainerRef" class="w-320px h-240px xl:w-600px xl:h-360px rounded-12px p-24px slate-background text-white font-mono overflow-y-auto">
+              <!-- macos like header -->
+              <div class="flex space-x-2 mb-8">
+                <span class="rounded-full w-12px h-12px bg-white/20"></span>
+                <span class="rounded-full w-12px h-12px bg-white/20"></span>
+                <span class="rounded-full w-12px h-12px bg-white/20"></span>
+              </div>
+              <p class="my-0 text-white/30"># 安装 @wxcloud/cli</p>
+              <p class="mt-0 mb-18px">$ <span class="text-orange-400">npm</span> install <span class="text-green-500">-g</span> @wxcloud/cli</p>
+              <p class="my-0 text-white/30"># 部署到云托管</p>
               <p class="mt-0 mb-18px">$ wxcloud deploy</p>
-              <p class="my-0 text-gray-300"># 输入 `wxcloud help` 来查看所有命令</p>
+              <p class="my-0 text-white/30"># 输入 `wxcloud help` 来查看所有命令</p>
               <template v-for="item of commandHistory">
                 <p class="my-0">{{ item.commandLine }}</p>
                 <p class="my-0 mb-18px text-gray-300">
@@ -154,104 +170,129 @@ COMMANDS
                 </p>
               </template>
               <p class="mt-0 mb-18px last:mb-0 cursor-text flex items-baseline" @click="showingPrompt = true">
-                $&nbsp;<span class="text-xl cursorContainer" v-if="!showingPrompt">{{ command.replace(/ /g, '&nbsp;')
-                }}</span><input v-if="showingPrompt" ref="promptInputRef" :size="command.length"
-                  :style="{ width: !command.length ? 0 : 'auto', padding: 0 }"
-                  class="outline-none border-none bg-transparent text-white text-xl font-mono caret-transparent"
-                  autocorrect="off" autocomplete="off" spellcheck="false" v-model="command" @keydown.enter="onCommand"
-                  @focusout="showingPrompt = false" /><span class="cursor"
-                  :style="{ marginLeft: !command ? '0' : (showingPrompt ? '-4px' : '3px') }"></span></p>
+                $&nbsp;<span class="text-xl cursorContainer" v-if="!showingPrompt">{{
+                  command.replace(/ /g, '&nbsp;')
+                }}</span><input v-if="showingPrompt" ref="promptInputRef" :size="command.length" :style="{ width: !command.length ? 0 : 'auto', padding: 0 }" class="outline-none border-none bg-transparent text-white text-xl font-mono caret-transparent" autocorrect="off" autocomplete="off" spellcheck="false" v-model="command" @keydown.enter="onCommand" @focusout="showingPrompt = false" /><span class="cursor" :style="{ marginLeft: !command ? '0' : (showingPrompt ? '-4px' : '3px') }"></span></p>
+            </div>
+          </div>
+        </div>
+        <div class="mt-120px px-8 bg-white/40 rounded-2xl h-224px mx-auto border-1 border-solid border-black/5 light-shadow">
+          <p class="font-500 text-md">快速开始</p>
+          <div class="text-sm font-medium text-center text-gray-500 border-b-1 border-gray-200">
+            <ul class="flex flex-wrap -mb-px list-none pl-0">
+              <li class="mr-4">
+                <a @click="onSwitchTab('npm')" class="tab" :class="{ 'active-tab': state.activeTab === 'npm' }">npm</a>
+              </li>
+              <li class="mr-4">
+                <a @click="onSwitchTab('yarn')" :class="{ 'active-tab': state.activeTab === 'yarn' }" class="tab">yarn</a>
+              </li>
+              <li class="mr-4">
+                <a @click="onSwitchTab('pnpm')" :class="{ 'active-tab': state.activeTab === 'pnpm' }" class="tab">pnpm</a>
+              </li>
+            </ul>
+          </div>
+          <div class="flex justify-between">
+            <p v-if="state.activeTab === 'npm'" class="mt-8 font-mono text-md"><span class="text-orange-400">npm</span> install <span class="text-green-500">-g</span> @wxcloud/cli</p>
+            <p v-if="state.activeTab === 'yarn'" class="mt-8 font-mono text-md"><span class="text-orange-400">yarn</span> global <span class="text-orange-500">add</span> @wxcloud/cli</p>
+            <p v-if="state.activeTab === 'pnpm'" class="mt-8 font-mono text-md"><span class="text-orange-400">pnpm</span> install <span class="text-green-500">-g</span> @wxcloud/cli</p>
+            <div class="flex py-8">
+              <span class="mr-4 opacity-60" v-if="state.copied">已复制 ✓</span>
+              <img @click="onCopy" class="cursor-pointer h-30px" src="/images/copy_icon.svg" />
             </div>
           </div>
         </div>
       </section>
-      <section class="py-88px bg-gray-100">
-        <div class="section grid grid-cols-3 gap-64px">
-          <div class="space-y-4">
-            <h3 class="text-3xl text-dark-900">轻松部署</h3>
-            <p>
-              无需编写 Dockerfile 配置和繁琐的上线流程，只需要选择你喜爱的框架，执行 wxcloud deploy，即可轻松部署到云托管。
-            </p>
-          </div>
-          <div class="space-y-4">
-            <h3 class="text-3xl text-dark-900">性能优越</h3>
-            <p>支持利用 CDN 分发静态文件，充分利用全球加速和服务端完整能力的优势，降低容器流量使用和负载。</p>
-          </div>
-          <div class="space-y-4">
-            <h3 class="text-3xl text-dark-900">容器化伸缩</h3>
-            <p>每一个云托管服务都是容器化的，利用云托管的自动扩缩容能力，可以让你的业务无惧流量波动，自动伸缩，无需操心运维和预估流量。</p>
+      <section class="py-80px">
+        <div class="section">
+          <h2 class="border-none py-12">产品优势</h2>
+          <div class="grid grid-flow-col gap-x-6">
+            <div class="py-12 px-8 border-black/5 border-solid rounded-2xl">
+              <img class="h-36px" src="/images/deployment_icon.svg" />
+              <h3 class="text-xl">轻松部署</h3>
+              <p class="text-base text-gray-500">选择你喜爱的框架，执行 wxcloud deploy，即可轻松部署到云托管。</p>
+            </div>
+            <div class="py-12 px-8 border-black/5 border-solid rounded-2xl">
+              <img class="h-36px" src="/images/performance_icon.svg" />
+              <h3 class="text-xl">性能优越</h3>
+              <p class="text-base text-gray-500">支持利用 CDN 分发静态文件，降低容器流量使用和负载。</p>
+            </div>
+            <div class="py-12 px-8 border-black/5 border-solid rounded-2xl">
+              <img class="h-36px" src="/images/elasticity.svg" />
+              <h3 class="text-xl">容器化伸缩</h3>
+              <p class="text-base text-gray-500">自动扩缩容能力，让业务无惧流量波动，无需操心运维和预估流量。</p>
+            </div>
           </div>
         </div>
       </section>
-      <section class="py-120px">
-        <div class="section grid grid-cols-3 gap-64px place-items-center">
-          <div class="space-y-4">
-            <h3 class="text-3xl text-dark-900">无需容器化知识<br>业务代码轻松上云</h3>
-            <p>
-              云托管 CLI 借助内置的项目特征集，结合云托管最佳实践，能够自动分析现有项目并自动生成可用的 Dockerfile。
-            </p>
-          </div>
-          <img class="col-span-2 block w-full" src="/images/detect.svg" />
+      <section class="py-80px section space-y-12">
+        <div class="flex flex-col h-400px card-1 px-12 justify-center">
+          <h3 class="text-3xl font-700 mb-4">
+            无需容器化知识<br/>业务代码轻松上云
+          </h3>
+          <p class="text-base text-gray-500 max-w-480px">云托管 CLI 借助内置的项目特征集，结合云托管最佳实践，能够自动分析现有项目并自动生成可用的 Dockerfile。</p>
+        </div>
+        <div class="flex flex-col h-400px card-2 px-12 justify-center">
+          <h3 class="text-3xl font-700 mb-4">
+            无语言限制<br/>支持市面常见框架
+          </h3>
+          <p class="text-base text-gray-500 max-w-480px">在云托管上使用你喜欢的服务端、前端、全栈框架，无需运维管理，将你从各种基础架构工作中解放出来。 </p>
         </div>
       </section>
-      <section class="bg-green-500 py-88px">
-        <div class="section grid grid-cols-3 gap-24px">
-          <div class="col-span-2 grid grid-cols-2 grid-rows-4 lg:grid-cols-4 lg:grid-rows-2 gap-32px">
-            <div class="framework-card">
-              <img class="block w-full h-full max-w-84px" src="/images/hexo.svg" />
-            </div>
-            <div class="framework-card">
-              <img class="block w-full h-full max-w-84px" src="/images/nuxt.svg" />
-            </div>
-            <div class="framework-card">
-              <img class="block w-full h-full max-w-84px" src="/images/react.svg" />
-            </div>
-            <div class="framework-card">
-              <img class="block w-full h-full max-w-84px" src="/images/vue.svg" />
-            </div>
-            <div class="framework-card">
-              <img class="block w-full h-full max-w-84px" src="/images/angular.svg" />
-            </div>
-            <div class="framework-card">
-              <img class="block w-full h-3/4 max-w-84px" src="/images/svelte.svg" />
-            </div>
-            <div class="framework-card">
-              <img class="block w-full h-full max-w-84px" src="/images/next.svg" />
-            </div>
-            <div class="framework-card py-0 px-0">
-              <img class="block w-full h-full max-w-84px" src="/images/django.svg" />
-            </div>
-          </div>
-          <div class="ml-48px space-y-4">
-            <h3 class="text-3xl text-white">支持大多数常见框架<br>无语言限制</h3>
-            <p class="text-white">
-              在云托管上使用你喜欢的服务端、前端、全栈框架，无需运维管理，将你从各种基础架构工作中解放出来。
-            </p>
-          </div>
+      <section class="py-80px section">
+        <div class="flex flex-col h-230px card-3 items-center justify-center">
+          <h3 class="text-2xl font-700 text-green-500 text-center">
+            使用云托管部署你的下一个服务
+          </h3>
+          <a href="https://cloud.weixin.qq.com/cloudrun" target="_blank">
+            <button class="cursor-pointer text-base w-150px h-40px bg-transparent border-green-500 border-solid border-width-1px text-green-500 py-2 px-6 rounded">开始体验</button>
+          </a>
         </div>
       </section>
-      <section class="px-64px py-88px">
-        <div class=" mx-auto grid place-items-center">
-          <div class="flex flex-col items-center space-y-6">
-            <h3 class="text-3xl text-dark-900">使用云托管部署你的下一个服务</h3>
-            <a href="https://cloud.weixin.qq.com/cloudrun" target="_blank">
-              <div role="button" class="primary-button">
-                立即体验
-              </div>
-            </a>
-          </div>
-        </div>
-      </section>
+      
     </main>
     <footer>
-      <div class="text-center text-gray-500 p-64px">
-        MIT Licensed | Copyright © 2022 WeChat CloudRun. All Rights Reserved
+      <div class="text-center text-gray-500 p-64px text-sm">
+        MIT Licensed | Copyright © 2022-2023 WeChat CloudRun. All Rights Reserved
       </div>
     </footer>
   </div>
 </template>
 
 <style scoped>
+.slate-background {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(136.6deg, rgba(57, 71, 98, 1) 0%, rgba(34, 45, 66, 1) 100%);
+  /* background: radial-gradient(365.4% 170.2% at 104.6% 100%, rgba(183,255,251,0) 35%, rgba(183,255,251,0.15) 100%); */
+  box-shadow: 0 48px 40px -18px rgba(19, 28, 46, 0.1);
+}
+
+.border-b-1,
+.border-b-2,
+.tab {
+  border-bottom-style: solid;
+}
+
+.light-shadow {
+  box-shadow: 0 20px 40px 0 rgba(0, 72, 114, 0.02);
+  ;
+}
+
+.card-1 {
+  background-image: url("/images/banner_bg_1@2x.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.card-2 {
+  background-image: url("/images/banner_bg_2@2x.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.card-3 {
+  background-image: url("/images/banner_bg_3@2x.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
 .cursor {
   display: inline-block;
   width: 0.5em;
