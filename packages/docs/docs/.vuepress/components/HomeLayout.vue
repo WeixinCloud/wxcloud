@@ -160,9 +160,9 @@ COMMANDS
                 <span class="rounded-full w-12px h-12px bg-white/20"></span>
               </div>
               <p class="my-0 text-white/30"># 安装 @wxcloud/cli</p>
-              <p class="mt-0 mb-18px">$ <span class="text-orange-400">npm</span> install <span class="text-green-500">-g</span> @wxcloud/cli</p>
+              <p class="mt-0 mb-18px"><span class="select-none">$</span> <span class="text-orange-400">npm</span> install <span class="text-green-500">-g</span> @wxcloud/cli</p>
               <p class="my-0 text-white/30"># 部署到云托管</p>
-              <p class="mt-0 mb-18px">$ wxcloud deploy</p>
+              <p class="mt-0 mb-18px"><span class="select-none">$</span> wxcloud deploy</p>
               <p class="my-0 text-white/30"># 输入 `wxcloud help` 来查看所有命令</p>
               <template v-for="item of commandHistory">
                 <p class="my-0">{{ item.commandLine }}</p>
@@ -206,7 +206,7 @@ COMMANDS
       <section class="py-80px">
         <div class="section">
           <h2 class="border-none py-12">产品优势</h2>
-          <div class="grid grid-flow-col gap-x-6">
+          <div class="grid grid-cols-3 grid-flow-col gap-x-6">
             <div class="py-12 px-8 border-black/5 border-solid rounded-2xl">
               <img class="h-36px" src="/images/deployment_icon.svg" />
               <h3 class="text-xl">轻松部署</h3>
