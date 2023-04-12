@@ -155,14 +155,14 @@ COMMANDS
             </a>
           </div>
           <div class="flex-none">
-            <div ref="promptContainerRef" class="flex flex-col box-border w-320px h-240px xl:w-600px xl:h-360px rounded-12px p-24px slate-background text-white font-mono overflow-y-auto">
+            <div class="flex flex-col box-border w-320px h-240px xl:w-600px xl:h-360px rounded-12px p-24px slate-background text-white font-mono overflow-y-auto">
               <!-- macos like header -->
               <div class="flex space-x-2">
                 <span class="rounded-full w-12px h-12px bg-white/20"></span>
                 <span class="rounded-full w-12px h-12px bg-white/20"></span>
                 <span class="rounded-full w-12px h-12px bg-white/20"></span>
               </div>
-              <div class="flex-1 w-full overflow-auto mt-32px scrollbar">
+              <div class="flex-1 w-full overflow-auto mt-32px scrollbar" ref="promptContainerRef">
                 <p class="my-0 text-white/30"># 安装 @wxcloud/cli</p>
                 <p class="mt-0 mb-18px"><span class="select-none">$</span> <span class="text-orange-400">npm</span> install <span class="text-green-500">-g</span> @wxcloud/cli</p>
                 <p class="my-0 text-white/30"># 部署到云托管</p>
