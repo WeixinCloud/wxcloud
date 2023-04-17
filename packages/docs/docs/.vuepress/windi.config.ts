@@ -22,8 +22,8 @@ export default defineConfig({
     'primary-button':
       'bg-green-500 text-base w-184px h-48px text-white rounded-4px cursor-pointer grid place-items-center',
     section: 'mx-auto px-24px sm:px-64px lg:px-128px xl:px-256px',
-    'tab': 'h-full cursor-pointer text-gray-500 inline-block border-b-2 border-transparent rounded-t-lg',
-    'active-tab': 'text-green-500 border-green-500',
+    'tab': 'h-full cursor-pointer text-black/55 inline-block border-b-2 border-transparent rounded-t-lg font-weight-600 text-base tracking-wide',
+    'active-tab': 'text-black/90 border-green-500',
     'feature-card':
       'bg-white bg-opacity-40 py-12 px-8 border-black/10 border-half border-solid rounded-2xl'
   },

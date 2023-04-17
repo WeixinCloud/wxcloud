@@ -118,10 +118,10 @@ COMMANDS
 <template>
   <div class="min-w-880px text-xl relative bg-white z-0">
     <!-- background -->
-    <div class="absolute top-0 h-1080px w-full bg-gradient-to-b from-green-100/5 to-transparent -z-1 banner-bg" />
-    <div class="absolute top-0 h-1080px w-full bg-gradient-to-b from-green-100/5 to-transparent -z-2" />
+    <div class="absolute top-0 h-1080px w-full background -z-1 banner-bg" />
+    <div class="absolute top-0 h-1080px w-full background -z-2" />
     <div class="h-20px"></div>
-    <header :class="{ 'bg-opacity-70': y > 20, 'bg-opacity-0': y <= 20 }" class="sticky top-0 w-full bg-white transition-all duration-500 ease-in-out backdrop-filter backdrop-blur-sm text-gray-700 py-12px">
+    <header :class="{ 'bg-opacity-70 backdrop-saturate-240': y > 20, 'bg-opacity-0': y <= 20 }" class="sticky top-0 z-1 w-full bg-white transition-all duration-500 ease-in-out backdrop-filter backdrop-blur-40px border-white/10 border-solid border-0 border-b-half text-gray-700 py-12px">
       <div class="h-40px w-full max-w-1224px mx-auto px-4 sm:px-6 lg:px-8 flex place-items-center justify-between ">
 
         <a href="/" class="text-black text-xl flex place-items-center">
@@ -162,7 +162,7 @@ COMMANDS
                 <span class="rounded-full w-12px h-12px bg-white/20"></span>
                 <span class="rounded-full w-12px h-12px bg-white/20"></span>
               </div>
-              <div class="flex-1 w-full overflow-auto mt-32px scrollbar" ref="promptContainerRef">
+              <div class="flex-1 w-full overflow-auto mt-32px scrollbar text-size-16px" ref="promptContainerRef">
                 <p class="my-0 text-white/30"># 安装 @wxcloud/cli</p>
                 <p class="mt-0 mb-18px"><span class="select-none">$</span> <span class="text-orange-400">npm</span> install <span class="text-green-500">-g</span> @wxcloud/cli</p>
                 <p class="my-0 text-white/30"># 部署到云托管</p>
@@ -182,9 +182,9 @@ COMMANDS
             </div>
           </div>
         </div>
-        <div class="mt-120px px-8 bg-white/40 rounded-2xl mx-auto border-1 border-solid border-black/10 light-shadow">
-          <p class="my-24px font-500 text-2xl leading-10 text-black/90 ">快速开始</p>
-          <div class="h-48px box-border text-sm font-medium text-center text-gray-500 border-b-1 border-b-half border-gray-200">
+        <div class="mt-120px px-8 py-24px bg-white/40 rounded-2xl mx-auto border-solid border-half backdrop-filter backdrop-blur-10px border-black/10 light-shadow">
+          <p class="m-0 font-500 text-2xl leading-10 text-black/90 ">快速开始</p>
+          <div class="h-48px border-inset text-sm font-medium text-center text-gray-500 border-solid border-0 border-b-half border-gray-200">
             <ul class="h-full mt-0 flex flex-wrap -mb-px list-none pl-0">
               <li class="mr-6">
                 <a @click="onSwitchTab('npm')" class="tab" :class="{ 'active-tab': state.activeTab === 'npm' }">npm</a>
@@ -197,11 +197,11 @@ COMMANDS
               </li>
             </ul>
           </div>
-          <div class="flex justify-between">
-            <p v-if="state.activeTab === 'npm'" class="mt-8 font-mono text-md"><span class="text-orange-400">npm</span> install <span class="text-green-500">-g</span> @wxcloud/cli</p>
-            <p v-if="state.activeTab === 'yarn'" class="mt-8 font-mono text-md"><span class="text-orange-400">yarn</span> global <span class="text-orange-500">add</span> @wxcloud/cli</p>
-            <p v-if="state.activeTab === 'pnpm'" class="mt-8 font-mono text-md"><span class="text-orange-400">pnpm</span> install <span class="text-green-500">-g</span> @wxcloud/cli</p>
-            <div class="flex pt-40px pb-24px">
+          <div class="flex justify-between mt-40px mb-24px">
+            <p v-if="state.activeTab === 'npm'" class="m-0 font-mono text-md"><span class="text-orange-400">npm</span> install <span class="text-green-500">-g</span> @wxcloud/cli</p>
+            <p v-if="state.activeTab === 'yarn'" class="m-0 font-mono text-md"><span class="text-orange-400">yarn</span> global <span class="text-orange-500">add</span> @wxcloud/cli</p>
+            <p v-if="state.activeTab === 'pnpm'" class="m-0 font-mono text-md"><span class="text-orange-400">pnpm</span> install <span class="text-green-500">-g</span> @wxcloud/cli</p>
+            <div class="flex place-items-center">
               <span class="mr-4 opacity-60 text-base leading-6" v-if="state.copied">已复制 ✓</span>
               <img @click="onCopy" class="cursor-pointer h-24px" src="/images/copy_icon.svg" />
             </div>
@@ -265,6 +265,9 @@ COMMANDS
 </template>
 
 <style scoped>
+.background {
+  background: linear-gradient(180deg, rgba(7, 193, 96, 0.05) -8.57%, rgba(7, 193, 96, 0) 58.62%), linear-gradient(195.82deg, rgba(211, 239, 255, 0.2) 2.24%, rgba(255, 255, 255, 0) 61.55%);
+}
 .slate-background {
   border: 0.5px solid rgba(255, 255, 255, 0.2);
   background: linear-gradient(136.6deg, rgba(57, 71, 98, 1) 0%, rgba(34, 45, 66, 1) 100%);
@@ -276,6 +279,11 @@ COMMANDS
 .border-b-2,
 .tab {
   border-bottom-style: solid;
+  display: flex;
+}
+
+.tab {
+  place-items: center;
 }
 
 .light-shadow {
@@ -305,13 +313,13 @@ COMMANDS
   background-image: url("/images/banner_img.svg");
   background-size: contain;
   background-repeat: no-repeat;
-  background-position: 85% -70%;
-  background-size: 800px 1000px;
+  background-position: 84 800%;
+  background-size: 1022px 1101px;
 }
 
 .cursor {
   display: inline-block;
-  width: 0.5em;
+  width: 0.3em;
   line-height: 100%;
   align-self: stretch;
   padding: 4px 0;
