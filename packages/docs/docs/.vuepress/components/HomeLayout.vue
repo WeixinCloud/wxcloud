@@ -121,7 +121,7 @@ COMMANDS
     <div class="absolute top-0 h-1080px w-full background -z-1 banner-bg" />
     <div class="absolute top-0 h-1080px w-full background -z-2" />
     <div class="h-20px"></div>
-    <header :class="{ 'bg-opacity-70 backdrop-saturate-240': y > 20, 'bg-opacity-0': y <= 20 }" class="sticky top-0 z-1 w-full bg-white transition-all duration-500 ease-in-out backdrop-filter backdrop-blur-40px border-white/10 border-solid border-0 border-b-half text-gray-700 py-12px">
+    <header :class="{ 'bg-opacity-70 backdrop-saturate-240 backdrop-blur-40px': y > 20, 'bg-opacity-0': y <= 20 }" class="sticky top-0 z-1 w-full bg-white transition-all duration-500 ease-in-out backdrop-filter border-black/10 border-solid border-0 border-b-half text-gray-700 py-12px">
       <div class="h-40px w-full max-w-1224px mx-auto px-4 sm:px-6 lg:px-8 flex place-items-center justify-between ">
 
         <a href="/" class="text-black text-xl flex place-items-center">
@@ -313,7 +313,7 @@ COMMANDS
   background-image: url("/images/banner_img.svg");
   background-size: contain;
   background-repeat: no-repeat;
-  background-position: 84 800%;
+  background-position: 84% 800%;
   background-size: 1022px 1101px;
 }
 
