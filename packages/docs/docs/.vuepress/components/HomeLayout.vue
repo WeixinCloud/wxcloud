@@ -177,7 +177,7 @@ COMMANDS
                 <p class="mt-0 mb-18px last:mb-0 cursor-text flex items-baseline" @click="showingPrompt = true">
                   $&nbsp;<span class="text-xl cursorContainer" v-if="!showingPrompt">{{
                     command.replace(/ /g, '&nbsp;')
-                  }}</span><input v-if="showingPrompt" ref="promptInputRef" :size="command.length" :style="{ width: !command.length ? 0 : 'auto', padding: 0 }" class="outline-none border-none bg-transparent text-white text-xl font-mono caret-transparent" autocorrect="off" autocomplete="off" spellcheck="false" v-model="command" @keydown.enter="onCommand" @focusout="showingPrompt = false" /><span class="cursor" :style="{ marginLeft: !command ? '0' : (showingPrompt ? '-4px' : '3px') }"></span></p>
+                  }}</span><input v-if="showingPrompt" ref="promptInputRef" :size="command.length" :style="{ width: !command.length ? 0 : 'auto', padding: 0 }" class="outline-none border-none bg-transparent text-white text-size-16px font-mono caret-transparent" autocorrect="off" autocomplete="off" spellcheck="false" v-model="command" @keydown.enter="onCommand" @focusout="showingPrompt = false" /><span class="cursor" :style="{ marginLeft: !command ? '0' : (showingPrompt ? '-4px' : '3px') }"></span></p>
               </div>
             </div>
           </div>
