@@ -214,18 +214,18 @@ COMMANDS
           <div class="grid grid-cols-3 grid-flow-col gap-x-6">
             <div class="feature-card">
               <img class="h-40px" src="/images/deployment_icon.svg" />
-              <h3 class="font-medium text-20px leading-7 tracking-wider text-black text-opacity-90">轻松部署</h3>
-              <p class="font-normal text-16px leading-6 text-black text-opacity-70">选择你喜爱的框架，执行 wxcloud deploy，即可轻松部署到云托管。</p>
+              <h3 class="font-medium mt-4 mb-2 text-20px leading-7 tracking-wider text-black text-opacity-90">轻松部署</h3>
+              <p class="m-0 font-normal text-16px leading-6 text-black text-opacity-70">选择你喜爱的框架，执行 wxcloud deploy，即可轻松部署到云托管。</p>
             </div>
             <div class="feature-card">
               <img class="h-40px" src="/images/performance_icon.svg" />
-              <h3 class="font-medium text-20px leading-7 tracking-wider text-black text-opacity-90">性能优越</h3>
-              <p class="font-normal text-16px leading-6 text-black text-opacity-70">支持利用 CDN 分发静态文件，降低容器流量使用和负载。</p>
+              <h3 class="font-medium mt-4 mb-2 text-20px leading-7 tracking-wider text-black text-opacity-90">性能优越</h3>
+              <p class="m-0 font-normal text-16px leading-6 text-black text-opacity-70">支持利用 CDN 分发静态文件，降低容器流量使用和负载。</p>
             </div>
             <div class="feature-card">
               <img class="h-40px" src="/images/elasticity.svg" />
-              <h3 class="font-medium text-20px leading-7 tracking-wider text-black text-opacity-90">容器化伸缩</h3>
-              <p class="font-normal text-16px leading-6 text-black text-opacity-70">自动扩缩容能力，让业务无惧流量波动，无需操心运维和预估流量。</p>
+              <h3 class="font-medium mt-4 mb-2 text-20px leading-7 tracking-wider text-black text-opacity-90">容器化伸缩</h3>
+              <p class="m-0 font-normal text-16px leading-6 text-black text-opacity-70">自动扩缩容能力，让业务无惧流量波动，无需操心运维和预估流量。</p>
             </div>
           </div>
         </div>

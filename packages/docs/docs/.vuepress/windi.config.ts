@@ -25,7 +25,7 @@ export default defineConfig({
     'tab': 'h-full cursor-pointer text-black/55 inline-block border-b-2 border-transparent rounded-t-lg font-weight-600 text-base tracking-wide',
     'active-tab': 'text-black/90 border-green-500',
     'feature-card':
-      'bg-white bg-opacity-40 py-12 px-8 border-black/10 border-half border-solid rounded-2xl'
+      'flex flex-col items-start bg-white bg-opacity-40 py-12 px-8 border-black/10 border-half border-solid rounded-2xl'
   },
   theme: {
     extend: {
