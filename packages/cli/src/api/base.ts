@@ -30,7 +30,7 @@ export async function fetchApi(apiName: string, data: any, options: fetchApiOpti
   const privateKey = options.wxCloudConfig?.privateKey || (await readLoginState()).privateKey;
 
   const headers: any = {
-    'X-CloudRunCli-Robot': '1',
+    'X-CloudRunCli-Robot': Math.ceil(Math.random() * 30).toString(),
     'X-CloudRunCli-Key': privateKey
   };
   const config = {
