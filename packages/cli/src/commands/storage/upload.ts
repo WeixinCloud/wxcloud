@@ -10,6 +10,7 @@ import { ApiRegion, setApiCommonParameters } from '../../api/common';
 import ora from 'ora';
 import { cli } from 'cli-ux';
 import { logger } from '../../utils/log';
+import { IGenericStorage, getAuthorizationThunk } from '../../utils/storage';
 
 const { tcbGetEnvironments, tcbDescribeWxCloudBaseRunEnvs } = CloudAPI;
 const { readdir, readFile } = promises;
@@ -122,10 +123,6 @@ async function getFiles(dir: string): Promise<string[]> {
     return [];
   }
 }
-interface IGenericStorage {
-  bucket: string;
-  region: string;
-}
 
 async function putObjectToCos(
   files: COS.PutObjectParams[],
@@ -182,32 +179,4 @@ async function putObjectToCos(
   } catch (err) {
     throw new Error(`上传文件失败: ${err.message}`);
   }
-}
-
-async function getAuthorizationThunk(storage: IGenericStorage) {
-  async function getAuthorization(options: {}, callback: (result: any) => void) {
-    const timestamp = Date.now();
-    const rawCredientials = await fetchApi('wxa-dev-qbase/gettcbtoken', {
-      region: storage.region,
-      source: storage.bucket,
-      scene: 'TOKEN_SCENE_COS',
-      service: 'cos'
-    });
-    if (!rawCredientials) {
-      throw new Error(`getFederalToken failed: ${JSON.stringify(rawCredientials)}`);
-    }
-    const credentials = {
-      TmpSecretId: rawCredientials.secretid,
-      TmpSecretKey: rawCredientials.secretkey,
-      XCosSecurityToken: rawCredientials.token,
-      StartTime: ~~(timestamp / 1000), // 时间戳，单位秒，如：1580000000 1620272999264
-      ExpiredTime: rawCredientials.expired_time // 时间戳，单位秒，如：1580000900
-    };
-
-    callback(credentials);
-
-    return;
-  }
-
-  return getAuthorization;
 }
