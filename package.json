@@ -1,7 +1,7 @@
 {
   "name": "@wxcloud/monorepo",
   "private": true,
-  "version": "2.1.2",
+  "version": "2.2.0",
   "scripts": {
     "build": "pnpm --filter=!docs -r run build",
     "build:all": "pnpm -r run build",
