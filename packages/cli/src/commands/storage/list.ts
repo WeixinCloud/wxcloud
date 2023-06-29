@@ -113,7 +113,7 @@ export async function listObjects(options: IListObjectsOptions) {
 interface IListObjectsOptions {
   storage: IGenericStorage;
   prefix: string;
-  marker: string;
+  marker?: string;
   maxKeys?: number;
   delimiter?: string;
   json?: boolean;
