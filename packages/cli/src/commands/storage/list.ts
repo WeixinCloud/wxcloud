@@ -43,8 +43,9 @@ export default class ListObjectsCommand extends Command {
   async run() {
     const { args, flags } = this.parse(ListObjectsCommand);
     setApiCommonParameters({ region: flags.region as ApiRegion });
-    const { mode = 'storage', marker, maxKeys, delimiter, json } = flags;
+    const { mode = 'storage', marker, delimiter, json } = flags;
     const envId = flags.envId;
+    const maxKeys = flags['max-keys'];
     console.log(`即将执行查询...`);
     const envRes = await Promise.all([
       tcbGetEnvironments({}),
