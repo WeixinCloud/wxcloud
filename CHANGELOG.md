@@ -1,3 +1,12 @@
+## [2.2.1](https://github.com/WeixinCloud/wxcloud/compare/v2.2.0...v2.2.1) (2023-06-29)
+
+
+### Bug Fixes
+
+* **cli:** use random robot id to bypass freq limit ([ad8be54](https://github.com/WeixinCloud/wxcloud/commits/ad8be5430aa5e81354b8dd209072adae1e292c89))
+
+
+
 # [2.2.0](https://github.com/WeixinCloud/wxcloud/compare/v2.1.2...v2.2.0) (2023-06-29)
 
 
