@@ -1,3 +1,28 @@
+# [2.2.0](https://github.com/WeixinCloud/wxcloud/compare/v2.1.2...v2.2.0) (2023-06-29)
+
+
+### Bug Fixes
+
+* **docs:** border ([5448f18](https://github.com/WeixinCloud/wxcloud/commits/5448f18061c152267a9874e5068a2eea71bc05cc))
+* **docs:** font size ([37194d9](https://github.com/WeixinCloud/wxcloud/commits/37194d91141af356bfe3703b2cf2af2362cf8b01))
+* **docs:** homepage style fix ([563c1f6](https://github.com/WeixinCloud/wxcloud/commits/563c1f60fb946cab04bd6cf234a5b78c8795db8d))
+* **docs:** layout ([203f387](https://github.com/WeixinCloud/wxcloud/commits/203f387594b15f272e7d48a01b7c54b40c6bf652))
+* **docs:** minor style tweak ([4aa8d68](https://github.com/WeixinCloud/wxcloud/commits/4aa8d6882e1e8ce56e3e1958bd925b4d000caeb3))
+* **docs:** scroll behavior ([fcd391d](https://github.com/WeixinCloud/wxcloud/commits/fcd391d938d045626ee4aef89040093eef192cae))
+* **docs:** update layout ([eae9534](https://github.com/WeixinCloud/wxcloud/commits/eae9534ccf4bedc6255983e69daa149fe09c5e4c))
+* IListObjectsOptions marker lack optional flag ([e568583](https://github.com/WeixinCloud/wxcloud/commits/e56858389e017e3a96666c3c43e6f0a0985ab449))
+* storage:list max-keys flag ([fb0cc77](https://github.com/WeixinCloud/wxcloud/commits/fb0cc77f5ac7a2ad564ff9ef7866c360980eda7f))
+
+
+### Features
+
+* **docs:** update background ([4699336](https://github.com/WeixinCloud/wxcloud/commits/469933646ace507cb833767c3b45b26d4d109d2a))
+* **docs:** update home layout ([bd16cb1](https://github.com/WeixinCloud/wxcloud/commits/bd16cb1f0e4dfb8bbf5dd2dafa33cbc34b6426e9))
+* **docs:** update homepage ([6eba9a6](https://github.com/WeixinCloud/wxcloud/commits/6eba9a646df25188a346e9c8ec20842f0bd1530a))
+* support storage:delete and storage:list ([1c3f2c8](https://github.com/WeixinCloud/wxcloud/commits/1c3f2c8573030980a4a7d5818f681a7a36b4c417))
+
+
+
 ## [2.1.2](https://github.com/WeixinCloud/wxcloud/compare/v2.1.1...v2.1.2) (2022-11-28)
 
 
@@ -12,14 +37,11 @@
 
 
 
-# [2.1.0](https://github.com/WeixinCloud/wxcloud/compare/v2.0.20...v2.1.0) (2022-10-31)
+# [2.1.0](https://github.com/WeixinCloud/wxcloud/compare/v2.0.22...v2.1.0) (2022-10-31)
 
 
 ### Bug Fixes
 
-* **cli/storage:** convert windows path to posix ([9e89ffa](https://github.com/WeixinCloud/wxcloud/commits/9e89ffade3f087cea18c68c19ffdc3a5fc4cff7e))
-* **cli/upload:** split win32 path ([edc9493](https://github.com/WeixinCloud/wxcloud/commits/edc94930f70697b2f0e3b657e130536d32272461))
-* **cloudkit:** use npm.cmd in windows ([5502897](https://github.com/WeixinCloud/wxcloud/commits/550289704a3b83b8c081ddb95b85827f59d0dc40))
 * **docs:** lock minor ([fcf935e](https://github.com/WeixinCloud/wxcloud/commits/fcf935e8299f4a65bfa2ba1fbed5222d5dfb6803))
 * **docs:** temporarily disable layout ([3d73aa2](https://github.com/WeixinCloud/wxcloud/commits/3d73aa28f4c8230825c3a22b51e8df5ffcb4c0e0))
 
@@ -27,6 +49,25 @@
 ### Features
 
 * **cli:** parse env params using regular expression ([#1](https://github.com/WeixinCloud/wxcloud/issues/1)) ([a690cb1](https://github.com/WeixinCloud/wxcloud/commits/a690cb1d62af278e62c38b768305598e79899d55))
+
+
+
+## [2.0.22](https://github.com/WeixinCloud/wxcloud/compare/v2.0.21...v2.0.22) (2022-09-27)
+
+
+### Bug Fixes
+
+* **cli/upload:** split win32 path ([edc9493](https://github.com/WeixinCloud/wxcloud/commits/edc94930f70697b2f0e3b657e130536d32272461))
+* **cloudkit:** use npm.cmd in windows ([5502897](https://github.com/WeixinCloud/wxcloud/commits/550289704a3b83b8c081ddb95b85827f59d0dc40))
+
+
+
+## [2.0.21](https://github.com/WeixinCloud/wxcloud/compare/v2.0.20...v2.0.21) (2022-09-27)
+
+
+### Bug Fixes
+
+* **cli/storage:** convert windows path to posix ([9e89ffa](https://github.com/WeixinCloud/wxcloud/commits/9e89ffade3f087cea18c68c19ffdc3a5fc4cff7e))
 
 
 
