@@ -22,9 +22,7 @@ export default class ConfigServiceCommand extends Command {
   static description = '配置服务';
 
   static examples = ['wxcloud service:config <action> [options]'];
-  static args = [
-    { name: 'action', description: '操作模式，默认为 read，更新配置为 update', default: 'read' }
-  ];
+  static args = [{ name: 'action', description: '操作模式，默认为 read，更新配置为 update', default: 'read' }];
 
   static flags = {
     help: flags.help({ char: 'h', description: '查看帮助' }),
@@ -64,7 +62,7 @@ export default class ConfigServiceCommand extends Command {
     envParamsJson: flags.string({
       description: '服务环境变量，在此版本开始生效，同步到服务设置，格式为json，默认为空'
     }),
-    customLog: flags.string({
+    customLogs: flags.string({
       char: 'l',
       description: '自定义日志采集路径'
     })
@@ -115,14 +113,11 @@ export default class ConfigServiceCommand extends Command {
 
     // merge old config with new config
     // remove undefined
-    ['cpu', 'mem', 'minNum', 'maxNum', 'envParams', 'customLog'].forEach(key => {
+    ['cpu', 'mem', 'minNum', 'maxNum', 'envParams', 'customLogs'].forEach(key => {
       if (flags[key] !== undefined) {
         config[key] = flags[key];
         if (key === 'envParams') {
-          const mergedEnvParams = merge(
-            parseEnvParams(flags.envParams),
-            JSON.parse(flags.envParamsJson || '{}')
-          );
+          const mergedEnvParams = merge(parseEnvParams(flags.envParams), JSON.parse(flags.envParamsJson || '{}'));
           config[key] = JSON.stringify(mergedEnvParams);
         }
       }

@@ -67,7 +67,7 @@ OPTIONS
   -c, --cpu=cpu                                 CPU
   -e, --envId=envId                             环境ID
   -h, --help                                    查看帮助
-  -l, --customLog=customLog                     自定义日志采集路径
+  -l, --customLogs=customLogs                   自定义日志采集路径
   -m, --mem=mem                                 内存
   -n, --minNum=minNum                           最小实例数
   -p, --envParams=envParams                     环境变量，格式aa=bb&cc=dd
