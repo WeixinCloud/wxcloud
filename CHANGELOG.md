@@ -1,3 +1,12 @@
+## [2.2.2](https://github.com/WeixinCloud/wxcloud/compare/v2.2.1...v2.2.2) (2023-07-13)
+
+
+### Bug Fixes
+
+* **cli/service:** pass custom logs arg correctly ([f1f1751](https://github.com/WeixinCloud/wxcloud/commits/f1f17517f511d6fc0e6b4fa748d6b6eb088c1a27))
+
+
+
 ## [2.2.1](https://github.com/WeixinCloud/wxcloud/compare/v2.2.0...v2.2.1) (2023-06-29)
 
 
